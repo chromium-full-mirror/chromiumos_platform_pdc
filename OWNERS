@@ -1,0 +1,2 @@
+include chromiumos/owners:v1:/firmware/OWNERS.pdc
+include chromiumos/owners:v1:/sie/OWNERS.chromeos_sie_lrs
