@@ -307,8 +307,13 @@ def main(
 
     servo = ServodClient(servod_host, servod_port)
 
-    pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(usbc_port)
-    log.info("Current FW: %d.%d.%d ('%s')", *pdc_live_ver, pdc_live_proj_name)
+    try:
+        pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(usbc_port)
+        log.info(
+            "Current FW: %d.%d.%d ('%s')", *pdc_live_ver, pdc_live_proj_name
+        )
+    except xmlrpc.client.Fault:
+        log.warning("Cannot read current FW (pdc info). Proceeding anyways.")
 
     try:
         # Start firmware update session
