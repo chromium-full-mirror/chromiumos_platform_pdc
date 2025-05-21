@@ -41,10 +41,17 @@ def get_fw_binary_config(fw_pkg: bytearray) -> dict:
         0x02: "Dual-port",
     }
 
-    return {
-        "proj_name": fw_pkg[
+    # Try to read project name. For really old firmware versions, this may fail
+    # with a unicode decode error.
+    try:
+        proj_name = fw_pkg[
             PDC_FW_OFFSET_PROJECT_NAME : PDC_FW_OFFSET_PROJECT_NAME + 12
-        ].decode("ascii"),
+        ].decode("ascii")
+    except UnicodeDecodeError:
+        proj_name = "unknown"
+
+    return {
+        "proj_name": proj_name,
         "vid": (
             fw_pkg[PDC_FW_OFFSET_VENDOR_VID_H] << 8
             | fw_pkg[PDC_FW_OFFSET_VENDOR_VID_L]
