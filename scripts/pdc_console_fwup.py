@@ -10,6 +10,7 @@ machine running this script.
 
 import ast
 import base64
+import dataclasses
 import logging
 from pathlib import Path
 import struct
@@ -69,6 +70,31 @@ def get_fw_binary_config(fw_pkg: bytearray) -> dict:
             fw_pkg[PDC_FW_OFFSET_FW_VERSION_CONFIG],
         ),
     }
+
+
+class ChipSpec:
+    """Base class for methods of specifying a PDC chip to update"""
+
+
+@dataclasses.dataclass
+class ChipSpecPortNum(ChipSpec):
+    """Specify a PDC chip by USB-C port number"""
+
+    port_number: int
+
+    def __str__(self):
+        return f"Port C{self.port_number}"
+
+
+@dataclasses.dataclass
+class ChipSpecRawI2C(ChipSpec):
+    """Specify a PDC chip by raw I2C bus name and address"""
+
+    i2c_bus: str
+    i2c_addr: int
+
+    def __str__(self):
+        return f"I2C {self.i2c_bus}:{self.i2c_addr}"
 
 
 class ServodClient(xmlrpc.client.ServerProxy):
@@ -134,12 +160,20 @@ class ServodClient(xmlrpc.client.ServerProxy):
             output[1][1],
         )
 
-    def fwup_start(self, port: int):
+    def fwup_start(self, chip: ChipSpec):
         """Start a FW update session"""
 
-        self._run_ec_command_get_output(
-            f"pdc_rtk_fwup start {port}", ["RTK_FWUP: Started"]
-        )
+        if isinstance(chip, ChipSpecPortNum):
+            self._run_ec_command_get_output(
+                f"pdc_rtk_fwup start {chip.port_number}", ["RTK_FWUP: Started"]
+            )
+        elif isinstance(chip, ChipSpecRawI2C):
+            self._run_ec_command_get_output(
+                f"pdc_rtk_fwup start {chip.i2c_bus} {chip.i2c_addr}",
+                ["RTK_FWUP: Started"],
+            )
+        else:
+            raise RuntimeError(f"Invalid chip spec type {chip}")
 
     def fwup_write(self, data: bytes) -> int:
         """Transfer FW payload data to the EC via the console"""
@@ -285,7 +319,7 @@ def write_flash(fw_image: bytes, servo: ServodClient):
 
 
 def main(
-    servod_host: str, servod_port: int, pdc_fw_path: Path, usbc_port: int
+    servod_host: str, servod_port: int, pdc_fw_path: Path, chip: ChipSpec
 ) -> int:
     """Process a PDC FW update"""
 
@@ -314,18 +348,25 @@ def main(
 
     servo = ServodClient(servod_host, servod_port)
 
-    try:
-        pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(usbc_port)
-        log.info(
-            "Current FW: %d.%d.%d ('%s')", *pdc_live_ver, pdc_live_proj_name
-        )
-    except xmlrpc.client.Fault:
-        log.warning("Cannot read current FW (pdc info). Proceeding anyways.")
+    if isinstance(chip, ChipSpecPortNum):
+        # This is only supported if a port number is passed. Skip for raw I2C
+        # updates.
+        try:
+            pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(
+                chip.port_number
+            )
+            log.info(
+                "Current FW: %d.%d.%d ('%s')", *pdc_live_ver, pdc_live_proj_name
+            )
+        except xmlrpc.client.Fault:
+            log.warning(
+                "Cannot read current FW (pdc info). Proceeding anyways."
+            )
 
     try:
         # Start firmware update session
-        log.info("Starting firmware update session (port C%d)", usbc_port)
-        servo.fwup_start(usbc_port)
+        log.info("Starting firmware update session (%s)", chip)
+        servo.fwup_start(chip)
 
         # Stream FW through the console
         write_flash(pdc_fw, servo)
@@ -344,16 +385,23 @@ def main(
     # Check FW version again after update. Using a polling routine because the
     # PDC stack might still be re-initializing immediately after finishing the
     # update.
-    for _ in range(3):
-        time.sleep(2.0)
-        try:
-            pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(usbc_port)
-            log.info(
-                "Current FW: %d.%d.%d ('%s')", *pdc_live_ver, pdc_live_proj_name
-            )
-            break
-        except xmlrpc.client.Fault:
-            log.info("Waiting for PDC stack to restart...")
+    if isinstance(chip, ChipSpecPortNum):
+        # This is only supported if a port number is passed. Skip for raw I2C
+        # updates.
+        for _ in range(3):
+            time.sleep(2.0)
+            try:
+                pdc_live_ver, pdc_live_proj_name = servo.get_pdc_fw_ver(
+                    chip.port_number
+                )
+                log.info(
+                    "Current FW: %d.%d.%d ('%s')",
+                    *pdc_live_ver,
+                    pdc_live_proj_name,
+                )
+                break
+            except xmlrpc.client.Fault:
+                log.info("Waiting for PDC stack to restart...")
 
     return 0
 
@@ -374,14 +422,38 @@ if __name__ == "__main__":
         "--host", type=str, default="localhost", help="Servod hostname"
     )
     parser.add_argument("--port", type=int, default=9999, help="Servod port")
-    parser.add_argument(
+
+    pdc_selection_arg_group = parser.add_mutually_exclusive_group()
+
+    pdc_selection_arg_group.add_argument(
         "--usbc_port",
         "-c",
         type=int,
         default=0,
-        help="USB-C port number on DUT to target",
+        help="USB-C port number on DUT to target. "
+        "Mutually exclusive with -i/--i2c_target.",
+    )
+    pdc_selection_arg_group.add_argument(
+        "--i2c_target",
+        "-i",
+        type=str,
+        help="Specify a raw I2C bus and address for update. "
+        "Mutually exclusive with -c/--usbc_port. "
+        "Format: <bus name>:<addr> (Example: I2C_PORT_PD:0x66)",
     )
 
     args = parser.parse_args()
 
-    sys.exit(main(args.host, args.port, args.pdc_fw_image, args.usbc_port))
+    if args.i2c_target:
+        try:
+            bus, addr = args.i2c_target.split(":")
+        except ValueError as e:
+            raise RuntimeError(
+                "Invalid I2C target. Must be in the form '<bus name>:<addr>'"
+            ) from e
+
+        chip_spec = ChipSpecRawI2C(i2c_bus=bus, i2c_addr=addr)
+    else:
+        chip_spec = ChipSpecPortNum(port_number=args.usbc_port)
+
+    sys.exit(main(args.host, args.port, args.pdc_fw_image, chip_spec))
