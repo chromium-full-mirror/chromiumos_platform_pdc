@@ -1,0 +1,4 @@
+# Python ignores
+*.pyc
+__pycache__
+*.egg-info
