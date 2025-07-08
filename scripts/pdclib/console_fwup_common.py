@@ -4,7 +4,6 @@
 
 """Common classes for use with the EC console-based PDC updater"""
 
-import abc
 import ast
 import dataclasses
 import logging
@@ -43,7 +42,7 @@ class ChipSpecRawI2C(ChipSpec):
         return f"I2C {self.i2c_bus}:{self.i2c_addr}"
 
 
-class ServodClient(xmlrpc.client.ServerProxy, abc.ABC):
+class ServodClient(xmlrpc.client.ServerProxy):
     """Interface with `servod` using the HTTP XML RPC interface
 
     This is significantly faster than calling dut-control as a subprocess since
@@ -105,23 +104,3 @@ class ServodClient(xmlrpc.client.ServerProxy, abc.ABC):
             (int(output[0][1]), int(output[0][2]), int(output[0][3])),
             output[1][1],
         )
-
-    @abc.abstractmethod
-    def fwup_start(self, chip: ChipSpec):
-        """Called when initiating a FW update session"""
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def fwup_write(self, data: bytes) -> int:
-        """Called to transfer chunks of FW update material"""
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def fwup_finish(self):
-        """Called to finalize and commit a FW update"""
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def fwup_abort(self):
-        """Terminate an update and attempt to recover to a safe state"""
-        raise NotImplementedError()
