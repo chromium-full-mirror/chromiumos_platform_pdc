@@ -1,0 +1,103 @@
+# Copyright 2025 The ChromiumOS Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+"""Display or patch configuration data with a Reaktek PDC FW binary
+
+Dump vital configuration items from a Realtek PDC FW binary and optionally
+apply a new 4 KiB configuration block to a Realtek PDC FW binary.
+"""
+
+import argparse
+import sys
+
+from pdclib import rtk_utils
+
+
+def print_config(fw):
+    """Parse a firmware binary, printing out key configuration values
+
+    Args:
+        fw: RtkFwBinary class containing the full Realtek firmware binary
+    """
+
+    rtk_configs = {
+        "Project name": fw.get_project_name,
+        "Version": fw.get_fw_version_str,
+        "USB VID:PID": fw.get_vid_pid_str,
+        "Port config": fw.get_port_used_str,
+        "CRC32": fw.get_file_crc32_str,
+    }
+
+    for name, func in rtk_configs.items():
+        value = func()
+        print(f"{name.ljust(20)}: {value}")
+
+
+def main(
+    pdc_fw_bin: str,
+    config_file: str,
+    output_file: str,
+) -> int:
+    """Display or update a Realtek PDC firmware file
+
+    Args:
+        pdc_fw_bin: Realtek PDC firmware binary input filename.
+        config_file: Optional - configuration binary input filename
+        output_file: Optional - output filename that contains pdc_fw_bin patched
+                    with config_file
+    """
+    fw = rtk_utils.RtkFwBinary(pdc_fw_bin)
+
+    # Print current values
+    print(f"Current config for '{pdc_fw_bin}':")
+    print_config(fw)
+    print()
+
+    if config_file is None:
+        return 0
+
+    with open(config_file, "rb") as fw_conf_file:
+        fw_conf = fw_conf_file.read()
+        fw_conf = bytearray(fw_conf)
+
+    # Patch new configuration into the firmware binary
+    fw.set_config(fw_conf)
+
+    # Patch in the new CRC
+    fw.set_file_crc32()
+
+    print(f"Modified config for `{output_file}`")
+    print_config(fw)
+
+    with open(output_file, "wb") as fw_pkg_file:
+        fw_pkg_file.write(fw.fw_bin)
+
+    return 0
+
+
+if __name__ == "__main__":
+    # need to handle script arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "pdc_fw_bin", type=str, help="Realtek PD firmware binary input"
+    )
+    parser.add_argument(
+        "--config_file",
+        type=str,
+        default=None,
+        help="Binary configuration file input",
+    )
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        default=None,
+        help="PD firmware binary output, required if using --config_file",
+    )
+
+    args = parser.parse_args()
+
+    if args.config_file and not args.output_file:
+        parser.error("--output_file is required when --config_file is used")
+
+    sys.exit(main(args.pdc_fw_bin, args.config_file, args.output_file))

@@ -44,6 +44,18 @@ class RtkFwBinary:
             self.get_range(RtkFwOffset.CRC_OFFSET, RtkFwOffset.CRC_LEN),
         )[0]
 
+    def set_file_crc32(self):
+        """Recalculate the CRC32 of the FW binary and update the stored value"""
+        crc32 = self.calc_crc32()
+        self.fw_bin[
+            RtkFwOffset.CRC_OFFSET : RtkFwOffset.CRC_OFFSET
+            + RtkFwOffset.CRC_LEN
+        ] = bytearray(crc32.to_bytes(4, "little"))
+
+    def get_file_crc32_str(self) -> str:
+        """Read the CRC32 embedded in the FW binary in string format"""
+        return hex(self.get_file_crc32())
+
     def calc_crc32(self) -> int:
         """Calculate the actual CRC32 of the FW binary"""
         return (
@@ -63,13 +75,22 @@ class RtkFwBinary:
         """Get the 'port used' setting, which controls single vs double port"""
         return RtkPortUsed(self.fw_bin[RtkFwOffset.PORT_USED])
 
+    def get_port_used_str(self) -> str:
+        """Get the 'port used' setting in human readable format."""
+        return self.get_port_used().name
+
     def get_fw_version(self) -> Tuple[int, int, int]:
-        """Get the version of the FW and config"""
+        """Get the version of the FW and config as tuple"""
         return (
             self.fw_bin[RtkFwOffset.FW_VERSION_MAJOR],
             self.fw_bin[RtkFwOffset.FW_VERSION_MINOR],
             self.fw_bin[RtkFwOffset.FW_VERSION_CONFIG],
         )
+
+    def get_fw_version_str(self) -> str:
+        """Get the version of the FW and config in string format"""
+        version = self.get_fw_version()
+        return f"{version[0]}.{version[1]}.{version[2]}"
 
     def get_project_name(self) -> str | None:
         """Get the project name string from config section"""
@@ -92,6 +113,11 @@ class RtkFwBinary:
             + self.get_range(RtkFwOffset.USB_PID, RtkFwOffset.USB_PID_LEN),
         )
 
+    def get_vid_pid_str(self) -> str:
+        """Get the USB vendor ID (VID) and product ID (PID) in string format"""
+        vid_pid = self.get_vid_pid()
+        return f"{vid_pid[0]:04X}:{vid_pid[1]:04X}"
+
     def get_range(self, start_offset: int, length: int) -> bytes:
         """Read a chunk of the FW binary"""
         if not (
@@ -103,3 +129,17 @@ class RtkFwBinary:
             )
 
         return self.fw_bin[start_offset : start_offset + length]
+
+    def set_config(self, config: bytearray):
+        """Overwrites the config region of a Realtek FW binary"""
+        if (
+            len(config)
+            != RtkFwOffset.CONFIG_RANGE_END - RtkFwOffset.CONFIG_RANGE_START
+        ):
+            raise ValueError(
+                f"Config length ({len(config)}) does not match expected size "
+                f"({RtkFwOffset.CONFIG_RANGE_SIZE})"
+            )
+        self.fw_bin[
+            RtkFwOffset.CONFIG_RANGE_START : RtkFwOffset.CONFIG_RANGE_END
+        ] = config

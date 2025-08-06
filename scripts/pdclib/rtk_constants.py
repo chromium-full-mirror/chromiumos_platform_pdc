@@ -10,6 +10,10 @@ import enum
 class RtkFwOffset(enum.IntEnum):
     """Offsets to extract certain fields from the RTK FW binary"""
 
+    # Full config section location
+    CONFIG_RANGE_START = 0x1F000
+    CONFIG_RANGE_END = CONFIG_RANGE_START + 0x1000
+
     # Config section parameters
     USB_VID = 0x1F89E
     USB_VID_LEN = 2
