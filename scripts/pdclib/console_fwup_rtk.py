@@ -194,11 +194,11 @@ def rtk_update(
     assert fw.verify_crc32(), "The CRC32 of the provided FW binary is incorrect"
 
     log.info(
-        "New FW: %d.%d.%d ('%s'), %04x:%04x, Port Config: %s",
-        *fw.get_fw_version(),
+        "New FW: %s ('%s'), %s, Port Config: %s",
+        fw.get_fw_version(),
         fw.get_project_name(),
-        *fw.get_vid_pid(),
-        repr(fw.get_port_used()),
+        fw.get_vid_pid(),
+        fw.get_port_used().name,
     )
 
     servo = RtkUpdaterServodClient(servod_host, servod_port)

@@ -28,6 +28,18 @@ class RtkFwOffset(enum.IntEnum):
     FW_VERSION_CONFIG = 0x1F802
 
     PORT_USED = 0x1F805
+    DEBUG_ACCY_GPIO_POLARITY = 0x1FC0C
+
+    PMC_I2C_ADDR_PORTA = 0x1F8AD  # Port 1
+    PMC_I2C_ADDR_PORTB = 0x1F8AC  # Port 0
+    RETIMER_I2C_ADDR_PORTA = 0x1F8BE  # Port 1
+    RETIMER_I2C_ADDR_PORTB = 0x1F8B9  # Port 0
+    BBR_I2C_ADDR_PORTA = 0x1F8AF  # Port 1
+    BBR_I2C_ADDR_PORTB = 0x1F8B4  # Port 0
+
+    I2C_VOLTAGE_SMBUS = 0x1F8A8
+    I2C_VOLTAGE_RETIMER = 0x1F8A9
+    I2C_VOLTAGE_PMC = 0x1F8AA
 
     # CRC32 signing
     CRC_OFFSET = 0x0001FFE6
@@ -47,3 +59,22 @@ class RtkPortUsed(enum.IntEnum):
     PORTB_ONLY = 0x00
     PORTA_ONLY = 0x01
     DUAL_PORT = 0x02
+
+
+class RtkDebugAccyGpioPolarity(enum.IntEnum):
+    """Debug accessory detect GPIO polarity
+
+    Indicates the polarity of the GPIO toggled in response to USB-C
+    debug accessory mode being entered. Used to control CCD entry.
+    """
+
+    ACTIVE_LOW = 0x00
+    ACTIVE_HIGH = 0x01
+    DISABLED = 0xFF
+
+
+class RtkI2cBusVoltage(enum.IntEnum):
+    """Voltage level used on the PDC I2C interfaces (SMBus/EC, PMC, Retimer)"""
+
+    LEVEL_1V8 = 0
+    LEVEL_3V3 = 1

@@ -5,17 +5,33 @@
 """Utilities for working with Realtek FW binaries"""
 
 import binascii
+import dataclasses
 from pathlib import Path
 import struct
 from typing import Tuple
 
 # pylint: disable=import-modules-only
+from pdclib.common import UsbVidPid
+from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkFwOffset
+from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortUsed
 
 
 class RtkFileSizeError(Exception):
     """Thrown if a FW binary has an unexpected size"""
+
+
+@dataclasses.dataclass
+class RtkFwVersion:
+    """Store a RTK PDC FW version (major.minor.config)"""
+
+    major: int
+    minor: int
+    config: int
+
+    def __str__(self):
+        return f"{self.major}.{self.minor}.{self.config}"
 
 
 class RtkFwBinary:
@@ -52,10 +68,6 @@ class RtkFwBinary:
             + RtkFwOffset.CRC_LEN
         ] = bytearray(crc32.to_bytes(4, "little"))
 
-    def get_file_crc32_str(self) -> str:
-        """Read the CRC32 embedded in the FW binary in string format"""
-        return hex(self.get_file_crc32())
-
     def calc_crc32(self) -> int:
         """Calculate the actual CRC32 of the FW binary"""
         return (
@@ -75,22 +87,13 @@ class RtkFwBinary:
         """Get the 'port used' setting, which controls single vs double port"""
         return RtkPortUsed(self.fw_bin[RtkFwOffset.PORT_USED])
 
-    def get_port_used_str(self) -> str:
-        """Get the 'port used' setting in human readable format."""
-        return self.get_port_used().name
-
     def get_fw_version(self) -> Tuple[int, int, int]:
         """Get the version of the FW and config as tuple"""
-        return (
+        return RtkFwVersion(
             self.fw_bin[RtkFwOffset.FW_VERSION_MAJOR],
             self.fw_bin[RtkFwOffset.FW_VERSION_MINOR],
             self.fw_bin[RtkFwOffset.FW_VERSION_CONFIG],
         )
-
-    def get_fw_version_str(self) -> str:
-        """Get the version of the FW and config in string format"""
-        version = self.get_fw_version()
-        return f"{version[0]}.{version[1]}.{version[2]}"
 
     def get_project_name(self) -> str | None:
         """Get the project name string from config section"""
@@ -107,16 +110,70 @@ class RtkFwBinary:
 
     def get_vid_pid(self) -> Tuple[int, int]:
         """Get the USB vendor ID (VID) and product ID (PID)"""
-        return struct.unpack(
-            "<HH",
-            self.get_range(RtkFwOffset.USB_VID, RtkFwOffset.USB_VID_LEN)
-            + self.get_range(RtkFwOffset.USB_PID, RtkFwOffset.USB_PID_LEN),
+        return UsbVidPid(
+            *struct.unpack(
+                "<HH",
+                self.get_range(RtkFwOffset.USB_VID, RtkFwOffset.USB_VID_LEN)
+                + self.get_range(RtkFwOffset.USB_PID, RtkFwOffset.USB_PID_LEN),
+            )
         )
 
-    def get_vid_pid_str(self) -> str:
-        """Get the USB vendor ID (VID) and product ID (PID) in string format"""
-        vid_pid = self.get_vid_pid()
-        return f"{vid_pid[0]:04X}:{vid_pid[1]:04X}"
+    def get_debug_accy_gpio_polarity(self) -> RtkDebugAccyGpioPolarity:
+        """Read the polarity of the debug accessory GPIO"""
+        return RtkDebugAccyGpioPolarity(
+            self.fw_bin[RtkFwOffset.DEBUG_ACCY_GPIO_POLARITY]
+        )
+
+    def get_pmc_i2c_addrs(self) -> Tuple[int, int]:
+        """Read the base PMC I2C address
+
+        Note: the addresses are returned as a tuple (Port A, Port B) in
+        7-bit format.
+        """
+
+        return (
+            self.fw_bin[RtkFwOffset.PMC_I2C_ADDR_PORTA] >> 1,
+            self.fw_bin[RtkFwOffset.PMC_I2C_ADDR_PORTB] >> 1,
+        )
+
+    def get_retimer_i2c_addrs(self) -> Tuple[int, int]:
+        """Read the I2C addresses of the retimer(s)
+
+        Note: the addresses are returned as a tuple (Port A, Port B) in
+        7-bit format.
+        """
+
+        return (
+            self.fw_bin[RtkFwOffset.RETIMER_I2C_ADDR_PORTA] >> 1,
+            self.fw_bin[RtkFwOffset.RETIMER_I2C_ADDR_PORTB] >> 1,
+        )
+
+    def get_bbr_i2c_addrs(self) -> Tuple[int, int]:
+        """Read the I2C addresses of Burnside Bridge (BBR) retimers
+
+        Note: the addresses are returned as a tuple (Port A, Port B) in
+        7-bit format.
+        """
+
+        return (
+            self.fw_bin[RtkFwOffset.BBR_I2C_ADDR_PORTA] >> 1,
+            self.fw_bin[RtkFwOffset.BBR_I2C_ADDR_PORTB] >> 1,
+        )
+
+    def get_i2c_voltage_smbus(self) -> RtkI2cBusVoltage:
+        """Read the voltage level of the SMBus/EC I2C interface"""
+
+        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_SMBUS])
+
+    def get_i2c_voltage_retimer(self) -> RtkI2cBusVoltage:
+        """Read the voltage level of the retimer I2C interface"""
+
+        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_RETIMER])
+
+    def get_i2c_voltage_pmc(self) -> RtkI2cBusVoltage:
+        """Read the voltage level of the PMC I2C interface"""
+
+        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_PMC])
 
     def get_range(self, start_offset: int, length: int) -> bytes:
         """Read a chunk of the FW binary"""

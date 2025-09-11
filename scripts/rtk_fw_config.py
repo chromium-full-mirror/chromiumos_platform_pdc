@@ -10,27 +10,37 @@ apply a new 4 KiB configuration block to a Realtek PDC FW binary.
 
 import argparse
 import sys
+from typing import Iterable
 
 from pdclib import rtk_utils
 
 
-def print_config(fw):
+def print_config(fw: rtk_utils.RtkFwBinary):
     """Parse a firmware binary, printing out key configuration values
 
     Args:
         fw: RtkFwBinary class containing the full Realtek firmware binary
     """
 
+    def format_i2c_addrs(addrs: Iterable[int]) -> str:
+        return ", ".join({hex(i) for i in addrs})
+
     rtk_configs = {
-        "Project name": fw.get_project_name,
-        "Version": fw.get_fw_version_str,
-        "USB VID:PID": fw.get_vid_pid_str,
-        "Port config": fw.get_port_used_str,
-        "CRC32": fw.get_file_crc32_str,
+        "Project name": fw.get_project_name(),
+        "Version": fw.get_fw_version(),
+        "USB VID:PID": fw.get_vid_pid(),
+        "Port config": fw.get_port_used().name,
+        "Debug Accy GPIO": fw.get_debug_accy_gpio_polarity().name,
+        "PMC I2C Base addrs": format_i2c_addrs(fw.get_pmc_i2c_addrs()),
+        "Retimer I2C addrs": format_i2c_addrs(fw.get_retimer_i2c_addrs()),
+        "BBR I2C addrs": format_i2c_addrs(fw.get_bbr_i2c_addrs()),
+        "SMBus I2C voltage": fw.get_i2c_voltage_smbus().name,
+        "Retimer I2C voltage": fw.get_i2c_voltage_retimer().name,
+        "PMC I2C voltage": fw.get_i2c_voltage_pmc().name,
+        "CRC32": hex(fw.get_file_crc32()),
     }
 
-    for name, func in rtk_configs.items():
-        value = func()
+    for name, value in rtk_configs.items():
         print(f"{name.ljust(20)}: {value}")
 
 
