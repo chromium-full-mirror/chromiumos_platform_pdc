@@ -82,6 +82,7 @@ def main(
     pdc_fw_bin: Path,
     config_file: Path,
     output_file: Path,
+    output_config_file: Path,
 ) -> int:
     """Display or update a Realtek PDC firmware file
 
@@ -90,6 +91,8 @@ def main(
         config_file: Optional - configuration binary input filename
         output_file: Optional - output filename that contains pdc_fw_bin patched
                     with config_file
+        output_config_file: Optional - if present, the configuration from the
+                    input firmware binary is extracted and written to this file.
     """
     fw = rtk_utils.RtkFwBinary(pdc_fw_bin)
 
@@ -97,6 +100,13 @@ def main(
     print(f"Current config for '{pdc_fw_bin}':")
     print_config(fw)
     print()
+
+    if output_config_file is not None:
+        config = fw.get_config()
+        print(f"Saving config to `{output_config_file}'")
+        with open(output_config_file, "wb") as cfg_file:
+            cfg_file.write(config)
+        return 0
 
     if config_file is None:
         return 0
@@ -137,10 +147,26 @@ if __name__ == "__main__":
         default=None,
         help="PD firmware binary output, required if using --config_file",
     )
+    parser.add_argument(
+        "--output_config_file",
+        type=str,
+        default=None,
+        help=(
+            "Extract the configuration from the input file. "
+            "If present --config_file option ignored"
+        ),
+    )
 
     args = parser.parse_args()
 
     if args.config_file and not args.output_file:
         parser.error("--output_file is required when --config_file is used")
 
-    sys.exit(main(args.pdc_fw_bin, args.config_file, args.output_file))
+    sys.exit(
+        main(
+            args.pdc_fw_bin,
+            args.config_file,
+            args.output_file,
+            args.output_config_file,
+        )
+    )

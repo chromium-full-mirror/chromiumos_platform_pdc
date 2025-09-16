@@ -264,6 +264,12 @@ class RtkFwBinary:
             self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] = config_chip_id_l
             self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] = config_chip_id_h
 
+    def get_config(self) -> bytes:
+        """Read full config from the FW binary"""
+        return self.get_range(
+            RtkFwOffset.CONFIG_RANGE_START, RtkFwOffset.CONFIG_RANGE_LENGTH
+        )
+
     def export_fw_binary(self, path: Path):
         """Save the full firmware binary to a file"""
 
