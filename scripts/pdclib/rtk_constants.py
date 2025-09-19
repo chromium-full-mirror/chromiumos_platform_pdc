@@ -41,6 +41,20 @@ class RtkFwOffset(enum.IntEnum):
     I2C_VOLTAGE_RETIMER = 0x1F8A9
     I2C_VOLTAGE_PMC = 0x1F8AA
 
+    PDO_MAX_COUNT = 7
+
+    # Sink PDOs
+    SNK_PDO_COUNT_PORTA = 0x1F84E  # Port 1
+    SNK_PDO_COUNT_PORTB = 0x1F84D  # Port 0
+    SNK_PDO_OFFSET_PDO1_PORTA = 0x1F86B  # Port 1 - start of 7*32-bit PDOs
+    SNK_PDO_OFFSET_PDO1_PORTB = 0x1F84F  # POrt 0 - start of 7*32-bit PDOs
+
+    # Src PDOs
+    SRC_PDO_COUNT_PORTA = 0x1F811  # Port 1
+    SRC_PDO_COUNT_PORTB = 0x1F810  # Port 0
+    SRC_PDO_OFFSET_PDO1_PORTA = 0x1F82E  # Port 1 - start of 7*32-bit PDOs
+    SRC_PDO_OFFSET_PDO1_PORTB = 0x1F812  # POrt 0 - start of 7*32-bit PDOs
+
     # CRC32 signing
     CRC_OFFSET = 0x0001FFE6
     CRC_LEN = 4

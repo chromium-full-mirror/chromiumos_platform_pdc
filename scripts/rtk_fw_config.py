@@ -12,6 +12,7 @@ import argparse
 import sys
 from typing import Iterable
 
+from pdclib import pdo
 from pdclib import rtk_utils
 
 
@@ -23,7 +24,7 @@ def print_config(fw: rtk_utils.RtkFwBinary):
     """
 
     def format_i2c_addrs(addrs: Iterable[int]) -> str:
-        return ", ".join({hex(i) for i in addrs})
+        return ", ".join([hex(i) for i in addrs])
 
     rtk_configs = {
         "Project name": fw.get_project_name(),
@@ -42,6 +43,24 @@ def print_config(fw: rtk_utils.RtkFwBinary):
 
     for name, value in rtk_configs.items():
         print(f"{name.ljust(20)}: {value}")
+
+    print()
+    print("Sink PDOs Port A:")
+    for p in fw.get_pdos(pdo.PDORole.SINK, "A"):
+        print(p)
+
+    print("Sink PDOs Port B:")
+    for p in fw.get_pdos(pdo.PDORole.SINK, "B"):
+        print(p)
+
+    print()
+    print("Source PDOs Port A:")
+    for p in fw.get_pdos(pdo.PDORole.SOURCE, "A"):
+        print(p)
+
+    print("Source PDOs Port B:")
+    for p in fw.get_pdos(pdo.PDORole.SOURCE, "B"):
+        print(p)
 
 
 def main(

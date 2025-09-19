@@ -8,10 +8,12 @@ import binascii
 import dataclasses
 from pathlib import Path
 import struct
-from typing import Tuple
+from typing import List, Tuple
 
 # pylint: disable=import-modules-only
 from pdclib.common import UsbVidPid
+from pdclib.pdo import PDO
+from pdclib.pdo import PDORole
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkFwOffset
 from pdclib.rtk_constants import RtkI2cBusVoltage
@@ -174,6 +176,34 @@ class RtkFwBinary:
         """Read the voltage level of the PMC I2C interface"""
 
         return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_PMC])
+
+    def get_pdos(self, role: PDORole, port: str) -> List[PDO]:
+        """Get the source or sink PDOs stored in the config"""
+
+        if port == "A" and role == PDORole.SINK:
+            count_offset = RtkFwOffset.SNK_PDO_COUNT_PORTA
+            start_offset = RtkFwOffset.SNK_PDO_OFFSET_PDO1_PORTA
+        elif port == "B" and role == PDORole.SINK:
+            count_offset = RtkFwOffset.SNK_PDO_COUNT_PORTB
+            start_offset = RtkFwOffset.SNK_PDO_OFFSET_PDO1_PORTB
+        elif port == "A" and role == PDORole.SOURCE:
+            count_offset = RtkFwOffset.SRC_PDO_COUNT_PORTA
+            start_offset = RtkFwOffset.SRC_PDO_OFFSET_PDO1_PORTA
+        elif port == "B" and role == PDORole.SOURCE:
+            count_offset = RtkFwOffset.SRC_PDO_COUNT_PORTB
+            start_offset = RtkFwOffset.SRC_PDO_OFFSET_PDO1_PORTB
+        else:
+            raise ValueError(
+                "port must be 'A' or 'B' and 'role' must be "
+                "PDORole.SINK or PDORole.SOURCE"
+            )
+
+        count = min(RtkFwOffset.PDO_MAX_COUNT, self.fw_bin[count_offset])
+
+        return [
+            PDO.parse_pdo(struct.unpack("<I", self.get_range(i, 4))[0])
+            for i in range(start_offset, start_offset + 4 * count, 4)
+        ]
 
     def get_range(self, start_offset: int, length: int) -> bytes:
         """Read a chunk of the FW binary"""
