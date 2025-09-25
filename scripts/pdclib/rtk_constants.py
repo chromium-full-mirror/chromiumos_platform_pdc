@@ -11,8 +11,9 @@ class RtkFwOffset(enum.IntEnum):
     """Offsets to extract certain fields from the RTK FW binary"""
 
     # Full config section location
-    CONFIG_RANGE_START = 0x1F000
-    CONFIG_RANGE_END = CONFIG_RANGE_START + 0x1000
+    CONFIG_RANGE_START = 0x1F800
+    CONFIG_RANGE_END = 0x1FC60
+    CONFIG_RANGE_LENGTH = CONFIG_RANGE_END - CONFIG_RANGE_START
 
     # Config section parameters
     USB_VID = 0x1F89E
@@ -26,6 +27,14 @@ class RtkFwOffset(enum.IntEnum):
     FW_VERSION_MAJOR = 0x7EF9
     FW_VERSION_MINOR = 0x7EFA
     FW_VERSION_CONFIG = 0x1F802
+
+    # Redundant version info stored in the config area. Read
+    # FW_VERSION_MAJOR, FW_VERSION_MINOR instead.
+    FW_CONFIG_VERSION_MAJOR = 0x1F800
+    FW_CONFIG_VERSION_MINOR = 0x1F801
+
+    FW_CONFIG_CHIP_ID_L = 0x1F803
+    FW_CONFIG_CHIP_ID_H = 0x1F804
 
     PORT_USED = 0x1F805
     DEBUG_ACCY_GPIO_POLARITY = 0x1FC0C

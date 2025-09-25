@@ -9,6 +9,7 @@ apply a new 4 KiB configuration block to a Realtek PDC FW binary.
 """
 
 import argparse
+from pathlib import Path
 import sys
 from typing import Iterable
 
@@ -64,9 +65,9 @@ def print_config(fw: rtk_utils.RtkFwBinary):
 
 
 def main(
-    pdc_fw_bin: str,
-    config_file: str,
-    output_file: str,
+    pdc_fw_bin: Path,
+    config_file: Path,
+    output_file: Path,
 ) -> int:
     """Display or update a Realtek PDC firmware file
 
@@ -99,8 +100,7 @@ def main(
     print(f"Modified config for `{output_file}`")
     print_config(fw)
 
-    with open(output_file, "wb") as fw_pkg_file:
-        fw_pkg_file.write(fw.fw_bin)
+    fw.export_fw_binary(output_file)
 
     return 0
 
@@ -109,17 +109,17 @@ if __name__ == "__main__":
     # need to handle script arguments
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "pdc_fw_bin", type=str, help="Realtek PD firmware binary input"
+        "pdc_fw_bin", type=Path, help="Realtek PD firmware binary input"
     )
     parser.add_argument(
         "--config_file",
-        type=str,
+        type=Path,
         default=None,
         help="Binary configuration file input",
     )
     parser.add_argument(
         "--output_file",
-        type=str,
+        type=Path,
         default=None,
         help="PD firmware binary output, required if using --config_file",
     )

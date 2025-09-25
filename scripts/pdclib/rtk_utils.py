@@ -217,16 +217,41 @@ class RtkFwBinary:
 
         return self.fw_bin[start_offset : start_offset + length]
 
-    def set_config(self, config: bytearray):
-        """Overwrites the config region of a Realtek FW binary"""
-        if (
-            len(config)
-            != RtkFwOffset.CONFIG_RANGE_END - RtkFwOffset.CONFIG_RANGE_START
-        ):
+    def set_config(self, config: bytearray, preserve_version=True):
+        """Overwrites the config region of a Realtek FW binary
+
+        :param: preserve_version - If true, do not overwrite the major, minor,
+                config version fields and the two chip ID bytes.
+        """
+        if len(config) != RtkFwOffset.CONFIG_RANGE_LENGTH:
             raise ValueError(
                 f"Config length ({len(config)}) does not match expected size "
-                f"({RtkFwOffset.CONFIG_RANGE_SIZE})"
+                f"({RtkFwOffset.CONFIG_RANGE_LENGTH})"
             )
+
+        config_ver_major = self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MAJOR]
+        config_ver_minor = self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MINOR]
+        config_chip_id_l = self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L]
+        config_chip_id_h = self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H]
+
         self.fw_bin[
             RtkFwOffset.CONFIG_RANGE_START : RtkFwOffset.CONFIG_RANGE_END
         ] = config
+
+        if preserve_version:
+            # Restore some fields to their original values
+            self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MAJOR] = config_ver_major
+            self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MINOR] = config_ver_minor
+            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] = config_chip_id_l
+            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] = config_chip_id_h
+
+    def export_fw_binary(self, path: Path):
+        """Save the full firmware binary to a file"""
+
+        if self.get_size() != RtkFwOffset.TOTAL_SIZE:
+            raise RtkFileSizeError(
+                f"Expected {RtkFwOffset.TOTAL_SIZE} "
+                f"bytes, got {self.get_size()} bytes"
+            )
+
+        path.write_bytes(self.fw_bin)
