@@ -27,6 +27,14 @@ def print_config(fw: rtk_utils.RtkFwBinary):
     def format_i2c_addrs(addrs: Iterable[int]) -> str:
         return ", ".join([hex(i) for i in addrs])
 
+    def format_svid(svid: int) -> str:
+        COMMON_SVIDS = {
+            0xFF01: "DP (ff01)",
+            0x8087: "TBT (8087)",
+        }
+
+        return COMMON_SVIDS.get(svid, hex(svid))
+
     rtk_configs = {
         "Project name": fw.get_project_name(),
         "Version": fw.get_fw_version(),
@@ -39,6 +47,12 @@ def print_config(fw: rtk_utils.RtkFwBinary):
         "SMBus I2C voltage": fw.get_i2c_voltage_smbus().name,
         "Retimer I2C voltage": fw.get_i2c_voltage_retimer().name,
         "PMC I2C voltage": fw.get_i2c_voltage_pmc().name,
+        "SVIDs Port A": ", ".join(
+            (format_svid(svid) for svid in fw.get_svids("A"))
+        ),
+        "SVIDs Port B": ", ".join(
+            (format_svid(svid) for svid in fw.get_svids("B"))
+        ),
         "CRC32": hex(fw.get_file_crc32()),
     }
 

@@ -205,6 +205,25 @@ class RtkFwBinary:
             for i in range(start_offset, start_offset + 4 * count, 4)
         ]
 
+    def get_svids(self, port: str) -> List[int]:
+        """Get the SVIDs stored in the config, by port"""
+
+        if port == "A":
+            count_offset = RtkFwOffset.SVID_COUNT_PORTA
+            start_offset = RtkFwOffset.SVID_OFFSET_PORTA
+        elif port == "B":
+            count_offset = RtkFwOffset.SVID_COUNT_PORTB
+            start_offset = RtkFwOffset.SVID_OFFSET_PORTB
+        else:
+            raise ValueError("port must be 'A' or 'B'")
+
+        count = min(RtkFwOffset.SVID_MAX_COUNT, self.fw_bin[count_offset])
+
+        return [
+            struct.unpack("<H", self.get_range(i, 2))[0]
+            for i in range(start_offset, start_offset + 2 * count, 2)
+        ]
+
     def get_range(self, start_offset: int, length: int) -> bytes:
         """Read a chunk of the FW binary"""
         if not (

@@ -50,6 +50,13 @@ class RtkFwOffset(enum.IntEnum):
     I2C_VOLTAGE_RETIMER = 0x1F8A9
     I2C_VOLTAGE_PMC = 0x1F8AA
 
+    # SVIDs
+    SVID_MAX_COUNT = 4
+    SVID_COUNT_PORTA = 0x1F88D  # Port 1
+    SVID_COUNT_PORTB = 0x1F88C  # Port 0
+    SVID_OFFSET_PORTA = 0x1F896  # Port 1
+    SVID_OFFSET_PORTB = 0x1F88E  # Port 0
+
     PDO_MAX_COUNT = 7
 
     # Sink PDOs
