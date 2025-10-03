@@ -38,12 +38,19 @@ class PDOConstants(enum.IntEnum):
     PDO_FIXED_VOLT_OFFSET = 10
     PDO_FIXED_VOLT_MASK = 0x3FF << PDO_FIXED_VOLT_OFFSET
 
+    # Source PDO only - bits 20:21, bit 22 reserved, 23, 24
+    # USB-PD R3.2 V1.0 Table 6.17
     PDO_FIXED_PEAK_CURRENT_OFFSET = 20
     PDO_FIXED_PEAK_CURRENT_MASK = 0x03 << PDO_FIXED_PEAK_CURRENT_OFFSET
+    PDO_FIXED_EPR_CAPABLE = 1 << 23
+    PDO_FIXED_UNCHUNKED_EXT_MSG_CAPABLE = 1 << 24
 
+    # Sink PDO only - 24:23 FRS current, bits 22:20 reserved
+    # USB-PD R3.2 V1.0 Table 6.17
     PDO_FIXED_FRS_CURRENT_OFFSET = 23
     PDO_FIXED_FRS_CURRENT_MASK = 0x3 << PDO_FIXED_FRS_CURRENT_OFFSET
 
+    # Common to source and sink PDOs
     PDO_FIXED_DUAL_ROLE_DATA = 1 << 25
     PDO_FIXED_COMM_CAPABLE = 1 << 26
     PDO_FIXED_UNCONSTRAINED_POWER = 1 << 27
@@ -96,10 +103,10 @@ class PDOType(enum.IntEnum):
 class PDOFixedFRSCurrent(enum.IntEnum):
     """FRS current field in a fixed PDO"""
 
-    NOT_SUPPORTED = 0
-    DEFAULT_USB_POWER = 1
-    V5_1A5 = 2
-    V5_3A0 = 3
+    FRS_NOT_SUPPORTED = 0
+    FRS_DEFAULT_USB_POWER = 1
+    FRS_V5_1A5 = 2
+    FRS_V5_3A0 = 3
 
     @staticmethod
     def get_frs_current_from_pdo(pdo: int) -> "PDOFixedFRSCurrent":
@@ -130,11 +137,12 @@ class PDOFixedPeakCurrent(enum.IntEnum):
 class PDO:
     """Base class for a PDO object"""
 
-    def __init__(self, pdo: int):
+    def __init__(self, pdo: int, role: PDORole):
         self.pdo = pdo
+        self.role = role
 
     @staticmethod
-    def parse_pdo(pdo: int) -> "PDO":
+    def parse_pdo(pdo: int, role: PDORole) -> "PDO":
         """Parse a PDO
 
         Given a 32-bit Power Delivery Object, parse it and return the
@@ -147,7 +155,7 @@ class PDO:
             PDOType.BAT: PDOBattery,
             PDOType.VAR: PDOVariable,
             PDOType.AUG: PDOAugmented,
-        }[pdo_type](pdo)
+        }[pdo_type](pdo, role)
 
     @property
     def pdo_type(self) -> PDOType:
@@ -174,7 +182,21 @@ class PDOFixed(PDO):
 
     @property
     def peak_current(self) -> PDOFixedPeakCurrent:
+        if self.role != PDORole.SOURCE:
+            raise ValueError("Peak overcurrent only defined in source PDOs")
         return PDOFixedPeakCurrent.get_peak_current_from_pdo(self.pdo)
+
+    @property
+    def epr_supported(self) -> bool:
+        if self.role != PDORole.SOURCE:
+            raise ValueError("EPR bit only defined in source PDOs")
+        return bool(self.pdo & PDOConstants.PDO_FIXED_EPR_CAPABLE)
+
+    @property
+    def unchunked_ext_msg_supported(self) -> bool:
+        if self.role != PDORole.SOURCE:
+            raise ValueError("Unchunked bit only defined in source PDOs")
+        return bool(self.pdo & PDOConstants.PDO_FIXED_UNCHUNKED_EXT_MSG_CAPABLE)
 
     @property
     def comm_capable(self) -> bool:
@@ -190,6 +212,8 @@ class PDOFixed(PDO):
 
     @property
     def frs_current(self) -> PDOFixedFRSCurrent:
+        if self.role != PDORole.SINK:
+            raise ValueError("FRS current only defined in sink PDOs")
         return PDOFixedFRSCurrent.get_frs_current_from_pdo(self.pdo)
 
     @property
@@ -206,7 +230,7 @@ class PDOFixed(PDO):
         return self.millivolts * self.milliamps / 1e6
 
     def __str__(self):
-        return (
+        output = (
             f"{self.pdo:08x}: {self.pdo_type.name} | "
             f"{self.millivolts:5}mV {self.milliamps:5}mA "
             f"{round(self.watts, 2):7}W | "
@@ -214,8 +238,20 @@ class PDOFixed(PDO):
             f"{'DRD' if self.dualrole_data else '   '} "
             f"{'USB' if self.comm_capable else '   '} "
             f"{'UP ' if self.unconstrained_power else '   '} "
-            f"{'SUS' if self.suspend_capable else '   '} "
+            f"{'SUS' if self.suspend_capable else '   '} | "
         )
+
+        if self.role == PDORole.SOURCE:
+            output += (
+                f"{'EPR' if self.epr_supported else '   '} "
+                f"{'UCHNK' if self.unchunked_ext_msg_supported else '     '} "
+                f"{self.peak_current.name} "
+            )
+
+        if self.role == PDORole.SINK:
+            output += f"{self.frs_current.name} "
+
+        return output
 
 
 class PDOBattery(PDO):

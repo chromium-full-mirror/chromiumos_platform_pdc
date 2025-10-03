@@ -201,7 +201,7 @@ class RtkFwBinary:
         count = min(RtkFwOffset.PDO_MAX_COUNT, self.fw_bin[count_offset])
 
         return [
-            PDO.parse_pdo(struct.unpack("<I", self.get_range(i, 4))[0])
+            PDO.parse_pdo(struct.unpack("<I", self.get_range(i, 4))[0], role)
             for i in range(start_offset, start_offset + 4 * count, 4)
         ]
 
