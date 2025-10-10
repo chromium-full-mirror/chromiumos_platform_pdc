@@ -83,3 +83,9 @@ def test_rtkfwbinary_check_config():
 
     assert fw.get_pmc_i2c_addrs() == (0x68, 0x68)
     assert fw.get_bbr_i2c_addrs() == (0x56, 0x40)
+
+    assert fw.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
+    assert (
+        fw.get_base_firmware_hash()
+        == "d209ee514901933893977dd6891eb892643db316"
+    )

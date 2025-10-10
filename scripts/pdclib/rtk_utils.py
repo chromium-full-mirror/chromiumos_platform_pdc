@@ -6,6 +6,7 @@
 
 import binascii
 import dataclasses
+import hashlib
 from pathlib import Path
 import struct
 from typing import Iterable, List, Tuple
@@ -258,6 +259,16 @@ class RtkFwBinary:
 
         return self.fw_bin[start_offset : start_offset + length]
 
+    def get_base_firmware_hash(self) -> str:
+        """Return the SHA1 of the base firmware region"""
+        return hashlib.sha1(
+            self.fw_bin[0 : RtkFwOffset.CONFIG_RANGE_START]
+        ).hexdigest()
+
+    def get_config_hash(self) -> str:
+        """Return the SHA1 of the config region"""
+        return hashlib.sha1(self.get_config()).hexdigest()
+
     def set_config(self, config: bytearray, preserve_version=True):
         """Overwrites the config region of a Realtek FW binary
 
@@ -343,6 +354,8 @@ def print_config(fw: RtkFwBinary, output_func=print):
             (format_svid(svid) for svid in fw.get_svids("B"))
         ),
         "CRC32": hex(fw.get_file_crc32()),
+        "Base FW SHA1": fw.get_base_firmware_hash(),
+        "Config SHA1": fw.get_config_hash(),
     }
 
     for name, value in rtk_configs.items():
