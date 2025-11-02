@@ -103,8 +103,30 @@ class RtkDebugAccyGpioPolarity(enum.IntEnum):
     DISABLED = 0xFF
 
 
+class RtkChipType(enum.IntEnum):
+    """Realtek PDC chip type"""
+
+    UNKNOWN = 0
+    RTS545X = 1
+    RTS545X_VB = 2
+
+
 class RtkI2cBusVoltage(enum.IntEnum):
     """Voltage level used on the PDC I2C interfaces (SMBus/EC, PMC, Retimer)"""
 
     LEVEL_1V8 = 0
     LEVEL_3V3 = 1
+
+    @classmethod
+    def parse_from_config(cls, value: int, chip_type: RtkChipType):
+        if chip_type == RtkChipType.RTS545X:
+            return {
+                0: cls.LEVEL_1V8,
+                1: cls.LEVEL_3V3,
+            }[value]
+        elif chip_type == RtkChipType.RTS545X_VB:
+            return {
+                0: cls.LEVEL_3V3,
+                1: cls.LEVEL_1V8,
+            }[value]
+        raise ValueError("Unknown chip type")

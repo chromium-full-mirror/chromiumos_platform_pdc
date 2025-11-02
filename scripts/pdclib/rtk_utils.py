@@ -14,6 +14,7 @@ from typing import Iterable, List, Tuple
 from pdclib.common import UsbVidPid
 from pdclib.pdo import PDO
 from pdclib.pdo import PDORole
+from pdclib.rtk_constants import RtkChipType
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkFwOffset
 from pdclib.rtk_constants import RtkI2cBusVoltage
@@ -162,20 +163,41 @@ class RtkFwBinary:
             self.fw_bin[RtkFwOffset.BBR_I2C_ADDR_PORTB] >> 1,
         )
 
+    def get_chip_type(self) -> RtkChipType:
+        """return if the chip is rts545x-vb."""
+
+        if (
+            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] == 0x39
+            and self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] == 0x69
+        ):
+            return RtkChipType.RTS545X
+        if (
+            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] == 0x07
+            and self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] == 0x70
+        ):
+            return RtkChipType.RTS545X_VB
+        return RtkChipType.UNKNOWN
+
     def get_i2c_voltage_smbus(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the SMBus/EC I2C interface"""
 
-        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_SMBUS])
+        return RtkI2cBusVoltage.parse_from_config(
+            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_SMBUS], self.get_chip_type()
+        )
 
     def get_i2c_voltage_retimer(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the retimer I2C interface"""
 
-        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_RETIMER])
+        return RtkI2cBusVoltage.parse_from_config(
+            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_RETIMER], self.get_chip_type()
+        )
 
     def get_i2c_voltage_pmc(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the PMC I2C interface"""
 
-        return RtkI2cBusVoltage(self.fw_bin[RtkFwOffset.I2C_VOLTAGE_PMC])
+        return RtkI2cBusVoltage.parse_from_config(
+            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_PMC], self.get_chip_type()
+        )
 
     def get_pdos(self, role: PDORole, port: str) -> List[PDO]:
         """Get the source or sink PDOs stored in the config"""
