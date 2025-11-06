@@ -12,71 +12,8 @@ apply a new 4 KiB configuration block to a Realtek PDC FW binary.
 import argparse
 from pathlib import Path
 import sys
-from typing import Iterable
 
-from pdclib import pdo
 from pdclib import rtk_utils
-
-
-def print_config(fw: rtk_utils.RtkFwBinary):
-    """Parse a firmware binary, printing out key configuration values
-
-    Args:
-        fw: RtkFwBinary class containing the full Realtek firmware binary
-    """
-
-    def format_i2c_addrs(addrs: Iterable[int]) -> str:
-        return ", ".join([hex(i) for i in addrs])
-
-    def format_svid(svid: int) -> str:
-        COMMON_SVIDS = {
-            0xFF01: "DP (ff01)",
-            0x8087: "TBT (8087)",
-        }
-
-        return COMMON_SVIDS.get(svid, hex(svid))
-
-    rtk_configs = {
-        "Project name": fw.get_project_name(),
-        "Version": fw.get_fw_version(),
-        "USB VID:PID": fw.get_vid_pid(),
-        "Port config": fw.get_port_used().name,
-        "Debug Accy GPIO": fw.get_debug_accy_gpio_polarity().name,
-        "PMC I2C Base addrs": format_i2c_addrs(fw.get_pmc_i2c_addrs()),
-        "Retimer I2C addrs": format_i2c_addrs(fw.get_retimer_i2c_addrs()),
-        "BBR I2C addrs": format_i2c_addrs(fw.get_bbr_i2c_addrs()),
-        "SMBus I2C voltage": fw.get_i2c_voltage_smbus().name,
-        "Retimer I2C voltage": fw.get_i2c_voltage_retimer().name,
-        "PMC I2C voltage": fw.get_i2c_voltage_pmc().name,
-        "SVIDs Port A": ", ".join(
-            (format_svid(svid) for svid in fw.get_svids("A"))
-        ),
-        "SVIDs Port B": ", ".join(
-            (format_svid(svid) for svid in fw.get_svids("B"))
-        ),
-        "CRC32": hex(fw.get_file_crc32()),
-    }
-
-    for name, value in rtk_configs.items():
-        print(f"{name.ljust(20)}: {value}")
-
-    print()
-    print("Sink PDOs Port A:")
-    for p in fw.get_pdos(pdo.PDORole.SINK, "A"):
-        print(p)
-
-    print("Sink PDOs Port B:")
-    for p in fw.get_pdos(pdo.PDORole.SINK, "B"):
-        print(p)
-
-    print()
-    print("Source PDOs Port A:")
-    for p in fw.get_pdos(pdo.PDORole.SOURCE, "A"):
-        print(p)
-
-    print("Source PDOs Port B:")
-    for p in fw.get_pdos(pdo.PDORole.SOURCE, "B"):
-        print(p)
 
 
 def main(
@@ -99,7 +36,7 @@ def main(
 
     # Print current values
     print(f"Current config for '{pdc_fw_bin}':")
-    print_config(fw)
+    rtk_utils.print_config(fw)
     print()
 
     if output_config_file is not None:
@@ -123,7 +60,7 @@ def main(
     fw.set_file_crc32()
 
     print(f"Modified config for `{output_file}`")
-    print_config(fw)
+    rtk_utils.print_config(fw)
 
     fw.export_fw_binary(output_file)
 

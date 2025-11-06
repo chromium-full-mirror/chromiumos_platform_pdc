@@ -8,7 +8,7 @@ import binascii
 import dataclasses
 from pathlib import Path
 import struct
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
 
 # pylint: disable=import-modules-only
 from pdclib.common import UsbVidPid
@@ -280,3 +280,64 @@ class RtkFwBinary:
             )
 
         path.write_bytes(self.fw_bin)
+
+
+def print_config(fw: RtkFwBinary, output_func=print):
+    """Parse a firmware binary, printing out key configuration values
+
+    Args:
+        fw: RtkFwBinary class containing the full Realtek firmware binary
+        output_func: Function to call to output lines. Defaults to print().
+                     Should automatically apply newlines.
+    """
+
+    def format_i2c_addrs(addrs: Iterable[int]) -> str:
+        return ", ".join([hex(i) for i in addrs])
+
+    def format_svid(svid: int) -> str:
+        COMMON_SVIDS = {
+            0xFF01: "DP (ff01)",
+            0x8087: "TBT (8087)",
+        }
+
+        return COMMON_SVIDS.get(svid, hex(svid))
+
+    rtk_configs = {
+        "Project name": fw.get_project_name(),
+        "Version": fw.get_fw_version(),
+        "USB VID:PID": fw.get_vid_pid(),
+        "Port config": fw.get_port_used().name,
+        "Debug Accy GPIO": fw.get_debug_accy_gpio_polarity().name,
+        "PMC I2C Base addrs": format_i2c_addrs(fw.get_pmc_i2c_addrs()),
+        "Retimer I2C addrs": format_i2c_addrs(fw.get_retimer_i2c_addrs()),
+        "BBR I2C addrs": format_i2c_addrs(fw.get_bbr_i2c_addrs()),
+        "SMBus I2C voltage": fw.get_i2c_voltage_smbus().name,
+        "Retimer I2C voltage": fw.get_i2c_voltage_retimer().name,
+        "PMC I2C voltage": fw.get_i2c_voltage_pmc().name,
+        "SVIDs Port A": ", ".join(
+            (format_svid(svid) for svid in fw.get_svids("A"))
+        ),
+        "SVIDs Port B": ", ".join(
+            (format_svid(svid) for svid in fw.get_svids("B"))
+        ),
+        "CRC32": hex(fw.get_file_crc32()),
+    }
+
+    for name, value in rtk_configs.items():
+        output_func(f"{name.ljust(20)}: {value}")
+
+    output_func("Sink PDOs Port A:")
+    for p in fw.get_pdos(PDORole.SINK, "A"):
+        output_func(p)
+
+    output_func("Sink PDOs Port B:")
+    for p in fw.get_pdos(PDORole.SINK, "B"):
+        output_func(p)
+
+    output_func("Source PDOs Port A:")
+    for p in fw.get_pdos(PDORole.SOURCE, "A"):
+        output_func(p)
+
+    output_func("Source PDOs Port B:")
+    for p in fw.get_pdos(PDORole.SOURCE, "B"):
+        output_func(p)
