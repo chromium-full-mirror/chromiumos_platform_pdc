@@ -1,1 +1,30 @@
+# Copyright 2025 The ChromiumOS Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
 python_version: "3.11"
+
+#
+# pytest and dependencies
+#
+
+wheel: <
+  name: "infra/python/wheels/pytest-py3"
+  version: "version:8.4.1"
+>
+wheel: <
+  name: "infra/python/wheels/iniconfig-py3"
+  version: "version:2.1.0"
+>
+wheel: <
+  name: "infra/python/wheels/packaging-py3"
+  version: "version:25.0"
+>
+wheel: <
+  name: "infra/python/wheels/pluggy-py3"
+  version: "version:1.6.0"
+>
+wheel: <
+  name: "infra/python/wheels/pygments-py3"
+  version: "version:2.19.2"
+>
