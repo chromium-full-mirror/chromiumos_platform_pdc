@@ -55,7 +55,7 @@ On the host machine, run the Python script
 `platform/pdc/scripts/pdc_console_fwup.py`. You do not need to be in the chroot.
 
 ```bash
-~/chromiumos/src/platform/pdc$ python3 scripts/pdc_console_fwup.py ~/Downloads/pdc_firmware.bin
+~/chromiumos/src/platform/pdc$ scripts/pdc_console_fwup.py ~/Downloads/pdc_firmware.bin
 
 2025-04-09 16:09:14 INFO     New FW: 16.0.1 ('GOOG0000'), 18d1:5065, Port Config: Dual-port
 2025-04-09 16:09:14 INFO     Connecting to servod at http://localhost:9999
