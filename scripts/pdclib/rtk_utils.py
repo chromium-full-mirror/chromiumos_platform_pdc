@@ -337,6 +337,7 @@ def print_config(fw: RtkFwBinary, output_func=print):
 
     rtk_configs = {
         "Project name": fw.get_project_name(),
+        "Chip type": fw.get_chip_type().name,
         "Version": fw.get_fw_version(),
         "USB VID:PID": fw.get_vid_pid(),
         "Port config": fw.get_port_used().name,

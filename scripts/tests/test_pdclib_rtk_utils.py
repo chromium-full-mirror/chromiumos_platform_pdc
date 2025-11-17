@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Union
 
 from pdclib.common import UsbVidPid
+from pdclib.rtk_constants import RtkChipType
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortUsed
@@ -89,3 +90,49 @@ def test_rtkfwbinary_check_config():
         fw.get_base_firmware_hash()
         == "d209ee514901933893977dd6891eb892643db316"
     )
+
+
+@pytest.mark.parametrize(
+    "filepath,expected",
+    [
+        pytest.param(
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+            ),
+            RtkChipType.RTS545X,
+            id="RTS545X",
+        ),
+        pytest.param(
+            get_test_file_path("RTS5453P-VB_Google_V0.44_20251001.bin"),
+            RtkChipType.RTS545X_VB,
+            id="RTS545X_VB",
+        ),
+    ],
+)
+def test_rtkfwbinary_get_chip_type(filepath: Path, expected: RtkChipType):
+    fw = RtkFwBinary(filepath)
+
+    assert fw.get_chip_type() == expected
+
+
+@pytest.mark.parametrize(
+    "filepath",
+    [
+        pytest.param(
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+            ),
+            id="RTS545X",
+        ),
+        pytest.param(
+            get_test_file_path("RTS5453P-VB_Google_V0.44_20251001.bin"),
+            id="RTS545X_VB",
+        ),
+    ],
+)
+def test_rtkfwbinary_get_i2c_voltage_level(filepath: Path):
+    fw = RtkFwBinary(filepath)
+
+    # Both FWs have 3.3V SMbus levels but the different chip_types represent
+    # the voltage levels differently. Ensure both types decode correctly.
+    assert fw.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
