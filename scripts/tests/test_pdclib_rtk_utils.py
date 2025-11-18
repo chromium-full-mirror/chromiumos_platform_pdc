@@ -137,6 +137,9 @@ def test_rtkconfigfragment_from_file(filepath: Path):
         PDO.parse_pdo(0x37119096, PDORole.SOURCE)
     ]
 
+    assert config.get_svids("A") == [0x8087, 0xFF01]  # TBT, DP
+    assert config.get_svids("B") == [0xFF01]  # DP
+
     assert (
         config.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
     )
