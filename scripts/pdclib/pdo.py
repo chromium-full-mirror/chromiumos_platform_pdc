@@ -162,6 +162,12 @@ class PDO:
         """Get the type of PDO"""
         return PDOType.get_type_from_pdo(self.pdo)
 
+    def __eq__(self, other: "PDO") -> bool:
+        return self.pdo == other.pdo
+
+    def __hash__(self) -> int:
+        return hash(self.pdo)
+
 
 class PDOFixed(PDO):
     """Fixed PDO"""

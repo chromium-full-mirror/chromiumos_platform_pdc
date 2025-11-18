@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Union
 
 from pdclib.common import UsbVidPid
+from pdclib.pdo import PDO
+from pdclib.pdo import PDORole
 from pdclib.rtk_constants import RtkChipType
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkI2cBusVoltage
@@ -121,6 +123,19 @@ def test_rtkconfigfragment_from_file(filepath: Path):
 
     assert config.get_pmc_i2c_addrs() == (0x68, 0x68)
     assert config.get_bbr_i2c_addrs() == (0x56, 0x40)
+
+    assert config.get_pdos(PDORole.SINK, "A") == [
+        PDO.parse_pdo(0x2601912C, PDORole.SINK)
+    ]
+    assert config.get_pdos(PDORole.SINK, "B") == [
+        PDO.parse_pdo(0x2601912C, PDORole.SINK)
+    ]
+    assert config.get_pdos(PDORole.SOURCE, "A") == [
+        PDO.parse_pdo(0x00019096, PDORole.SOURCE)
+    ]
+    assert config.get_pdos(PDORole.SOURCE, "B") == [
+        PDO.parse_pdo(0x37119096, PDORole.SOURCE)
+    ]
 
     assert (
         config.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
