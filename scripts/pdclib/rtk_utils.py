@@ -16,6 +16,7 @@ from pdclib.common import UsbVidPid
 from pdclib.pdo import PDO
 from pdclib.pdo import PDORole
 from pdclib.rtk_constants import RtkChipType
+from pdclib.rtk_constants import RtkConfigOffset
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkFwOffset
 from pdclib.rtk_constants import RtkI2cBusVoltage
@@ -76,9 +77,9 @@ class RtkFwBinary:
         """Calculate the actual CRC32 of the FW binary"""
         return (
             binascii.crc32(
-                self.fw_bin[
-                    RtkFwOffset.CRC_RANGE_START : RtkFwOffset.CRC_RANGE_END
-                ]
+                self.get_range(
+                    RtkFwOffset.CRC_RANGE_START, RtkFwOffset.CRC_RANGE_LENGTH
+                )
             )
             ^ 0xFFFFFFFF
         )
@@ -89,20 +90,20 @@ class RtkFwBinary:
 
     def get_port_used(self) -> RtkPortUsed:
         """Get the 'port used' setting, which controls single vs double port"""
-        return RtkPortUsed(self.fw_bin[RtkFwOffset.PORT_USED])
+        return RtkPortUsed(self._get_config_byte(RtkConfigOffset.PORT_USED))
 
     def get_fw_version(self) -> Tuple[int, int, int]:
         """Get the version of the FW and config as tuple"""
         return RtkFwVersion(
-            self.fw_bin[RtkFwOffset.FW_VERSION_MAJOR],
-            self.fw_bin[RtkFwOffset.FW_VERSION_MINOR],
-            self.fw_bin[RtkFwOffset.FW_VERSION_CONFIG],
+            self.get_byte(RtkFwOffset.FW_VERSION_MAJOR),
+            self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
+            self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG),
         )
 
     def get_project_name(self) -> str | None:
         """Get the project name string from config section"""
-        proj_name = self.get_range(
-            RtkFwOffset.PROJECT_NAME, RtkFwOffset.PROJECT_NAME_LEN
+        proj_name = self._get_config_range(
+            RtkConfigOffset.PROJECT_NAME, RtkConfigOffset.PROJECT_NAME_LEN
         )
 
         try:
@@ -117,15 +118,19 @@ class RtkFwBinary:
         return UsbVidPid(
             *struct.unpack(
                 "<HH",
-                self.get_range(RtkFwOffset.USB_VID, RtkFwOffset.USB_VID_LEN)
-                + self.get_range(RtkFwOffset.USB_PID, RtkFwOffset.USB_PID_LEN),
+                self._get_config_range(
+                    RtkConfigOffset.USB_VID, RtkConfigOffset.USB_VID_LEN
+                )
+                + self._get_config_range(
+                    RtkConfigOffset.USB_PID, RtkConfigOffset.USB_PID_LEN
+                ),
             )
         )
 
     def get_debug_accy_gpio_polarity(self) -> RtkDebugAccyGpioPolarity:
         """Read the polarity of the debug accessory GPIO"""
         return RtkDebugAccyGpioPolarity(
-            self.fw_bin[RtkFwOffset.DEBUG_ACCY_GPIO_POLARITY]
+            self._get_config_byte(RtkConfigOffset.DEBUG_ACCY_GPIO_POLARITY)
         )
 
     def get_pmc_i2c_addrs(self) -> Tuple[int, int]:
@@ -136,8 +141,8 @@ class RtkFwBinary:
         """
 
         return (
-            self.fw_bin[RtkFwOffset.PMC_I2C_ADDR_PORTA] >> 1,
-            self.fw_bin[RtkFwOffset.PMC_I2C_ADDR_PORTB] >> 1,
+            self._get_config_byte(RtkConfigOffset.PMC_I2C_ADDR_PORTA) >> 1,
+            self._get_config_byte(RtkConfigOffset.PMC_I2C_ADDR_PORTB) >> 1,
         )
 
     def get_retimer_i2c_addrs(self) -> Tuple[int, int]:
@@ -148,8 +153,8 @@ class RtkFwBinary:
         """
 
         return (
-            self.fw_bin[RtkFwOffset.RETIMER_I2C_ADDR_PORTA] >> 1,
-            self.fw_bin[RtkFwOffset.RETIMER_I2C_ADDR_PORTB] >> 1,
+            self._get_config_byte(RtkConfigOffset.RETIMER_I2C_ADDR_PORTA) >> 1,
+            self._get_config_byte(RtkConfigOffset.RETIMER_I2C_ADDR_PORTB) >> 1,
         )
 
     def get_bbr_i2c_addrs(self) -> Tuple[int, int]:
@@ -160,21 +165,23 @@ class RtkFwBinary:
         """
 
         return (
-            self.fw_bin[RtkFwOffset.BBR_I2C_ADDR_PORTA] >> 1,
-            self.fw_bin[RtkFwOffset.BBR_I2C_ADDR_PORTB] >> 1,
+            self._get_config_byte(RtkConfigOffset.BBR_I2C_ADDR_PORTA) >> 1,
+            self._get_config_byte(RtkConfigOffset.BBR_I2C_ADDR_PORTB) >> 1,
         )
 
     def get_chip_type(self) -> RtkChipType:
         """return if the chip is rts545x-vb."""
 
         if (
-            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] == 0x39
-            and self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] == 0x69
+            self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_L) == 0x39
+            and self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_H)
+            == 0x69
         ):
             return RtkChipType.RTS545X
         if (
-            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] == 0x07
-            and self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] == 0x70
+            self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_L) == 0x07
+            and self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_H)
+            == 0x70
         ):
             return RtkChipType.RTS545X_VB
         return RtkChipType.UNKNOWN
@@ -183,48 +190,55 @@ class RtkFwBinary:
         """Read the voltage level of the SMBus/EC I2C interface"""
 
         return RtkI2cBusVoltage.parse_from_config(
-            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_SMBUS], self.get_chip_type()
+            self._get_config_byte(RtkConfigOffset.I2C_VOLTAGE_SMBUS),
+            self.get_chip_type(),
         )
 
     def get_i2c_voltage_retimer(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the retimer I2C interface"""
 
         return RtkI2cBusVoltage.parse_from_config(
-            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_RETIMER], self.get_chip_type()
+            self._get_config_byte(RtkConfigOffset.I2C_VOLTAGE_RETIMER),
+            self.get_chip_type(),
         )
 
     def get_i2c_voltage_pmc(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the PMC I2C interface"""
 
         return RtkI2cBusVoltage.parse_from_config(
-            self.fw_bin[RtkFwOffset.I2C_VOLTAGE_PMC], self.get_chip_type()
+            self._get_config_byte(RtkConfigOffset.I2C_VOLTAGE_PMC),
+            self.get_chip_type(),
         )
 
     def get_pdos(self, role: PDORole, port: str) -> List[PDO]:
         """Get the source or sink PDOs stored in the config"""
 
         if port == "A" and role == PDORole.SINK:
-            count_offset = RtkFwOffset.SNK_PDO_COUNT_PORTA
-            start_offset = RtkFwOffset.SNK_PDO_OFFSET_PDO1_PORTA
+            count_offset = RtkConfigOffset.SNK_PDO_COUNT_PORTA
+            start_offset = RtkConfigOffset.SNK_PDO_OFFSET_PDO1_PORTA
         elif port == "B" and role == PDORole.SINK:
-            count_offset = RtkFwOffset.SNK_PDO_COUNT_PORTB
-            start_offset = RtkFwOffset.SNK_PDO_OFFSET_PDO1_PORTB
+            count_offset = RtkConfigOffset.SNK_PDO_COUNT_PORTB
+            start_offset = RtkConfigOffset.SNK_PDO_OFFSET_PDO1_PORTB
         elif port == "A" and role == PDORole.SOURCE:
-            count_offset = RtkFwOffset.SRC_PDO_COUNT_PORTA
-            start_offset = RtkFwOffset.SRC_PDO_OFFSET_PDO1_PORTA
+            count_offset = RtkConfigOffset.SRC_PDO_COUNT_PORTA
+            start_offset = RtkConfigOffset.SRC_PDO_OFFSET_PDO1_PORTA
         elif port == "B" and role == PDORole.SOURCE:
-            count_offset = RtkFwOffset.SRC_PDO_COUNT_PORTB
-            start_offset = RtkFwOffset.SRC_PDO_OFFSET_PDO1_PORTB
+            count_offset = RtkConfigOffset.SRC_PDO_COUNT_PORTB
+            start_offset = RtkConfigOffset.SRC_PDO_OFFSET_PDO1_PORTB
         else:
             raise ValueError(
                 "port must be 'A' or 'B' and 'role' must be "
                 "PDORole.SINK or PDORole.SOURCE"
             )
 
-        count = min(RtkFwOffset.PDO_MAX_COUNT, self.fw_bin[count_offset])
+        count = min(
+            RtkConfigOffset.PDO_MAX_COUNT, self._get_config_byte(count_offset)
+        )
 
         return [
-            PDO.parse_pdo(struct.unpack("<I", self.get_range(i, 4))[0], role)
+            PDO.parse_pdo(
+                struct.unpack("<I", self._get_config_range(i, 4))[0], role
+            )
             for i in range(start_offset, start_offset + 4 * count, 4)
         ]
 
@@ -232,18 +246,20 @@ class RtkFwBinary:
         """Get the SVIDs stored in the config, by port"""
 
         if port == "A":
-            count_offset = RtkFwOffset.SVID_COUNT_PORTA
-            start_offset = RtkFwOffset.SVID_OFFSET_PORTA
+            count_offset = RtkConfigOffset.SVID_COUNT_PORTA
+            start_offset = RtkConfigOffset.SVID_OFFSET_PORTA
         elif port == "B":
-            count_offset = RtkFwOffset.SVID_COUNT_PORTB
-            start_offset = RtkFwOffset.SVID_OFFSET_PORTB
+            count_offset = RtkConfigOffset.SVID_COUNT_PORTB
+            start_offset = RtkConfigOffset.SVID_OFFSET_PORTB
         else:
             raise ValueError("port must be 'A' or 'B'")
 
-        count = min(RtkFwOffset.SVID_MAX_COUNT, self.fw_bin[count_offset])
+        count = min(
+            RtkConfigOffset.SVID_MAX_COUNT, self._get_config_byte(count_offset)
+        )
 
         return [
-            struct.unpack("<H", self.get_range(i, 2))[0]
+            struct.unpack("<H", self._get_config_range(i, 2))[0]
             for i in range(start_offset, start_offset + 2 * count, 2)
         ]
 
@@ -259,10 +275,26 @@ class RtkFwBinary:
 
         return self.fw_bin[start_offset : start_offset + length]
 
+    def get_byte(self, offset: int) -> int:
+        """Read a single byte from the FW binary"""
+        return self.get_range(offset, 1)[0]
+
+    def _get_config_range(self, start_offset: int, length: int):
+        """Read a chunk of the config section"""
+        return self.get_range(
+            RtkFwOffset.CONFIG_RANGE_START + start_offset, length
+        )
+
+    def _get_config_byte(self, offset: int):
+        """Read a single byte from the config section"""
+        return self._get_config_range(offset, 1)[0]
+
     def get_base_firmware_hash(self) -> str:
         """Return the SHA1 of the base firmware region"""
         return hashlib.sha1(
-            self.fw_bin[0 : RtkFwOffset.CONFIG_RANGE_START]
+            self.get_range(
+                RtkFwOffset.FW_CODE_START, RtkFwOffset.FW_CODE_LENGTH
+            )
         ).hexdigest()
 
     def get_config_hash(self) -> str:
@@ -281,10 +313,18 @@ class RtkFwBinary:
                 f"({RtkFwOffset.CONFIG_RANGE_LENGTH})"
             )
 
-        config_ver_major = self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MAJOR]
-        config_ver_minor = self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MINOR]
-        config_chip_id_l = self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L]
-        config_chip_id_h = self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H]
+        config_ver_major = self._get_config_byte(
+            RtkConfigOffset.FW_CONFIG_VERSION_MAJOR
+        )
+        config_ver_minor = self._get_config_byte(
+            RtkConfigOffset.FW_CONFIG_VERSION_MINOR
+        )
+        config_chip_id_l = self._get_config_byte(
+            RtkConfigOffset.FW_CONFIG_CHIP_ID_L
+        )
+        config_chip_id_h = self._get_config_byte(
+            RtkConfigOffset.FW_CONFIG_CHIP_ID_H
+        )
 
         self.fw_bin[
             RtkFwOffset.CONFIG_RANGE_START : RtkFwOffset.CONFIG_RANGE_END
@@ -292,10 +332,22 @@ class RtkFwBinary:
 
         if preserve_version:
             # Restore some fields to their original values
-            self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MAJOR] = config_ver_major
-            self.fw_bin[RtkFwOffset.FW_CONFIG_VERSION_MINOR] = config_ver_minor
-            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_L] = config_chip_id_l
-            self.fw_bin[RtkFwOffset.FW_CONFIG_CHIP_ID_H] = config_chip_id_h
+            self.fw_bin[
+                RtkFwOffset.CONFIG_RANGE_START
+                + RtkConfigOffset.FW_CONFIG_VERSION_MAJOR
+            ] = config_ver_major
+            self.fw_bin[
+                RtkFwOffset.CONFIG_RANGE_START
+                + RtkConfigOffset.FW_CONFIG_VERSION_MINOR
+            ] = config_ver_minor
+            self.fw_bin[
+                RtkFwOffset.CONFIG_RANGE_START
+                + RtkConfigOffset.FW_CONFIG_CHIP_ID_L
+            ] = config_chip_id_l
+            self.fw_bin[
+                RtkFwOffset.CONFIG_RANGE_START
+                + RtkConfigOffset.FW_CONFIG_CHIP_ID_H
+            ] = config_chip_id_h
 
     def get_config(self) -> bytes:
         """Read full config from the FW binary"""

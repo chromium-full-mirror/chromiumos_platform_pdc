@@ -15,72 +15,84 @@ class RtkFwOffset(enum.IntEnum):
     CONFIG_RANGE_END = 0x1FC60
     CONFIG_RANGE_LENGTH = CONFIG_RANGE_END - CONFIG_RANGE_START
 
-    # Config section parameters
-    USB_VID = 0x1F89E
-    USB_VID_LEN = 2
-    USB_PID = 0x1F8A0
-    USB_PID_LEN = 2
-
-    PROJECT_NAME = 0x1FC00
-    PROJECT_NAME_LEN = 12
+    FW_CODE_START = 0
+    FW_CODE_END = CONFIG_RANGE_START
+    FW_CODE_LENGTH = FW_CODE_END - FW_CODE_START
 
     FW_VERSION_MAJOR = 0x7EF9
     FW_VERSION_MINOR = 0x7EFA
-    FW_VERSION_CONFIG = 0x1F802
-
-    # Redundant version info stored in the config area. Read
-    # FW_VERSION_MAJOR, FW_VERSION_MINOR instead.
-    FW_CONFIG_VERSION_MAJOR = 0x1F800
-    FW_CONFIG_VERSION_MINOR = 0x1F801
-
-    FW_CONFIG_CHIP_ID_L = 0x1F803
-    FW_CONFIG_CHIP_ID_H = 0x1F804
-
-    PORT_USED = 0x1F805
-    DEBUG_ACCY_GPIO_POLARITY = 0x1FC0C
-
-    PMC_I2C_ADDR_PORTA = 0x1F8AD  # Port 1
-    PMC_I2C_ADDR_PORTB = 0x1F8AC  # Port 0
-    RETIMER_I2C_ADDR_PORTA = 0x1F8BE  # Port 1
-    RETIMER_I2C_ADDR_PORTB = 0x1F8B9  # Port 0
-    BBR_I2C_ADDR_PORTA = 0x1F8B4  # Port 1
-    BBR_I2C_ADDR_PORTB = 0x1F8AF  # Port 0
-
-    I2C_VOLTAGE_SMBUS = 0x1F8A8
-    I2C_VOLTAGE_RETIMER = 0x1F8A9
-    I2C_VOLTAGE_PMC = 0x1F8AA
-
-    # SVIDs
-    SVID_MAX_COUNT = 4
-    SVID_COUNT_PORTA = 0x1F88D  # Port 1
-    SVID_COUNT_PORTB = 0x1F88C  # Port 0
-    SVID_OFFSET_PORTA = 0x1F896  # Port 1
-    SVID_OFFSET_PORTB = 0x1F88E  # Port 0
-
-    PDO_MAX_COUNT = 7
-
-    # Sink PDOs
-    SNK_PDO_COUNT_PORTA = 0x1F84E  # Port 1
-    SNK_PDO_COUNT_PORTB = 0x1F84D  # Port 0
-    SNK_PDO_OFFSET_PDO1_PORTA = 0x1F86B  # Port 1 - start of 7*32-bit PDOs
-    SNK_PDO_OFFSET_PDO1_PORTB = 0x1F84F  # POrt 0 - start of 7*32-bit PDOs
-
-    # Src PDOs
-    SRC_PDO_COUNT_PORTA = 0x1F811  # Port 1
-    SRC_PDO_COUNT_PORTB = 0x1F810  # Port 0
-    SRC_PDO_OFFSET_PDO1_PORTA = 0x1F82E  # Port 1 - start of 7*32-bit PDOs
-    SRC_PDO_OFFSET_PDO1_PORTB = 0x1F812  # POrt 0 - start of 7*32-bit PDOs
+    # Note: the third version byte is RtkConfigOffset.FW_VERSION_CONFIG
 
     # CRC32 signing
     CRC_OFFSET = 0x0001FFE6
     CRC_LEN = 4
     CRC_RANGE_START = 0
     CRC_RANGE_END = 0x1FFE6
+    CRC_RANGE_LENGTH = CRC_RANGE_END - CRC_RANGE_START
 
     # Flash layout
     # 2 segments, each 64kiB, for a total of 128kiB
     SEGMENT_SIZE = 64 * 1024
     TOTAL_SIZE = 2 * SEGMENT_SIZE
+
+
+class RtkConfigOffset(enum.IntEnum):
+    """Offsets within the config section"""
+
+    # Redundant version info stored in the config area. Read
+    # RtkFwOffset.FW_VERSION_MAJOR, RtkFwOffset.FW_VERSION_MINOR
+    # instead.
+    FW_CONFIG_VERSION_MAJOR = 0x00
+    FW_CONFIG_VERSION_MINOR = 0x01
+    FW_VERSION_CONFIG = 0x02
+
+    FW_CONFIG_CHIP_ID_L = 0x03
+    FW_CONFIG_CHIP_ID_H = 0x04
+
+    PORT_USED = 0x05
+
+    PDO_MAX_COUNT = 7
+
+    # Src PDOs
+    SRC_PDO_COUNT_PORTB = 0x10  # Port 0
+    SRC_PDO_COUNT_PORTA = 0x11  # Port 1
+    SRC_PDO_OFFSET_PDO1_PORTB = 0x12  # Port 0 - start of 7*32-bit PDOs
+    SRC_PDO_OFFSET_PDO1_PORTA = 0x2E  # Port 1 - start of 7*32-bit PDOs
+
+    # Sink PDOs
+    SNK_PDO_COUNT_PORTB = 0x4D  # Port 0
+    SNK_PDO_COUNT_PORTA = 0x4E  # Port 1
+    SNK_PDO_OFFSET_PDO1_PORTB = 0x4F  # POrt 0 - start of 7*32-bit PDOs
+    SNK_PDO_OFFSET_PDO1_PORTA = 0x6B  # Port 1 - start of 7*32-bit PDOs
+
+    # SVIDs
+    SVID_MAX_COUNT = 4
+    SVID_COUNT_PORTB = 0x8C  # Port 0
+    SVID_COUNT_PORTA = 0x8D  # Port 1
+    SVID_OFFSET_PORTB = 0x8E  # Port 0
+    SVID_OFFSET_PORTA = 0x96  # Port 1
+
+    USB_VID = 0x9E
+    USB_VID_LEN = 2
+    USB_PID = 0xA0
+    USB_PID_LEN = 2
+
+    I2C_VOLTAGE_SMBUS = 0xA8
+    I2C_VOLTAGE_RETIMER = 0xA9
+    I2C_VOLTAGE_PMC = 0xAA
+
+    PMC_I2C_ADDR_PORTB = 0xAC  # Port 0
+    PMC_I2C_ADDR_PORTA = 0xAD  # Port 1
+    BBR_I2C_ADDR_PORTB = 0xAF  # Port 0
+    BBR_I2C_ADDR_PORTA = 0xB4  # Port 1
+
+    RETIMER_I2C_ADDR_PORTB = 0xB9  # Port 0
+    RETIMER_I2C_ADDR_PORTA = 0xBE  # Port 1
+
+    PROJECT_NAME = 0x400
+    PROJECT_NAME_LEN = 12
+
+    DEBUG_ACCY_GPIO_POLARITY = 0x40C
 
 
 class RtkPortUsed(enum.IntEnum):
