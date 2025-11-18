@@ -6,7 +6,9 @@
 
 """Test pdclib.rtk_utils"""
 
+import os
 from pathlib import Path
+import tempfile
 from typing import Union
 
 from pdclib.common import UsbVidPid
@@ -86,6 +88,43 @@ def test_rtkfwbinary_check_base_fw_hash():
         fw.get_base_firmware_hash()
         == "d209ee514901933893977dd6891eb892643db316"
     )
+
+
+def test_rtkfwbinary_export_fw_binary():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
+    )
+
+    hash_fw = fw.get_base_firmware_hash()
+    hash_config = fw.get_config_hash()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_file = Path(tmpdir) / "out.bin"
+        fw.export_fw_binary(output_file)
+
+        assert output_file.exists()
+
+        # Read the outputted firmware back in and check its hashes against the
+        # original
+        fw_out = RtkFwBinary(output_file)
+        assert fw_out.get_base_firmware_hash() == hash_fw
+        assert fw_out.get_config_hash() == hash_config
+
+
+def test_rtkfwbinary_export_fw_binary_malformed():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
+    )
+
+    # Add an extra unexpected byte
+    fw.fw_bin.append(0x00)
+
+    with pytest.raises(RtkFileSizeError):
+        fw.export_fw_binary(Path(os.devnull))
 
 
 @pytest.mark.parametrize(
