@@ -14,6 +14,7 @@ from pdclib.rtk_constants import RtkChipType
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortUsed
+from pdclib.rtk_utils import RtkConfigFragment
 from pdclib.rtk_utils import RtkFileSizeError
 from pdclib.rtk_utils import RtkFwBinary
 from pdclib.rtk_utils import RtkFwVersion
@@ -62,33 +63,67 @@ def test_rtkfwbinary_crc_update():
     assert fw.verify_crc32()
 
 
-def test_rtkfwbinary_check_config():
+def test_rtkfwbinary_check_version():
     fw = RtkFwBinary(
         get_test_file_path(
             "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
         )
     )
 
-    assert fw.get_project_name() == "GOOG0H00"
     assert fw.get_fw_version() == RtkFwVersion(0, 44, 3)
-    assert fw.get_vid_pid() == UsbVidPid(0x18D1, 0x5075)
-    assert fw.get_port_used() == RtkPortUsed.PORTA_ONLY
-    assert (
-        fw.get_debug_accy_gpio_polarity()
-        == RtkDebugAccyGpioPolarity.ACTIVE_HIGH
+
+
+def test_rtkfwbinary_check_base_fw_hash():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
     )
 
-    assert fw.get_i2c_voltage_pmc() == RtkI2cBusVoltage.LEVEL_1V8
-    assert fw.get_i2c_voltage_retimer() == RtkI2cBusVoltage.LEVEL_1V8
-    assert fw.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
-
-    assert fw.get_pmc_i2c_addrs() == (0x68, 0x68)
-    assert fw.get_bbr_i2c_addrs() == (0x56, 0x40)
-
-    assert fw.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
     assert (
         fw.get_base_firmware_hash()
         == "d209ee514901933893977dd6891eb892643db316"
+    )
+
+
+@pytest.mark.parametrize(
+    "filepath",
+    [
+        # Each of these has the same config data. The first is a full FW bundle,
+        # the second is a config fragment. `RtkConfigFragment.from_file()` is
+        # able to parse both formats.
+        pytest.param(
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+            ),
+            id="FromFW",
+        ),
+        pytest.param(
+            get_test_file_path("ocelotrvp-GOOG0H00-config.bin"),
+            id="FromConfigFragment",
+        ),
+    ],
+)
+def test_rtkconfigfragment_from_file(filepath: Path):
+    config = RtkConfigFragment.from_file(filepath)
+
+    assert config.get_project_name() == "GOOG0H00"
+    assert config.get_vid_pid() == UsbVidPid(0x18D1, 0x5075)
+    assert config.get_port_used() == RtkPortUsed.PORTA_ONLY
+    assert (
+        config.get_debug_accy_gpio_polarity()
+        == RtkDebugAccyGpioPolarity.ACTIVE_HIGH
+    )
+
+    assert config.get_i2c_voltage_pmc() == RtkI2cBusVoltage.LEVEL_1V8
+    assert config.get_i2c_voltage_retimer() == RtkI2cBusVoltage.LEVEL_1V8
+    assert config.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
+
+    assert config.get_pmc_i2c_addrs() == (0x68, 0x68)
+    assert config.get_bbr_i2c_addrs() == (0x56, 0x40)
+
+    assert (
+        config.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
     )
 
 

@@ -39,6 +39,10 @@ class RtkFwOffset(enum.IntEnum):
 class RtkConfigOffset(enum.IntEnum):
     """Offsets within the config section"""
 
+    CONFIG_RANGE_START = 0
+    CONFIG_RANGE_END = RtkFwOffset.CONFIG_RANGE_LENGTH
+    CONFIG_RANGE_LENGTH = CONFIG_RANGE_END - CONFIG_RANGE_START
+
     # Redundant version info stored in the config area. Read
     # RtkFwOffset.FW_VERSION_MAJOR, RtkFwOffset.FW_VERSION_MINOR
     # instead.

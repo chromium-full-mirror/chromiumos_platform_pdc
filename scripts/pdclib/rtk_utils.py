@@ -39,66 +39,48 @@ class RtkFwVersion:
         return f"{self.major}.{self.minor}.{self.config}"
 
 
-class RtkFwBinary:
-    """Utilities for examining a Realtek PDC firmware binary"""
+def _range_check(arr: bytearray, start: int, length: int) -> None:
+    """Helper to throw an exception if a range is out of bounds"""
 
-    def __init__(self, fw_path: Path):
-        self.fw_bin = bytearray()
-        with open(fw_path, "rb") as f:
-            while chunk := f.read(1024):
-                self.fw_bin.extend(chunk)
-
-        if self.get_size() != RtkFwOffset.TOTAL_SIZE:
-            raise RtkFileSizeError(
-                f"Unknown FW file. Expected {RtkFwOffset.TOTAL_SIZE} "
-                f"bytes, got {self.get_size()} bytes"
-            )
-
-    def get_size(self):
-        """Size of the FW binary in bytes"""
-        return len(self.fw_bin)
-
-    def get_file_crc32(self) -> int:
-        """Read the CRC32 embedded in the FW binary"""
-        return struct.unpack(
-            "<L",
-            self.get_range(RtkFwOffset.CRC_OFFSET, RtkFwOffset.CRC_LEN),
-        )[0]
-
-    def set_file_crc32(self):
-        """Recalculate the CRC32 of the FW binary and update the stored value"""
-        crc32 = self.calc_crc32()
-        self.fw_bin[
-            RtkFwOffset.CRC_OFFSET : RtkFwOffset.CRC_OFFSET
-            + RtkFwOffset.CRC_LEN
-        ] = bytearray(crc32.to_bytes(4, "little"))
-
-    def calc_crc32(self) -> int:
-        """Calculate the actual CRC32 of the FW binary"""
-        return (
-            binascii.crc32(
-                self.get_range(
-                    RtkFwOffset.CRC_RANGE_START, RtkFwOffset.CRC_RANGE_LENGTH
-                )
-            )
-            ^ 0xFFFFFFFF
+    if not (0 <= start < len(arr) and 0 <= (start + length) <= len(arr)):
+        raise ValueError(
+            f"Offset ({start}) or length ({length}) are out of range "
+            f"(total len {len(arr)})"
         )
 
-    def verify_crc32(self) -> bool:
-        """Compare the expected and actual CRC32 checksums"""
-        return self.calc_crc32() == self.get_file_crc32()
+
+class _RtkConfigMixin:
+    """Provides methods for reading a RTK config section.
+
+    This is an abstract class intended to be mixed-in to another class. Its
+    subclasses shall implement `get_config_region()` to access the underlying
+    config section data by reference.
+    """
+
+    def get_config_region(self) -> Tuple[bytearray, int]:
+        """Implement in the inheriting class
+
+        Should provide a reference to the bytearray containing the config data,
+        and a start offset within the bytearray where the config regions starts.
+        """
+        raise NotImplementedError()
+
+    def _get_config_range(self, start_offset: int, length: int) -> bytearray:
+        """Read a chunk of the config section"""
+        config_fragment, offset = self.get_config_region()
+
+        start_offset += offset
+
+        _range_check(config_fragment, start_offset, length)
+        return config_fragment[start_offset : start_offset + length]
+
+    def _get_config_byte(self, offset: int) -> int:
+        """Read a single byte from the config section"""
+        return self._get_config_range(offset, 1)[0]
 
     def get_port_used(self) -> RtkPortUsed:
         """Get the 'port used' setting, which controls single vs double port"""
         return RtkPortUsed(self._get_config_byte(RtkConfigOffset.PORT_USED))
-
-    def get_fw_version(self) -> Tuple[int, int, int]:
-        """Get the version of the FW and config as tuple"""
-        return RtkFwVersion(
-            self.get_byte(RtkFwOffset.FW_VERSION_MAJOR),
-            self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
-            self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG),
-        )
 
     def get_project_name(self) -> str | None:
         """Get the project name string from config section"""
@@ -263,31 +245,138 @@ class RtkFwBinary:
             for i in range(start_offset, start_offset + 2 * count, 2)
         ]
 
-    def get_range(self, start_offset: int, length: int) -> bytes:
-        """Read a chunk of the FW binary"""
-        if not (
-            0 <= start_offset < len(self.fw_bin)
-            and 0 <= (start_offset + length) <= len(self.fw_bin)
-        ):
+    def get_config(self) -> bytes:
+        """Read full config"""
+        return self._get_config_range(
+            RtkConfigOffset.CONFIG_RANGE_START,
+            RtkConfigOffset.CONFIG_RANGE_LENGTH,
+        )
+
+    def get_config_hash(self) -> str:
+        """Return the SHA1 of the config region"""
+        return hashlib.sha1(self.get_config()).hexdigest()
+
+
+class RtkConfigFragment(_RtkConfigMixin):
+    """Stores a standalone config fragment."""
+
+    def __init__(self, config_fragment: bytearray):
+        if len(config_fragment) != RtkConfigOffset.CONFIG_RANGE_LENGTH:
             raise ValueError(
-                f"Offset ({start_offset}) or length ({length}) are out of range"
+                "Config fragment has unexpected length: "
+                f"Got {len(config_fragment)}, "
+                f"expected {RtkConfigOffset.CONFIG_RANGE_LENGTH}"
             )
 
+        self.config_fragment = config_fragment
+
+    # @override
+    def get_config_region(self) -> Tuple[bytearray, int]:
+        """Provide a reference to the config fragment bytearray
+
+        Used by the mixin's methods to access the underlying config data
+        """
+        return self.config_fragment, 0
+
+    @classmethod
+    def from_file(cls, filepath: Path):
+        size = filepath.stat().st_size
+
+        if size == RtkFwOffset.CONFIG_RANGE_LENGTH:
+            # Loading just a config fragment
+            with open(filepath, "rb") as f:
+                return cls(bytearray(f.read()))
+        if size == RtkFwOffset.TOTAL_SIZE:
+            # Loading a full FW bundle. Extract just the config.
+            fw = RtkFwBinary(filepath)
+            return cls(fw.get_config())
+
+        raise RtkFileSizeError(f"File {filepath} has unexpected size")
+
+
+class RtkFwBinary(_RtkConfigMixin):
+    """Utilities for examining a Realtek PDC firmware binary
+
+    This class mixed in RtkConfigBinary, so all of its methods are directly
+    available. _get_config_range() is overridden to remap the config data
+    location to where it appears in the full FW binary.
+    """
+
+    def __init__(self, fw_path: Path):
+        self.fw_bin = bytearray()
+        with open(fw_path, "rb") as f:
+            while chunk := f.read(1024):
+                self.fw_bin.extend(chunk)
+
+        if self.get_size() != RtkFwOffset.TOTAL_SIZE:
+            raise RtkFileSizeError(
+                f"Unknown FW file. Expected {RtkFwOffset.TOTAL_SIZE} "
+                f"bytes, got {self.get_size()} bytes"
+            )
+
+        # Do not initialize the superclass (RtkConfigBinary). Just allow its
+        # methods to mix-in and override _get_config_range so those methods
+        # read from self.fw_bin with an overall config section offset added.
+
+    def get_size(self):
+        """Size of the FW binary in bytes"""
+        return len(self.fw_bin)
+
+    def get_file_crc32(self) -> int:
+        """Read the CRC32 embedded in the FW binary"""
+        return struct.unpack(
+            "<L",
+            self.get_range(RtkFwOffset.CRC_OFFSET, RtkFwOffset.CRC_LEN),
+        )[0]
+
+    def set_file_crc32(self):
+        """Recalculate the CRC32 of the FW binary and update the stored value"""
+        crc32 = self.calc_crc32()
+        self.fw_bin[
+            RtkFwOffset.CRC_OFFSET : RtkFwOffset.CRC_OFFSET
+            + RtkFwOffset.CRC_LEN
+        ] = bytearray(crc32.to_bytes(4, "little"))
+
+    def calc_crc32(self) -> int:
+        """Calculate the actual CRC32 of the FW binary"""
+        return (
+            binascii.crc32(
+                self.get_range(
+                    RtkFwOffset.CRC_RANGE_START, RtkFwOffset.CRC_RANGE_LENGTH
+                )
+            )
+            ^ 0xFFFFFFFF
+        )
+
+    def verify_crc32(self) -> bool:
+        """Compare the expected and actual CRC32 checksums"""
+        return self.calc_crc32() == self.get_file_crc32()
+
+    def get_fw_version(self) -> Tuple[int, int, int]:
+        """Get the version of the FW and config as tuple"""
+        return RtkFwVersion(
+            self.get_byte(RtkFwOffset.FW_VERSION_MAJOR),
+            self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
+            self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG),
+        )
+
+    def get_range(self, start_offset: int, length: int) -> bytes:
+        """Read a chunk of the FW binary"""
+        _range_check(self.fw_bin, start_offset, length)
         return self.fw_bin[start_offset : start_offset + length]
 
     def get_byte(self, offset: int) -> int:
         """Read a single byte from the FW binary"""
         return self.get_range(offset, 1)[0]
 
-    def _get_config_range(self, start_offset: int, length: int):
-        """Read a chunk of the config section"""
-        return self.get_range(
-            RtkFwOffset.CONFIG_RANGE_START + start_offset, length
-        )
+    # @override
+    def get_config_region(self) -> Tuple[bytearray, int]:
+        """Provides _RtkConfigMixin access to the config data
 
-    def _get_config_byte(self, offset: int):
-        """Read a single byte from the config section"""
-        return self._get_config_range(offset, 1)[0]
+        Pass a reference to fw_bin with an offset to the start of the config
+        section within the FW binary.
+        """
+        return self.fw_bin, RtkFwOffset.CONFIG_RANGE_START
 
     def get_base_firmware_hash(self) -> str:
         """Return the SHA1 of the base firmware region"""
@@ -296,10 +385,6 @@ class RtkFwBinary:
                 RtkFwOffset.FW_CODE_START, RtkFwOffset.FW_CODE_LENGTH
             )
         ).hexdigest()
-
-    def get_config_hash(self) -> str:
-        """Return the SHA1 of the config region"""
-        return hashlib.sha1(self.get_config()).hexdigest()
 
     def set_config(self, config: bytearray, preserve_version=True):
         """Overwrites the config region of a Realtek FW binary
@@ -348,12 +433,6 @@ class RtkFwBinary:
                 RtkFwOffset.CONFIG_RANGE_START
                 + RtkConfigOffset.FW_CONFIG_CHIP_ID_H
             ] = config_chip_id_h
-
-    def get_config(self) -> bytes:
-        """Read full config from the FW binary"""
-        return self.get_range(
-            RtkFwOffset.CONFIG_RANGE_START, RtkFwOffset.CONFIG_RANGE_LENGTH
-        )
 
     def export_fw_binary(self, path: Path):
         """Save the full firmware binary to a file"""
