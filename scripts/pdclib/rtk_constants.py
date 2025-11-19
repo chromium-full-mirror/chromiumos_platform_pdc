@@ -55,6 +55,9 @@ class RtkConfigOffset(enum.IntEnum):
 
     PORT_USED = 0x05
 
+    SRC_MAX_PDP_PORTB = 0x0E  # Port 0
+    SRC_MAX_PDP_PORTA = 0x0F  # Port 1
+
     PDO_MAX_COUNT = 7
 
     # Src PDOs

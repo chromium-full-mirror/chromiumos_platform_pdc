@@ -176,6 +176,9 @@ def test_rtkconfigfragment_from_file(filepath: Path):
         PDO.parse_pdo(0x37119096, PDORole.SOURCE)
     ]
 
+    assert config.get_src_max_pdp("A") == 15
+    assert config.get_src_max_pdp("B") == 15
+
     assert config.get_svids("A") == [0x8087, 0xFF01]  # TBT, DP
     assert config.get_svids("B") == [0xFF01]  # DP
 

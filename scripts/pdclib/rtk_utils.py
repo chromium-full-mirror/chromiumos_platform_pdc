@@ -224,6 +224,15 @@ class _RtkConfigMixin:
             for i in range(start_offset, start_offset + 4 * count, 4)
         ]
 
+    def get_src_max_pdp(self, port: str) -> int:
+        """Get the max source PDP value for each port"""
+        if port == "A":
+            return self._get_config_byte(RtkConfigOffset.SRC_MAX_PDP_PORTA)
+        elif port == "B":
+            return self._get_config_byte(RtkConfigOffset.SRC_MAX_PDP_PORTB)
+        else:
+            raise ValueError("port must be 'A' or 'B'")
+
     def get_svids(self, port: str) -> List[int]:
         """Get the SVIDs stored in the config, by port"""
 
@@ -501,10 +510,10 @@ def print_config(fw: RtkFwBinary, output_func=print):
     for p in fw.get_pdos(PDORole.SINK, "B"):
         output_func(p)
 
-    output_func("Source PDOs Port A:")
+    output_func(f"Source PDOs Port A: (Max PDP = {fw.get_src_max_pdp('A')}W)")
     for p in fw.get_pdos(PDORole.SOURCE, "A"):
         output_func(p)
 
-    output_func("Source PDOs Port B:")
+    output_func(f"Source PDOs Port B: (Max PDP = {fw.get_src_max_pdp('B')}W)")
     for p in fw.get_pdos(PDORole.SOURCE, "B"):
         output_func(p)
