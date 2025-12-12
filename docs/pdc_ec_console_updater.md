@@ -3,10 +3,11 @@
 **Purpose:** Provide a fast mechanism for engineers to update the PDC without
 needing special cables or having to compile AP or EC FW images.
 
-**Status:** Realtek PDCs supported. TI support upcoming.
+**Status:** Realtek and TI PDCs supported
 
 **Code links:**
-  * EC firmware: [pdc_rts54xx_fwup.c](https://chromium.googlesource.com/chromiumos/platform/ec/+/refs/heads/main/zephyr/drivers/usbc/pdc_rts54xx_fwup.c)
+  * EC firmware: [pdc_rts54xx_fwup.c](https://chromium.googlesource.com/chromiumos/platform/ec/+/refs/heads/main/zephyr/drivers/usbc/pdc_rts54xx_fwup.c),
+    [tps6699x_fwup.c](https://chromium.googlesource.com/chromiumos/platform/ec/+/refs/heads/main/zephyr/drivers/usbc/tps6699x_fwup.c)
   * Host script: [pdc_console_fwup.py](../scripts/pdc_console_fwup.py)
 
 ## Background
@@ -25,17 +26,19 @@ PDC FW payload is streamed by a Python script running on the host, through the
 EC’s serial console interface, and to the PDC. The transfer takes 3.5 minutes.
 
 ## How to Use
-Currently, the feature is only supported on RTK PDCs.
 
 ### Prerequisites
   * The EC firmware must have the Kconfig option
-    `CONFIG_USBC_PDC_RTS54XX_CONSOLE_FW_UPDATER` enabled. This option depends
+    `CONFIG_USBC_PDC_RTS54XX_CONSOLE_FW_UPDATER` and/or
+    `CONFIG_USBC_PDC_TPS6699X_CONSOLE_FW_UPDATER` enabled. This option depends
     on `CONFIG_PLATFORM_EC_SYSTEM_UNLOCKED`, which is typically only enabled
     during the bringup phase for security reasons. You can determine if EC
-    support is present by seeing if the `pdc_rtk_fwup` EC console command is
-    present.
+    support is present by seeing if the `pdc_rtk_fwup` and/or `pdc_tps_fwup`
+    EC console command is present.
   * You must be running [`servod`](https://chromium.googlesource.com/chromiumos/third_party/hdctools/+/HEAD/docs/servod_outside_chroot.md)
-    and have any Servo or Suzy Qable attached for EC console access.
+    and have any Servo or Suzy Qable attached for EC console access. Make sure
+    you add `-p 9999` to `start-servod` to expose the port for remote command
+    access.
 
 ### Warnings
   * The console PDC updater does not verify compatibility of the incoming FW
@@ -54,8 +57,10 @@ Currently, the feature is only supported on RTK PDCs.
 On the host machine, run the Python script
 `platform/pdc/scripts/pdc_console_fwup.py`. You do not need to be in the chroot.
 
+Make sure to specify `--pdc_driver rtk` or `--pdc_driver tps`.
+
 ```bash
-~/chromiumos/src/platform/pdc$ scripts/pdc_console_fwup.py ~/Downloads/pdc_firmware.bin
+~/chromiumos/src/platform/pdc$ scripts/pdc_console_fwup.py --pdc_driver [rtk|tps] ~/Downloads/pdc_firmware.bin
 
 2025-04-09 16:09:14 INFO     New FW: 16.0.1 ('GOOG0000'), 18d1:5065, Port Config: Dual-port
 2025-04-09 16:09:14 INFO     Connecting to servod at http://localhost:9999
@@ -78,6 +83,8 @@ PDC. Additional CLI args are supported:
 
   * `-c` / `--usbc_port` - Send the update to the specified port number. This
     is needed in systems with multiple PDC chips. Default is 0 for port C0.
+  * `--i2c_target` - Advanced feature to specify a specific I2C bus and target
+    I2C address (I2C_PORT_PD:0x66). Used instead of `--usbc_port`.
   * `--host`, `--port` - Override the `servod` host and port. Default is
     `localhost:9999`
 
