@@ -6,7 +6,7 @@
 """Display or patch configuration data with a Reaktek PDC FW binary
 
 Dump vital configuration items from a Realtek PDC FW binary and optionally
-apply a new 4 KiB configuration block to a Realtek PDC FW binary.
+apply a new configuration block to a Realtek PDC FW binary.
 """
 
 import argparse
