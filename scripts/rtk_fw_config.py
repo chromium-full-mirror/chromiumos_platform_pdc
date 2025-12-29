@@ -49,11 +49,8 @@ def main(
     if config_file is None:
         return 0
 
-    with open(config_file, "rb") as fw_conf_file:
-        fw_conf = fw_conf_file.read()
-        fw_conf = bytearray(fw_conf)
-
     # Patch new configuration into the firmware binary
+    fw_conf = rtk_utils.RtkConfigFragment.from_file(config_file)
     fw.set_config(fw_conf)
 
     # Patch in the new CRC

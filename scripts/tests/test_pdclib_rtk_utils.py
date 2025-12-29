@@ -15,6 +15,7 @@ from pdclib.common import UsbVidPid
 from pdclib.pdo import PDO
 from pdclib.pdo import PDORole
 from pdclib.rtk_constants import RtkChipType
+from pdclib.rtk_constants import RtkConfigOffset
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortUsed
@@ -90,6 +91,48 @@ def test_rtkfwbinary_check_base_fw_hash():
     )
 
 
+def test_rtkfwbinary_fragment_config_mismatch():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
+    )
+
+    fw_conf = RtkConfigFragment.from_file(
+        get_test_file_path("ocelotrvp-GOOG0H00-config_v4.bin")
+    )
+
+    with pytest.raises(ValueError):
+        fw.set_config(fw_conf)
+
+
+def test_rtkfwbinary_bin_config_mismatch():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
+    )
+
+    fw_bin = RtkFwBinary(get_test_file_path("rts5453_v0.45.4.bin"))
+
+    with pytest.raises(ValueError):
+        fw.set_config(fw_bin)
+
+
+def test_rtkfwbinary_set_config():
+    fw = RtkFwBinary(get_test_file_path("rts5453_v0.45.4.bin"))
+
+    fw_conf = RtkConfigFragment.from_file(
+        get_test_file_path("ocelotrvp-GOOG0H00-config_v4.bin")
+    )
+
+    assert fw.get_project_name() != fw_conf.get_project_name()
+
+    fw.set_config(fw_conf)
+
+    assert fw.get_project_name() == fw_conf.get_project_name()
+
+
 def test_rtkfwbinary_export_fw_binary():
     fw = RtkFwBinary(
         get_test_file_path(
@@ -148,6 +191,8 @@ def test_rtkfwbinary_export_fw_binary_malformed():
 def test_rtkconfigfragment_from_file(filepath: Path):
     config = RtkConfigFragment.from_file(filepath)
 
+    assert len(config.get_config()) == RtkConfigOffset.CONFIG_RANGE_LENGTH
+
     assert config.get_project_name() == "GOOG0H00"
     assert config.get_vid_pid() == UsbVidPid(0x18D1, 0x5075)
     assert config.get_port_used() == RtkPortUsed.PORTA_ONLY
@@ -155,6 +200,8 @@ def test_rtkconfigfragment_from_file(filepath: Path):
         config.get_debug_accy_gpio_polarity()
         == RtkDebugAccyGpioPolarity.ACTIVE_HIGH
     )
+
+    assert config.get_config_version() == 3
 
     assert config.get_i2c_voltage_pmc() == RtkI2cBusVoltage.LEVEL_1V8
     assert config.get_i2c_voltage_retimer() == RtkI2cBusVoltage.LEVEL_1V8

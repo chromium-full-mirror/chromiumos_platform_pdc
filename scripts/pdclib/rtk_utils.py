@@ -168,6 +168,10 @@ class _RtkConfigMixin:
             return RtkChipType.RTS545X_VB
         return RtkChipType.UNKNOWN
 
+    def get_config_version(self) -> int:
+        """Read the config version"""
+        return self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG)
+
     def get_i2c_voltage_smbus(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the SMBus/EC I2C interface"""
 
@@ -361,12 +365,12 @@ class RtkFwBinary(_RtkConfigMixin):
         """Compare the expected and actual CRC32 checksums"""
         return self.calc_crc32() == self.get_file_crc32()
 
-    def get_fw_version(self) -> Tuple[int, int, int]:
-        """Get the version of the FW and config as tuple"""
+    def get_fw_version(self) -> RtkFwVersion:
+        """Get the version of the FW and config"""
         return RtkFwVersion(
             self.get_byte(RtkFwOffset.FW_VERSION_MAJOR),
             self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
-            self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG),
+            self.get_config_version(),
         )
 
     def get_range(self, start_offset: int, length: int) -> bytes:
@@ -395,17 +399,26 @@ class RtkFwBinary(_RtkConfigMixin):
             )
         ).hexdigest()
 
-    def set_config(self, config: bytearray, preserve_version=True):
+    def set_config(self, config: _RtkConfigMixin, preserve_version=True):
         """Overwrites the config region of a Realtek FW binary
 
-        :param: preserve_version - If true, do not overwrite the major, minor,
-                config version fields and the two chip ID bytes.
+        :param: config - Realtek configuration class. Can be a full FW binary
+                or a config fragment.
+        :param: preserve_version - If true, do not overwrite the major/minor
+                version fields and the two chip ID bytes. If true, throw an
+                exception if the config version field does not match between
+                the base firmware and the config fragment.
         """
-        if len(config) != RtkFwOffset.CONFIG_RANGE_LENGTH:
-            raise ValueError(
-                f"Config length ({len(config)}) does not match expected size "
-                f"({RtkFwOffset.CONFIG_RANGE_LENGTH})"
-            )
+        config_fragment = config.get_config()
+
+        if preserve_version:
+            # Verify the config version matches
+            if self.get_config_version() != config.get_config_version():
+                raise ValueError(
+                    "Config version mismatch: "
+                    f"base firmware version {self.get_config_version()}, "
+                    f"config version {config.get_config_version()}"
+                )
 
         config_ver_major = self._get_config_byte(
             RtkConfigOffset.FW_CONFIG_VERSION_MAJOR
@@ -422,7 +435,7 @@ class RtkFwBinary(_RtkConfigMixin):
 
         self.fw_bin[
             RtkFwOffset.CONFIG_RANGE_START : RtkFwOffset.CONFIG_RANGE_END
-        ] = config
+        ] = config_fragment
 
         if preserve_version:
             # Restore some fields to their original values
