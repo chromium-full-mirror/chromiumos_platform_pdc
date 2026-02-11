@@ -35,6 +35,9 @@ class RtkFwVersion:
     minor: int
     config: int
 
+    def as_tuple(self) -> tuple:
+        return (self.major, self.minor, self.config)
+
     def __str__(self):
         return f"{self.major}.{self.minor}.{self.config}"
 
