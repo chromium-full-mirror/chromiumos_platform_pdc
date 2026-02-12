@@ -20,7 +20,7 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "12-17-2025_21-41-30",
+		"timeStamp": "2-19-2026_13-40-44",
 		"toolBuildVersion": "2.34",
 		"sharedSettings": false
 	},
@@ -3037,8 +3037,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31315130",
-								"value description": "0x31315130"
+								"value (EDITABLE)": "0x31325130",
+								"value description": "0x31325130"
 							}
 						]
 					},
@@ -4143,8 +4143,8 @@
 								"name": "DebugAccessory Support",
 								"start position": 12,
 								"end position": 12,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB3 Rate",
@@ -5816,8 +5816,8 @@
 								"name": "Fast Role Swap required USB Type-C Current",
 								"start position": 31,
 								"end position": 32,
-								"value (EDITABLE)": "0x1",
-								"value description": "Default USB Power"
+								"value (EDITABLE)": "0x0",
+								"value description": "FRS Not Supported"
 							},
 							{
 								"name": "Higher Capability",
@@ -5907,8 +5907,8 @@
 								"name": "Maximum Voltage",
 								"start position": 57,
 								"end position": 64,
-								"value (EDITABLE)": "0x60",
-								"value description": "9.600000000000001 V"
+								"value (EDITABLE)": "0x80",
+								"value description": "12.8 V"
 							},
 							{
 								"name": "Peak Current",
@@ -5921,22 +5921,22 @@
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Peak Current",
 								"start position": 66,
 								"end position": 67,
-								"value (EDITABLE)": "0x0",
-								"value description": "100%"
+								"value (EDITABLE)": "0x2",
+								"value description": "150%"
 							},
 							{
 								"name": "APDO Type",
@@ -5956,36 +5956,36 @@
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Operating Power",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "75 W"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "125 W"
 							},
 							{
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Maximum Current",
 								"start position": 72,
 								"end position": 78,
-								"value (EDITABLE)": "0x2c",
-								"value description": "2.2 A"
+								"value (EDITABLE)": "0x74",
+								"value description": "5.800000000000001 A"
 							},
 							{
 								"name": "Maximum Current for 15V-20V",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Minimum Voltage",
@@ -7160,15 +7160,15 @@
 								"name": "SVID 1",
 								"start position": 0,
 								"end position": 15,
-								"value (EDITABLE)": "0x8087",
-								"value description": "0x8087"
+								"value (EDITABLE)": "0xff01",
+								"value description": "0xff01"
 							},
 							{
 								"name": "SVID 2",
 								"start position": 16,
 								"end position": 31,
-								"value (EDITABLE)": "0xff01",
-								"value description": "0xff01"
+								"value (EDITABLE)": "0x8087",
+								"value description": "0x8087"
 							}
 						]
 					},
@@ -7216,8 +7216,8 @@
 								"name": "Number Valid VDOs",
 								"start position": 0,
 								"end position": 2,
-								"value (EDITABLE)": "0x6",
-								"value description": 6
+								"value (EDITABLE)": "0x4",
+								"value description": 4
 							},
 							{
 								"name": "Vendor ID",
@@ -7307,267 +7307,267 @@
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
 							},
 							{
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
+							},
+							{
+								"name": "BCD Device",
+								"start position": 72,
+								"end position": 87,
+								"value (EDITABLE)": "0x1320",
+								"value description": "0x1320"
+							},
+							{
+								"name": "BCD Device",
+								"start position": 72,
+								"end position": 87,
+								"value (EDITABLE)": "0x1320",
+								"value description": "0x1320"
+							},
+							{
+								"name": "USB Product ID",
+								"start position": 88,
+								"end position": 103,
+								"value (EDITABLE)": "0x507c",
+								"value description": "0x507c"
+							},
+							{
+								"name": "USB Product ID",
+								"start position": 88,
+								"end position": 103,
+								"value (EDITABLE)": "0x507c",
+								"value description": "0x507c"
+							},
+							{
+								"name": "USB Highest Speed",
+								"start position": 104,
+								"end position": 106,
+								"value (EDITABLE)": "0x1",
+								"value description": "USB3.2Gen1"
+							},
+							{
+								"name": "Port Number",
+								"start position": 104,
+								"end position": 108,
+								"value (EDITABLE)": "0x1",
+								"value description": "0x1"
+							},
+							{
+								"name": "Non-Spec Data",
+								"start position": 104,
+								"end position": 134,
+								"value (EDITABLE)": "0x47000021",
+								"value description": "0x47000021"
+							},
+							{
+								"name": "USB Highest Speed",
+								"start position": 104,
+								"end position": 106,
+								"value (EDITABLE)": "0x1",
+								"value description": "USB3.2Gen1"
+							},
+							{
+								"name": "Port Number",
+								"start position": 104,
+								"end position": 108,
+								"value (EDITABLE)": "0x1",
+								"value description": "0x1"
+							},
+							{
+								"name": "Non-Spec Data",
+								"start position": 104,
+								"end position": 134,
+								"value (EDITABLE)": "0x47000021",
+								"value description": "0x47000021"
+							},
+							{
+								"name": "Alternate Mode",
+								"start position": 107,
+								"end position": 109,
+								"value (EDITABLE)": "0x4",
+								"value description": "0x4"
+							},
+							{
+								"name": "Alternate Mode",
+								"start position": 107,
+								"end position": 109,
+								"value (EDITABLE)": "0x4",
+								"value description": "0x4"
+							},
+							{
+								"name": "VBUS Required",
+								"start position": 110,
+								"end position": 110,
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
+							},
+							{
+								"name": "VBUS Required",
+								"start position": 110,
+								"end position": 110,
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
+							},
+							{
+								"name": "VCONN Required",
+								"start position": 111,
+								"end position": 111,
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
+							},
+							{
+								"name": "VCONN Required",
+								"start position": 111,
+								"end position": 111,
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
+							},
+							{
+								"name": "VCONN Power",
+								"start position": 112,
+								"end position": 114,
+								"value (EDITABLE)": "0x0",
+								"value description": "1W"
+							},
+							{
+								"name": "VCONN Power",
+								"start position": 112,
+								"end position": 114,
+								"value (EDITABLE)": "0x0",
+								"value description": "1W"
+							},
+							{
+								"name": "UFP Connector Type (Legacy)",
+								"start position": 126,
+								"end position": 127,
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
+							},
+							{
+								"name": "DFP Connector Type (Legacy)",
+								"start position": 126,
+								"end position": 127,
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
+							},
+							{
+								"name": "UFP Connector Type (Legacy)",
+								"start position": 126,
+								"end position": 127,
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
+							},
+							{
+								"name": "DFP Connector Type (Legacy)",
+								"start position": 126,
+								"end position": 127,
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
+							},
+							{
+								"name": "Device Capability",
+								"start position": 128,
+								"end position": 131,
+								"value (EDITABLE)": "0x7",
+								"value description": "0x7"
+							},
+							{
+								"name": "Host Capability",
+								"start position": 128,
+								"end position": 130,
+								"value (EDITABLE)": "0x7",
+								"value description": "0x7"
+							},
+							{
+								"name": "Device Capability",
+								"start position": 128,
+								"end position": 131,
+								"value (EDITABLE)": "0x7",
+								"value description": "0x7"
+							},
+							{
+								"name": "Host Capability",
+								"start position": 128,
+								"end position": 130,
+								"value (EDITABLE)": "0x7",
+								"value description": "0x7"
+							},
+							{
+								"name": "UFP VDO Version",
+								"start position": 133,
+								"end position": 135,
+								"value (EDITABLE)": "0x2",
+								"value description": "Reserved1"
+							},
+							{
+								"name": "DFP VDO Version",
+								"start position": 133,
+								"end position": 135,
+								"value (EDITABLE)": "0x2",
+								"value description": "Version 1.2"
+							},
+							{
+								"name": "UFP VDO Version",
+								"start position": 133,
+								"end position": 135,
+								"value (EDITABLE)": "0x2",
+								"value description": "Reserved1"
+							},
+							{
+								"name": "DFP VDO Version",
+								"start position": 133,
+								"end position": 135,
+								"value (EDITABLE)": "0x2",
+								"value description": "Version 1.2"
+							},
+							{
+								"name": "USB Highest Speed",
+								"start position": 168,
+								"end position": 170,
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
+							},
+							{
+								"name": "Port Number",
+								"start position": 168,
+								"end position": 172,
 								"value (EDITABLE)": "0x0",
 								"value description": "0x0"
 							},
 							{
-								"name": "BCD Device",
-								"start position": 72,
-								"end position": 87,
-								"value (EDITABLE)": "0x1320",
-								"value description": "0x1320"
-							},
-							{
-								"name": "BCD Device",
-								"start position": 72,
-								"end position": 87,
-								"value (EDITABLE)": "0x1320",
-								"value description": "0x1320"
-							},
-							{
-								"name": "USB Product ID",
-								"start position": 88,
-								"end position": 103,
-								"value (EDITABLE)": "0x507c",
-								"value description": "0x507c"
-							},
-							{
-								"name": "USB Product ID",
-								"start position": 88,
-								"end position": 103,
-								"value (EDITABLE)": "0x507c",
-								"value description": "0x507c"
-							},
-							{
-								"name": "USB Highest Speed",
-								"start position": 104,
-								"end position": 106,
-								"value (EDITABLE)": "0x3",
-								"value description": "USB4Gen3"
-							},
-							{
-								"name": "Port Number",
-								"start position": 104,
-								"end position": 108,
-								"value (EDITABLE)": "0xb",
-								"value description": "0xb"
-							},
-							{
 								"name": "Non-Spec Data",
-								"start position": 104,
-								"end position": 134,
-								"value (EDITABLE)": "0x6500002b",
-								"value description": "0x6500002b"
-							},
-							{
-								"name": "USB Highest Speed",
-								"start position": 104,
-								"end position": 106,
-								"value (EDITABLE)": "0x3",
-								"value description": "USB4Gen3"
-							},
-							{
-								"name": "Port Number",
-								"start position": 104,
-								"end position": 108,
-								"value (EDITABLE)": "0xb",
-								"value description": "0xb"
-							},
-							{
-								"name": "Non-Spec Data",
-								"start position": 104,
-								"end position": 134,
-								"value (EDITABLE)": "0x6500002b",
-								"value description": "0x6500002b"
-							},
-							{
-								"name": "Alternate Mode",
-								"start position": 107,
-								"end position": 109,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "Alternate Mode",
-								"start position": 107,
-								"end position": 109,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "VBUS Required",
-								"start position": 110,
-								"end position": 110,
+								"start position": 168,
+								"end position": 198,
 								"value (EDITABLE)": "0x0",
-								"value description": "False"
-							},
-							{
-								"name": "VBUS Required",
-								"start position": 110,
-								"end position": 110,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
-							},
-							{
-								"name": "VCONN Required",
-								"start position": 111,
-								"end position": 111,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
-							},
-							{
-								"name": "VCONN Required",
-								"start position": 111,
-								"end position": 111,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
-							},
-							{
-								"name": "VCONN Power",
-								"start position": 112,
-								"end position": 114,
-								"value (EDITABLE)": "0x0",
-								"value description": "1W"
-							},
-							{
-								"name": "VCONN Power",
-								"start position": 112,
-								"end position": 114,
-								"value (EDITABLE)": "0x0",
-								"value description": "1W"
-							},
-							{
-								"name": "UFP Connector Type (Legacy)",
-								"start position": 126,
-								"end position": 127,
-								"value (EDITABLE)": "0x0",
-								"value description": "Reserved"
-							},
-							{
-								"name": "DFP Connector Type (Legacy)",
-								"start position": 126,
-								"end position": 127,
-								"value (EDITABLE)": "0x0",
-								"value description": "Reserved"
-							},
-							{
-								"name": "UFP Connector Type (Legacy)",
-								"start position": 126,
-								"end position": 127,
-								"value (EDITABLE)": "0x0",
-								"value description": "Reserved"
-							},
-							{
-								"name": "DFP Connector Type (Legacy)",
-								"start position": 126,
-								"end position": 127,
-								"value (EDITABLE)": "0x0",
-								"value description": "Reserved"
-							},
-							{
-								"name": "Device Capability",
-								"start position": 128,
-								"end position": 131,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "Host Capability",
-								"start position": 128,
-								"end position": 130,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "Device Capability",
-								"start position": 128,
-								"end position": 131,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "Host Capability",
-								"start position": 128,
-								"end position": 130,
-								"value (EDITABLE)": "0x5",
-								"value description": "0x5"
-							},
-							{
-								"name": "UFP VDO Version",
-								"start position": 133,
-								"end position": 135,
-								"value (EDITABLE)": "0x3",
-								"value description": "Version 1.3"
-							},
-							{
-								"name": "DFP VDO Version",
-								"start position": 133,
-								"end position": 135,
-								"value (EDITABLE)": "0x3",
-								"value description": "Reserved1"
-							},
-							{
-								"name": "UFP VDO Version",
-								"start position": 133,
-								"end position": 135,
-								"value (EDITABLE)": "0x3",
-								"value description": "Version 1.3"
-							},
-							{
-								"name": "DFP VDO Version",
-								"start position": 133,
-								"end position": 135,
-								"value (EDITABLE)": "0x3",
-								"value description": "Reserved1"
+								"value description": "0x0"
 							},
 							{
 								"name": "USB Highest Speed",
 								"start position": 168,
 								"end position": 170,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 168,
 								"end position": 172,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 168,
 								"end position": 198,
-								"value (EDITABLE)": "0x47000001",
-								"value description": "0x47000001"
-							},
-							{
-								"name": "USB Highest Speed",
-								"start position": 168,
-								"end position": 170,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
-							},
-							{
-								"name": "Port Number",
-								"start position": 168,
-								"end position": 172,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
-							},
-							{
-								"name": "Non-Spec Data",
-								"start position": 168,
-								"end position": 198,
-								"value (EDITABLE)": "0x47000001",
-								"value description": "0x47000001"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Alternate Mode",
@@ -7657,57 +7657,57 @@
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							}
 						]
 					},
@@ -8777,8 +8777,8 @@
 								"name": "Source PDP",
 								"start position": 104,
 								"end position": 110,
-								"value (EDITABLE)": "0x8",
-								"value description": "8 W"
+								"value (EDITABLE)": "0xf",
+								"value description": "15 W"
 							},
 							{
 								"name": "Source EPR PDP",
@@ -8798,15 +8798,15 @@
 								"name": "Port Reported PDP",
 								"start position": 0,
 								"end position": 7,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Present PDP",
 								"start position": 8,
 								"end position": 15,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Maximum PDP",
@@ -8833,8 +8833,8 @@
 								"name": "Port Maximum PDP2",
 								"start position": 41,
 								"end position": 49,
-								"value (EDITABLE)": "0xf",
-								"value description": "0xf"
+								"value (EDITABLE)": "0x1e",
+								"value description": "0x1e"
 							},
 							{
 								"name": "DPSPort",
@@ -9092,8 +9092,8 @@
 								"name": "Sink Maximum PDP",
 								"start position": 80,
 								"end position": 87,
-								"value (EDITABLE)": "0x3c",
-								"value description": "60 W"
+								"value (EDITABLE)": "0x64",
+								"value description": "100 W"
 							},
 							{
 								"name": "EPR Sink Minimum PDP",
@@ -9267,8 +9267,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31315130",
-								"value description": "0x31315130"
+								"value (EDITABLE)": "0x31325130",
+								"value description": "0x31325130"
 							}
 						]
 					},
@@ -12046,8 +12046,8 @@
 								"name": "Fast Role Swap required USB Type-C Current",
 								"start position": 31,
 								"end position": 32,
-								"value (EDITABLE)": "0x1",
-								"value description": "Default USB Power"
+								"value (EDITABLE)": "0x0",
+								"value description": "FRS Not Supported"
 							},
 							{
 								"name": "Higher Capability",
@@ -12137,8 +12137,8 @@
 								"name": "Maximum Voltage",
 								"start position": 57,
 								"end position": 64,
-								"value (EDITABLE)": "0x60",
-								"value description": "9.600000000000001 V"
+								"value (EDITABLE)": "0x80",
+								"value description": "12.8 V"
 							},
 							{
 								"name": "Peak Current",
@@ -12151,22 +12151,22 @@
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Peak Current",
 								"start position": 66,
 								"end position": 67,
-								"value (EDITABLE)": "0x0",
-								"value description": "100%"
+								"value (EDITABLE)": "0x2",
+								"value description": "150%"
 							},
 							{
 								"name": "APDO Type",
@@ -12186,36 +12186,36 @@
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Operating Power",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "75 W"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "125 W"
 							},
 							{
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Maximum Current",
 								"start position": 72,
 								"end position": 78,
-								"value (EDITABLE)": "0x2c",
-								"value description": "2.2 A"
+								"value (EDITABLE)": "0x74",
+								"value description": "5.800000000000001 A"
 							},
 							{
 								"name": "Maximum Current for 15V-20V",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Minimum Voltage",
@@ -13390,15 +13390,15 @@
 								"name": "SVID 1",
 								"start position": 0,
 								"end position": 15,
-								"value (EDITABLE)": "0x8087",
-								"value description": "0x8087"
+								"value (EDITABLE)": "0xff01",
+								"value description": "0xff01"
 							},
 							{
 								"name": "SVID 2",
 								"start position": 16,
 								"end position": 31,
-								"value (EDITABLE)": "0xff01",
-								"value description": "0xff01"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							}
 						]
 					},
@@ -13537,85 +13537,85 @@
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
 							},
 							{
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
+							},
+							{
+								"name": "BCD Device",
+								"start position": 72,
+								"end position": 87,
+								"value (EDITABLE)": "0x1320",
+								"value description": "0x1320"
+							},
+							{
+								"name": "BCD Device",
+								"start position": 72,
+								"end position": 87,
+								"value (EDITABLE)": "0x1320",
+								"value description": "0x1320"
+							},
+							{
+								"name": "USB Product ID",
+								"start position": 88,
+								"end position": 103,
+								"value (EDITABLE)": "0x507c",
+								"value description": "0x507c"
+							},
+							{
+								"name": "USB Product ID",
+								"start position": 88,
+								"end position": 103,
+								"value (EDITABLE)": "0x507c",
+								"value description": "0x507c"
+							},
+							{
+								"name": "USB Highest Speed",
+								"start position": 104,
+								"end position": 106,
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
+							},
+							{
+								"name": "Port Number",
+								"start position": 104,
+								"end position": 108,
 								"value (EDITABLE)": "0x0",
 								"value description": "0x0"
 							},
 							{
-								"name": "BCD Device",
-								"start position": 72,
-								"end position": 87,
-								"value (EDITABLE)": "0x1320",
-								"value description": "0x1320"
-							},
-							{
-								"name": "BCD Device",
-								"start position": 72,
-								"end position": 87,
-								"value (EDITABLE)": "0x1320",
-								"value description": "0x1320"
-							},
-							{
-								"name": "USB Product ID",
-								"start position": 88,
-								"end position": 103,
-								"value (EDITABLE)": "0x507c",
-								"value description": "0x507c"
-							},
-							{
-								"name": "USB Product ID",
-								"start position": 88,
-								"end position": 103,
-								"value (EDITABLE)": "0x507c",
-								"value description": "0x507c"
+								"name": "Non-Spec Data",
+								"start position": 104,
+								"end position": 134,
+								"value (EDITABLE)": "0x43000000",
+								"value description": "0x43000000"
 							},
 							{
 								"name": "USB Highest Speed",
 								"start position": 104,
 								"end position": 106,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 104,
 								"end position": 108,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
-							},
-							{
-								"name": "USB Highest Speed",
-								"start position": 104,
-								"end position": 106,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
-							},
-							{
-								"name": "Port Number",
-								"start position": 104,
-								"end position": 108,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
-							},
-							{
-								"name": "Non-Spec Data",
-								"start position": 104,
-								"end position": 134,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
+								"value (EDITABLE)": "0x43000000",
+								"value description": "0x43000000"
 							},
 							{
 								"name": "Alternate Mode",
@@ -15007,8 +15007,8 @@
 								"name": "Source PDP",
 								"start position": 104,
 								"end position": 110,
-								"value (EDITABLE)": "0x8",
-								"value description": "8 W"
+								"value (EDITABLE)": "0xf",
+								"value description": "15 W"
 							},
 							{
 								"name": "Source EPR PDP",
@@ -15028,15 +15028,15 @@
 								"name": "Port Reported PDP",
 								"start position": 0,
 								"end position": 7,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Present PDP",
 								"start position": 8,
 								"end position": 15,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Maximum PDP",
@@ -15063,8 +15063,8 @@
 								"name": "Port Maximum PDP2",
 								"start position": 41,
 								"end position": 49,
-								"value (EDITABLE)": "0xf",
-								"value description": "0xf"
+								"value (EDITABLE)": "0x1e",
+								"value description": "0x1e"
 							},
 							{
 								"name": "DPSPort",
@@ -15322,8 +15322,8 @@
 								"name": "Sink Maximum PDP",
 								"start position": 80,
 								"end position": 87,
-								"value (EDITABLE)": "0x3c",
-								"value description": "60 W"
+								"value (EDITABLE)": "0x64",
+								"value description": "100 W"
 							},
 							{
 								"name": "EPR Sink Minimum PDP",
@@ -15497,8 +15497,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31315130",
-								"value description": "0x31315130"
+								"value (EDITABLE)": "0x31325130",
+								"value description": "0x31325130"
 							}
 						]
 					},
@@ -16820,8 +16820,8 @@
 								"name": "DebugAccessory Support",
 								"start position": 12,
 								"end position": 12,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB3 Rate",
@@ -18640,8 +18640,8 @@
 								"name": "Maximum Voltage",
 								"start position": 57,
 								"end position": 64,
-								"value (EDITABLE)": "0x60",
-								"value description": "9.600000000000001 V"
+								"value (EDITABLE)": "0x80",
+								"value description": "12.8 V"
 							},
 							{
 								"name": "Peak Current",
@@ -18654,22 +18654,22 @@
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Maximum Voltage",
 								"start position": 60,
 								"end position": 69,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Peak Current",
 								"start position": 66,
 								"end position": 67,
-								"value (EDITABLE)": "0x0",
-								"value description": "100%"
+								"value (EDITABLE)": "0x2",
+								"value description": "150%"
 							},
 							{
 								"name": "APDO Type",
@@ -18689,36 +18689,36 @@
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Operating Power",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "75 W"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "125 W"
 							},
 							{
 								"name": "Operating Current",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Maximum Current",
 								"start position": 72,
 								"end position": 78,
-								"value (EDITABLE)": "0x2c",
-								"value description": "2.2 A"
+								"value (EDITABLE)": "0x74",
+								"value description": "5.800000000000001 A"
 							},
 							{
 								"name": "Maximum Current for 15V-20V",
 								"start position": 72,
 								"end position": 81,
-								"value (EDITABLE)": "0x12c",
-								"value description": "3 A"
+								"value (EDITABLE)": "0x1f4",
+								"value description": "5 A"
 							},
 							{
 								"name": "Minimum Voltage",
@@ -18759,8 +18759,8 @@
 								"name": "Maximum Voltage",
 								"start position": 89,
 								"end position": 96,
-								"value (EDITABLE)": "0x60",
-								"value description": "9.600000000000001 V"
+								"value (EDITABLE)": "0x80",
+								"value description": "12.8 V"
 							},
 							{
 								"name": "Peak Current",
@@ -18773,22 +18773,22 @@
 								"name": "Maximum Voltage",
 								"start position": 92,
 								"end position": 101,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Maximum Voltage",
 								"start position": 92,
 								"end position": 101,
-								"value (EDITABLE)": "0x12c",
-								"value description": "15 V"
+								"value (EDITABLE)": "0x190",
+								"value description": "20 V"
 							},
 							{
 								"name": "Peak Current",
 								"start position": 98,
 								"end position": 99,
-								"value (EDITABLE)": "0x0",
-								"value description": "100%"
+								"value (EDITABLE)": "0x2",
+								"value description": "150%"
 							},
 							{
 								"name": "APDO Type",
@@ -19893,15 +19893,15 @@
 								"name": "SVID 1",
 								"start position": 0,
 								"end position": 15,
-								"value (EDITABLE)": "0x8087",
-								"value description": "0x8087"
+								"value (EDITABLE)": "0xff01",
+								"value description": "0xff01"
 							},
 							{
 								"name": "SVID 2",
 								"start position": 16,
 								"end position": 31,
-								"value (EDITABLE)": "0xff01",
-								"value description": "0xff01"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							}
 						]
 					},
@@ -20306,15 +20306,15 @@
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
 							},
 							{
 								"name": "Certification Test ID",
 								"start position": 40,
 								"end position": 71,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x44c0",
+								"value description": "0x44c0"
 							},
 							{
 								"name": "BCD Device",
@@ -20348,43 +20348,43 @@
 								"name": "USB Highest Speed",
 								"start position": 104,
 								"end position": 106,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x2",
+								"value description": "USB3.2Gen2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 104,
 								"end position": 108,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x2",
+								"value description": "0x2"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
+								"value (EDITABLE)": "0x43000002",
+								"value description": "0x43000002"
 							},
 							{
 								"name": "USB Highest Speed",
 								"start position": 104,
 								"end position": 106,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x2",
+								"value description": "USB3.2Gen2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 104,
 								"end position": 108,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x2",
+								"value description": "0x2"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
+								"value (EDITABLE)": "0x43000002",
+								"value description": "0x43000002"
 							},
 							{
 								"name": "Alternate Mode",
@@ -21958,8 +21958,8 @@
 								"name": "Source PDP",
 								"start position": 104,
 								"end position": 110,
-								"value (EDITABLE)": "0x8",
-								"value description": "8 W"
+								"value (EDITABLE)": "0xf",
+								"value description": "15 W"
 							},
 							{
 								"name": "Source EPR PDP",
@@ -21979,15 +21979,15 @@
 								"name": "Port Reported PDP",
 								"start position": 0,
 								"end position": 7,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Present PDP",
 								"start position": 8,
 								"end position": 15,
-								"value (EDITABLE)": "0xf",
-								"value description": "15  W"
+								"value (EDITABLE)": "0x7",
+								"value description": "7  W"
 							},
 							{
 								"name": "Port Maximum PDP",
@@ -22014,8 +22014,8 @@
 								"name": "Port Maximum PDP2",
 								"start position": 41,
 								"end position": 49,
-								"value (EDITABLE)": "0xf",
-								"value description": "0xf"
+								"value (EDITABLE)": "0x1e",
+								"value description": "0x1e"
 							},
 							{
 								"name": "DPSPort",
@@ -22483,8 +22483,8 @@
 								"name": "Sink Maximum PDP",
 								"start position": 80,
 								"end position": 87,
-								"value (EDITABLE)": "0x2d",
-								"value description": "45 W"
+								"value (EDITABLE)": "0x64",
+								"value description": "100 W"
 							},
 							{
 								"name": "EPR Sink Minimum PDP",
