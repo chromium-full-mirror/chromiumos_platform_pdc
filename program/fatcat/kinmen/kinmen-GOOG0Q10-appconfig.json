@@ -3037,8 +3037,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x30315130",
-								"value description": "0x30315130"
+								"value (EDITABLE)": "0x30325130",
+								"value description": "0x30325130"
 							}
 						]
 					},
@@ -6971,8 +6971,8 @@
 								"name": "No Capabality Mismatch",
 								"start position": 3,
 								"end position": 3,
-								"value (EDITABLE)": "0x0",
-								"value description": "The capability mismatch bit will be asserted to indicate to the attached source that more power is desired"
+								"value (EDITABLE)": "0x1",
+								"value description": "The capability mismatch bit will not be asserted"
 							},
 							{
 								"name": "Auto Compute Sink Min Voltage",
@@ -9267,8 +9267,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x30315130",
-								"value description": "0x30315130"
+								"value (EDITABLE)": "0x30325130",
+								"value description": "0x30325130"
 							}
 						]
 					},
@@ -13202,7 +13202,7 @@
 								"start position": 3,
 								"end position": 3,
 								"value (EDITABLE)": "0x0",
-								"value description": "The capability mismatch bit will be asserted to indicate to the attached source that more power is desired"
+								"value description": "The capability mismatch bit will not be asserted"
 							},
 							{
 								"name": "Auto Compute Sink Min Voltage",
@@ -15497,8 +15497,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x30315130",
-								"value description": "0x30315130"
+								"value (EDITABLE)": "0x30325130",
+								"value description": "0x30325130"
 							}
 						]
 					},
@@ -19704,8 +19704,8 @@
 								"name": "No Capabality Mismatch",
 								"start position": 3,
 								"end position": 3,
-								"value (EDITABLE)": "0x0",
-								"value description": "The capability mismatch bit will be asserted to indicate to the attached source that more power is desired"
+								"value (EDITABLE)": "0x1",
+								"value description": "The capability mismatch bit will not be asserted"
 							},
 							{
 								"name": "Auto Compute Sink Min Voltage",
