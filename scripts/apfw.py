@@ -11,6 +11,7 @@ the user's $PATH.
 """
 
 import argparse
+import json
 import logging
 from pathlib import Path
 import sys
@@ -36,26 +37,33 @@ def cmd_read_ap_image(args) -> int:
 
     detected_fw = apfw_image.search_pdc_fw_images(args.ap_fw_path, cbfstool)
 
-    # Human-readable text output, alphabetically ordered.
-    for file in sorted(detected_fw.keys()):
-        file_info = detected_fw[file]
-        hash_text = (
-            (
-                "%d.%d.%d (%s)"
-                % (
-                    *file_info["hash_file"]["ver"],
-                    file_info["hash_file"].get("config_name", "N/A"),
-                )
-            )
-            if file_info["hash_file"]
-            else "Missing/invalid"
-        )
-        fw_ver_text = "%d.%d.%d (%s)" % (*file_info["fw_binary"],)
+    if args.json:
+        # JSON output
         print(
-            f"{file:<25}Hash File: {hash_text:<19} "
-            f"SHA1: {file_info['fw_binary_hash']:<42} "
-            f"Embedded: {fw_ver_text}"
+            json.dumps(
+                {
+                    "input_file": str(args.ap_fw_path.resolve()),
+                    "detected_fw": detected_fw,
+                }
+            )
         )
+    else:
+        # Human-readable text output, alphabetically ordered.
+        for file in sorted(detected_fw.keys()):
+            file_info = detected_fw[file]
+
+            hash_text = "%d.%d.%d (%s)" % (
+                *file_info["hash_file"]["ver"],
+                file_info["hash_file"].get("config_name", "N/A"),
+            )
+            fw_ver_text = "%d.%d.%d (%s)" % (*file_info["fw_binary"],)
+            print(
+                f"{file:<25}Hash File: {hash_text:<19} "
+                f"SHA1: {file_info['fw_binary_hash']:<42} "
+                f"Embedded: {fw_ver_text}"
+            )
+
+    return 0
 
 
 def main(argv: list[str] | None) -> int:
@@ -75,6 +83,9 @@ def main(argv: list[str] | None) -> int:
         "--verbose",
         action="store_true",
         help="Enable verbose log messages",
+    )
+    parser.add_argument(
+        "-j", "--json", action="store_true", help="Output data in JSON format"
     )
 
     cli_args = parser.parse_args(argv)
