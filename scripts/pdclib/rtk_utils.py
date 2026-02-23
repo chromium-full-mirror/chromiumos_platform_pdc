@@ -53,11 +53,11 @@ class _RtkConfigMixin:
     """Provides methods for reading a RTK config section.
 
     This is an abstract class intended to be mixed-in to another class. Its
-    subclasses shall implement `get_config_region()` to access the underlying
-    config section data by reference.
+    subclasses shall implement `_get_config_region_location()` to access the
+    underlying config section data by reference.
     """
 
-    def get_config_region(self) -> Tuple[bytearray, int]:
+    def _get_config_region_location(self) -> Tuple[bytearray, int]:
         """Implement in the inheriting class
 
         Should provide a reference to the bytearray containing the config data,
@@ -67,7 +67,7 @@ class _RtkConfigMixin:
 
     def _get_config_range(self, start_offset: int, length: int) -> bytearray:
         """Read a chunk of the config section"""
-        config_fragment, offset = self.get_config_region()
+        config_fragment, offset = self._get_config_region_location()
 
         start_offset += offset
 
@@ -273,7 +273,9 @@ class _RtkConfigMixin:
 class RtkConfigFragment(_RtkConfigMixin):
     """Stores a standalone config fragment."""
 
-    def __init__(self, config_fragment: bytearray):
+    def __init__(self, filepath: Path):
+        config_fragment = filepath.read_bytes()
+
         if len(config_fragment) != RtkConfigOffset.CONFIG_RANGE_LENGTH:
             raise ValueError(
                 "Config fragment has unexpected length: "
@@ -284,35 +286,20 @@ class RtkConfigFragment(_RtkConfigMixin):
         self.config_fragment = config_fragment
 
     # @override
-    def get_config_region(self) -> Tuple[bytearray, int]:
+    def _get_config_region_location(self) -> Tuple[bytearray, int]:
         """Provide a reference to the config fragment bytearray
 
         Used by the mixin's methods to access the underlying config data
         """
         return self.config_fragment, 0
 
-    @classmethod
-    def from_file(cls, filepath: Path):
-        size = filepath.stat().st_size
-
-        if size == RtkFwOffset.CONFIG_RANGE_LENGTH:
-            # Loading just a config fragment
-            with open(filepath, "rb") as f:
-                return cls(bytearray(f.read()))
-        if size == RtkFwOffset.TOTAL_SIZE:
-            # Loading a full FW bundle. Extract just the config.
-            fw = RtkFwBinary(filepath)
-            return cls(fw.get_config())
-
-        raise RtkFileSizeError(f"File {filepath} has unexpected size")
-
 
 class RtkFwBinary(_RtkConfigMixin):
     """Utilities for examining a Realtek PDC firmware binary
 
-    This class mixed in RtkConfigBinary, so all of its methods are directly
-    available. _get_config_range() is overridden to remap the config data
-    location to where it appears in the full FW binary.
+    This class mixes in RtkConfigBinary, so all of its methods are directly
+    available. _get_config_region_location() is overridden to remap the config
+    data location to where it appears in the full FW binary.
     """
 
     def __init__(self, fw_path: Path):
@@ -328,8 +315,9 @@ class RtkFwBinary(_RtkConfigMixin):
             )
 
         # Do not initialize the superclass (RtkConfigBinary). Just allow its
-        # methods to mix-in and override _get_config_range so those methods
-        # read from self.fw_bin with an overall config section offset added.
+        # methods to mix-in and override _get_config_region_location() so those
+        # methods read from self.fw_bin with an overall config section offset
+        # added.
 
     def get_size(self):
         """Size of the FW binary in bytes"""
@@ -383,7 +371,7 @@ class RtkFwBinary(_RtkConfigMixin):
         return self.get_range(offset, 1)[0]
 
     # @override
-    def get_config_region(self) -> Tuple[bytearray, int]:
+    def _get_config_region_location(self) -> Tuple[bytearray, int]:
         """Provides _RtkConfigMixin access to the config data
 
         Pass a reference to fw_bin with an offset to the start of the config
@@ -468,14 +456,41 @@ class RtkFwBinary(_RtkConfigMixin):
         path.write_bytes(self.fw_bin)
 
 
-def print_config(fw: RtkFwBinary, output_func=print):
-    """Parse a firmware binary, printing out key configuration values
+def fw_or_config_from_file(filepath: Path) -> RtkFwBinary | RtkConfigFragment:
+    """Read a RtkFwBinary or RtkConfigFragment from file
+
+    The type is determined automatically by file size.
+    """
+
+    size = filepath.stat().st_size
+
+    if size == RtkFwOffset.CONFIG_RANGE_LENGTH:
+        # Loading just a config fragment
+        return RtkConfigFragment(filepath)
+    if size == RtkFwOffset.TOTAL_SIZE:
+        # Loading a full FW bundle.
+        return RtkFwBinary(filepath)
+
+    raise RtkFileSizeError(
+        f"Size of {filepath} ({size} bytes) matches neither full binary nor "
+        "config fragment lengths"
+    )
+
+
+def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
+    """Parse firmware binary or config fragment, printing out key config values
 
     Args:
-        fw: RtkFwBinary class containing the full Realtek firmware binary
+        binary: RtkFwBinary containing the full Realtek firmware binary or a
+                RtkConfigFragment containing only a config section.
         output_func: Function to call to output lines. Defaults to print().
                      Should automatically apply newlines.
     """
+
+    if not isinstance(binary, _RtkConfigMixin):
+        raise TypeError("Param `binary` must inherit _RtkConfigMixin")
+
+    is_full_fw_binary = isinstance(binary, RtkFwBinary)
 
     def format_i2c_addrs(addrs: Iterable[int]) -> str:
         return ", ".join([hex(i) for i in addrs])
@@ -489,44 +504,50 @@ def print_config(fw: RtkFwBinary, output_func=print):
         return COMMON_SVIDS.get(svid, hex(svid))
 
     rtk_configs = {
-        "Project name": fw.get_project_name(),
-        "Chip type": fw.get_chip_type().name,
-        "Version": fw.get_fw_version(),
-        "USB VID:PID": fw.get_vid_pid(),
-        "Port config": fw.get_port_used().name,
-        "Debug Accy GPIO": fw.get_debug_accy_gpio_polarity().name,
-        "PMC I2C Base addrs": format_i2c_addrs(fw.get_pmc_i2c_addrs()),
-        "Retimer I2C addrs": format_i2c_addrs(fw.get_retimer_i2c_addrs()),
-        "BBR I2C addrs": format_i2c_addrs(fw.get_bbr_i2c_addrs()),
-        "SMBus I2C voltage": fw.get_i2c_voltage_smbus().name,
-        "Retimer I2C voltage": fw.get_i2c_voltage_retimer().name,
-        "PMC I2C voltage": fw.get_i2c_voltage_pmc().name,
+        "Project name": binary.get_project_name(),
+        "Chip type": binary.get_chip_type().name,
+        "Version": (binary.get_fw_version() if is_full_fw_binary else "N/A"),
+        "USB VID:PID": binary.get_vid_pid(),
+        "Port config": binary.get_port_used().name,
+        "Debug Accy GPIO": binary.get_debug_accy_gpio_polarity().name,
+        "PMC I2C Base addrs": format_i2c_addrs(binary.get_pmc_i2c_addrs()),
+        "Retimer I2C addrs": format_i2c_addrs(binary.get_retimer_i2c_addrs()),
+        "BBR I2C addrs": format_i2c_addrs(binary.get_bbr_i2c_addrs()),
+        "SMBus I2C voltage": binary.get_i2c_voltage_smbus().name,
+        "Retimer I2C voltage": binary.get_i2c_voltage_retimer().name,
+        "PMC I2C voltage": binary.get_i2c_voltage_pmc().name,
         "SVIDs Port A": ", ".join(
-            (format_svid(svid) for svid in fw.get_svids("A"))
+            (format_svid(svid) for svid in binary.get_svids("A"))
         ),
         "SVIDs Port B": ", ".join(
-            (format_svid(svid) for svid in fw.get_svids("B"))
+            (format_svid(svid) for svid in binary.get_svids("B"))
         ),
-        "CRC32": hex(fw.get_file_crc32()),
-        "Base FW SHA1": fw.get_base_firmware_hash(),
-        "Config SHA1": fw.get_config_hash(),
+        "CRC32": (hex(binary.get_file_crc32()) if is_full_fw_binary else "N/A"),
+        "Base FW SHA1": (
+            binary.get_base_firmware_hash() if is_full_fw_binary else "N/A"
+        ),
+        "Config SHA1": binary.get_config_hash(),
     }
 
     for name, value in rtk_configs.items():
         output_func(f"{name.ljust(20)}: {value}")
 
     output_func("Sink PDOs Port A:")
-    for p in fw.get_pdos(PDORole.SINK, "A"):
-        output_func(p)
+    for p in binary.get_pdos(PDORole.SINK, "A"):
+        output_func(str(p))
 
     output_func("Sink PDOs Port B:")
-    for p in fw.get_pdos(PDORole.SINK, "B"):
-        output_func(p)
+    for p in binary.get_pdos(PDORole.SINK, "B"):
+        output_func(str(p))
 
-    output_func(f"Source PDOs Port A: (Max PDP = {fw.get_src_max_pdp('A')}W)")
-    for p in fw.get_pdos(PDORole.SOURCE, "A"):
-        output_func(p)
+    output_func(
+        f"Source PDOs Port A: (Max PDP = {binary.get_src_max_pdp('A')}W)"
+    )
+    for p in binary.get_pdos(PDORole.SOURCE, "A"):
+        output_func(str(p))
 
-    output_func(f"Source PDOs Port B: (Max PDP = {fw.get_src_max_pdp('B')}W)")
-    for p in fw.get_pdos(PDORole.SOURCE, "B"):
-        output_func(p)
+    output_func(
+        f"Source PDOs Port B: (Max PDP = {binary.get_src_max_pdp('B')}W)"
+    )
+    for p in binary.get_pdos(PDORole.SOURCE, "B"):
+        output_func(str(p))

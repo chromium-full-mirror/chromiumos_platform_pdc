@@ -1,0 +1,25 @@
+Project name        : GOOG0H00
+Chip type           : RTS545X
+Version             : 0.44.3
+USB VID:PID         : 18D1:5075
+Port config         : PORTA_ONLY
+Debug Accy GPIO     : ACTIVE_HIGH
+PMC I2C Base addrs  : 0x68, 0x68
+Retimer I2C addrs   : 0x10, 0x8
+BBR I2C addrs       : 0x56, 0x40
+SMBus I2C voltage   : LEVEL_3V3
+Retimer I2C voltage : LEVEL_1V8
+PMC I2C voltage     : LEVEL_1V8
+SVIDs Port A        : TBT (8087), DP (ff01)
+SVIDs Port B        : DP (ff01)
+CRC32               : 0xb2b5d7c5
+Base FW SHA1        : d209ee514901933893977dd6891eb892643db316
+Config SHA1         : 0b200289086f713fc175b32ff2f11fce6148c690
+Sink PDOs Port A:
+2601912c: FIX |  5000mV  3000mA    15.0W | DRP DRD USB         | FRS_NOT_SUPPORTED
+Sink PDOs Port B:
+2601912c: FIX |  5000mV  3000mA    15.0W | DRP DRD USB         | FRS_NOT_SUPPORTED
+Source PDOs Port A: (Max PDP = 15W)
+00019096: FIX |  5000mV  1500mA     7.5W |                     |           PEAK_100
+Source PDOs Port B: (Max PDP = 15W)
+37119096: FIX |  5000mV  1500mA     7.5W | DRP DRD USB     SUS |     UCHNK PEAK_110

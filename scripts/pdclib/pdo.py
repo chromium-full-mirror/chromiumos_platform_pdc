@@ -257,7 +257,7 @@ class PDOFixed(PDO):
         if self.role == PDORole.SINK:
             output += f"{self.frs_current.name} "
 
-        return output
+        return output.strip()
 
 
 class PDOBattery(PDO):

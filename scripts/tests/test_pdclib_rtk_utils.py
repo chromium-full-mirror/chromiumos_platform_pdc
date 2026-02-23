@@ -19,6 +19,8 @@ from pdclib.rtk_constants import RtkConfigOffset
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortUsed
+from pdclib.rtk_utils import fw_or_config_from_file
+from pdclib.rtk_utils import print_config
 from pdclib.rtk_utils import RtkConfigFragment
 from pdclib.rtk_utils import RtkFileSizeError
 from pdclib.rtk_utils import RtkFwBinary
@@ -98,7 +100,7 @@ def test_rtkfwbinary_fragment_config_mismatch():
         )
     )
 
-    fw_conf = RtkConfigFragment.from_file(
+    fw_conf = RtkConfigFragment(
         get_test_file_path("ocelotrvp-GOOG0H00-config_v4.bin")
     )
 
@@ -122,7 +124,7 @@ def test_rtkfwbinary_bin_config_mismatch():
 def test_rtkfwbinary_set_config():
     fw = RtkFwBinary(get_test_file_path("rts5453_v0.45.4.bin"))
 
-    fw_conf = RtkConfigFragment.from_file(
+    fw_conf = RtkConfigFragment(
         get_test_file_path("ocelotrvp-GOOG0H00-config_v4.bin")
     )
 
@@ -174,8 +176,7 @@ def test_rtkfwbinary_export_fw_binary_malformed():
     "filepath",
     [
         # Each of these has the same config data. The first is a full FW bundle,
-        # the second is a config fragment. `RtkConfigFragment.from_file()` is
-        # able to parse both formats.
+        # the second is a config fragment.
         pytest.param(
             get_test_file_path(
                 "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
@@ -188,49 +189,49 @@ def test_rtkfwbinary_export_fw_binary_malformed():
         ),
     ],
 )
-def test_rtkconfigfragment_from_file(filepath: Path):
-    config = RtkConfigFragment.from_file(filepath)
+def test_fw_or_config_from_file(filepath: Path):
+    binary = fw_or_config_from_file(filepath)
 
-    assert len(config.get_config()) == RtkConfigOffset.CONFIG_RANGE_LENGTH
+    assert len(binary.get_config()) == RtkConfigOffset.CONFIG_RANGE_LENGTH
 
-    assert config.get_project_name() == "GOOG0H00"
-    assert config.get_vid_pid() == UsbVidPid(0x18D1, 0x5075)
-    assert config.get_port_used() == RtkPortUsed.PORTA_ONLY
+    assert binary.get_project_name() == "GOOG0H00"
+    assert binary.get_vid_pid() == UsbVidPid(0x18D1, 0x5075)
+    assert binary.get_port_used() == RtkPortUsed.PORTA_ONLY
     assert (
-        config.get_debug_accy_gpio_polarity()
+        binary.get_debug_accy_gpio_polarity()
         == RtkDebugAccyGpioPolarity.ACTIVE_HIGH
     )
 
-    assert config.get_config_version() == 3
+    assert binary.get_config_version() == 3
 
-    assert config.get_i2c_voltage_pmc() == RtkI2cBusVoltage.LEVEL_1V8
-    assert config.get_i2c_voltage_retimer() == RtkI2cBusVoltage.LEVEL_1V8
-    assert config.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
+    assert binary.get_i2c_voltage_pmc() == RtkI2cBusVoltage.LEVEL_1V8
+    assert binary.get_i2c_voltage_retimer() == RtkI2cBusVoltage.LEVEL_1V8
+    assert binary.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
 
-    assert config.get_pmc_i2c_addrs() == (0x68, 0x68)
-    assert config.get_bbr_i2c_addrs() == (0x56, 0x40)
+    assert binary.get_pmc_i2c_addrs() == (0x68, 0x68)
+    assert binary.get_bbr_i2c_addrs() == (0x56, 0x40)
 
-    assert config.get_pdos(PDORole.SINK, "A") == [
+    assert binary.get_pdos(PDORole.SINK, "A") == [
         PDO.parse_pdo(0x2601912C, PDORole.SINK)
     ]
-    assert config.get_pdos(PDORole.SINK, "B") == [
+    assert binary.get_pdos(PDORole.SINK, "B") == [
         PDO.parse_pdo(0x2601912C, PDORole.SINK)
     ]
-    assert config.get_pdos(PDORole.SOURCE, "A") == [
+    assert binary.get_pdos(PDORole.SOURCE, "A") == [
         PDO.parse_pdo(0x00019096, PDORole.SOURCE)
     ]
-    assert config.get_pdos(PDORole.SOURCE, "B") == [
+    assert binary.get_pdos(PDORole.SOURCE, "B") == [
         PDO.parse_pdo(0x37119096, PDORole.SOURCE)
     ]
 
-    assert config.get_src_max_pdp("A") == 15
-    assert config.get_src_max_pdp("B") == 15
+    assert binary.get_src_max_pdp("A") == 15
+    assert binary.get_src_max_pdp("B") == 15
 
-    assert config.get_svids("A") == [0x8087, 0xFF01]  # TBT, DP
-    assert config.get_svids("B") == [0xFF01]  # DP
+    assert binary.get_svids("A") == [0x8087, 0xFF01]  # TBT, DP
+    assert binary.get_svids("B") == [0xFF01]  # DP
 
     assert (
-        config.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
+        binary.get_config_hash() == "0b200289086f713fc175b32ff2f11fce6148c690"
     )
 
 
@@ -278,3 +279,36 @@ def test_rtkfwbinary_get_i2c_voltage_level(filepath: Path):
     # Both FWs have 3.3V SMbus levels but the different chip_types represent
     # the voltage levels differently. Ensure both types decode correctly.
     assert fw.get_i2c_voltage_smbus() == RtkI2cBusVoltage.LEVEL_3V3
+
+
+@pytest.mark.parametrize(
+    ("binary", "expected_text"),
+    [
+        pytest.param(
+            RtkFwBinary(
+                get_test_file_path(
+                    "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+                )
+            ),
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3_config.txt"
+            ).read_text(),
+            id="FromFW",
+        ),
+        pytest.param(
+            RtkConfigFragment(
+                get_test_file_path("ocelotrvp-GOOG0H00-config.bin")
+            ),
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-config_config.txt"
+            ).read_text(),
+            id="FromConfigFragment",
+        ),
+    ],
+)
+def test_print_config(binary, expected_text: str):
+    output = []
+
+    print_config(binary, output_func=output.append)
+
+    assert "\n".join(output).strip() == expected_text.strip()
