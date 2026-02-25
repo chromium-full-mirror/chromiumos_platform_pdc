@@ -9,7 +9,6 @@
 import os
 from pathlib import Path
 import tempfile
-from typing import Union
 
 from pdclib.common import UsbVidPid
 from pdclib.pdo import PDO
@@ -26,11 +25,7 @@ from pdclib.rtk_utils import RtkFileSizeError
 from pdclib.rtk_utils import RtkFwBinary
 from pdclib.rtk_utils import RtkFwVersion
 import pytest
-
-
-def get_test_file_path(filename: Union[Path | str]) -> Path:
-    """Return an absolute path to the given file in the test_files/ dir"""
-    return Path(__file__).parent.resolve() / "test_files" / filename
+from tests.common import get_test_file_path
 
 
 def test_rtkfwversion():
@@ -156,6 +151,27 @@ def test_rtkfwbinary_export_fw_binary():
         fw_out = RtkFwBinary(output_file)
         assert fw_out.get_base_firmware_hash() == hash_fw
         assert fw_out.get_config_hash() == hash_config
+
+
+def test_rtkfwbinary_export_config_section():
+    fw = RtkFwBinary(
+        get_test_file_path(
+            "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
+        )
+    )
+
+    hash_config = fw.get_config_hash()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_file = Path(tmpdir) / "out.bin"
+        fw.export_config_section(output_file)
+
+        assert output_file.exists()
+
+        # Read the outputted config back in and check its hashes against the
+        # original
+        config_out = RtkConfigFragment(output_file)
+        assert config_out.get_config_hash() == hash_config
 
 
 def test_rtkfwbinary_export_fw_binary_malformed():
