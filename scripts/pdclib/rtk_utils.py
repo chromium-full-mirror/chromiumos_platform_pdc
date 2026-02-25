@@ -269,6 +269,41 @@ class _RtkConfigMixin:
         """Return the SHA1 of the config region"""
         return hashlib.sha1(self.get_config()).hexdigest()
 
+    def export_config_section(self, filepath: Path):
+        """Write the config section to a file"""
+        filepath.write_bytes(self.get_config())
+
+    def compare_configs(self, other: "_RtkConfigMixin") -> bool:
+        """Compare two config regions for equivalence. Ignore certain fields"""
+
+        this_config = self.get_config()
+        other_config = other.get_config()
+
+        if (
+            len(this_config) != RtkConfigOffset.CONFIG_RANGE_LENGTH
+            or len(other_config) != RtkConfigOffset.CONFIG_RANGE_LENGTH
+        ):
+            raise ValueError(
+                f"Config section has bad length (self={len(this_config)}, "
+                f"other={len(other_config)}, "
+                f"expected={RtkConfigOffset.CONFIG_RANGE_LENGTH})"
+            )
+
+        # Special fields that are preserved when overwriting a config. A config
+        # comparison should ignore these.
+        IGNORE_OFFSETS = {
+            RtkConfigOffset.FW_CONFIG_VERSION_MAJOR,
+            RtkConfigOffset.FW_CONFIG_VERSION_MINOR,
+            RtkConfigOffset.FW_CONFIG_CHIP_ID_L,
+            RtkConfigOffset.FW_CONFIG_CHIP_ID_H,
+        }
+
+        return all(
+            x == y
+            for i, (x, y) in enumerate(zip(this_config, other_config))
+            if i not in IGNORE_OFFSETS
+        )
+
 
 class RtkConfigFragment(_RtkConfigMixin):
     """Stores a standalone config fragment."""

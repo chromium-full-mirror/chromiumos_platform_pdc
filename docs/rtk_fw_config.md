@@ -14,29 +14,34 @@ This is particularly useful when you need to:
 
 ## Usage
 
-The script is located in the `scripts/` directory and can be invoked using
-`vpython3`.
+The script is located in the `scripts/` directory. It uses [vpython] to
+automatically set up dependencies. It can be run inside or outside of the
+chroot.
 
-### Displaying Current Configuration
+### Displaying Current Configuration (`show`)
 
-To view the vital configuration parameters of a firmware binary, provide the
-path to the file as the main argument. This will print a summary of the
-configuration without modifying the file.
+To view the vital configuration parameters of a firmware binary or config
+fragment, provide the path to the file as the main argument. This will print a
+summary of the configuration without modifying the file.
 
 **Command:**
 ```bash
-./scripts/rtk_fw_config.py <path/to/firmware.bin>
+./scripts/rtk_fw_config.py show -i <path/to/firmware-or-config.bin>
 ```
 
 **Example:**
 ```bash
-./scripts/rtk_fw_config.py firmware/realtek/rts5453/rts5453_v16.2.3.bin
+# Full FW image
+./scripts/rtk_fw_config.py show -i firmware/realtek/rts5453/rts5453_v16.2.3.bin
+
+# Config fragment
+./scripts/rtk_fw_config.py show -i program/ocelot/ocelotrvp/ocelotrvp-GOOG0H00-config.bin
 ```
 
 This will produce output detailing the Customer ID, version, checksum, and other
 important values from the firmware's configuration block.
 
-### Extracting a Configuration File
+### Extracting a Configuration File (`extract`)
 
 You can extract the configuration block from a firmware binary and save it to a
 new file. This is useful for backup purposes or for using it as a template for a
@@ -44,18 +49,22 @@ new configuration.
 
 **Command:**
 ```bash
-./scripts/rtk_fw_config.py <path/to/firmware.bin> --output_config_file <path/to/save/config.bin>
+./scripts/rtk_fw_config.py extract \
+    -i <path/to/firmware.bin> \
+    -o <path/to/save/config.bin>
 ```
 
 **Example:**
 ```bash
-./scripts/rtk_fw_config.py firmware/realtek/rts5453/rts5453_v16.2.3.bin --output_config_file my_config.bin
+./scripts/rtk_fw_config.py extract \
+    -i firmware/realtek/rts5453/rts5453_v16.2.3.bin \
+    -o my_config.bin
 ```
 
 This command reads the firmware, extracts the configuration, and saves it to
 `my_config.bin`.
 
-### Patching a New Configuration
+### Patching a New Configuration (`merge`)
 
 This is the primary function for creating new firmware images. It takes a base
 firmware binary and a separate configuration file, and produces a new firmware
@@ -75,12 +84,18 @@ format version.
 
 **Command:**
 ```bash
-./scripts/rtk_fw_config.py <path/to/base_firmware.bin> --config_file <path/to/new_config.bin> --output_file <path/to/new_firmware.bin>
+./scripts/rtk_fw_config.py merge \
+    -i <path/to/base_firmware.bin> \
+    -c <path/to/new_config.bin> \
+    -o <path/to/new_firmware.bin>
 ```
 
 **Example:**
 ```bash
-./scripts/rtk_fw_config.py firmware/realtek/rts5453/rts5453_v16.2.3.bin --config_file program/skywalker/grogu/grogu-GOOG0E00-config.bin --output_file grogu-firmware.bin
+./scripts/rtk_fw_config.py merge \
+    -i firmware/realtek/rts5453/rts5453_v16.2.3.bin \
+    -c program/skywalker/grogu/grogu-GOOG0E00-config.bin \
+    -o grogu-firmware.bin
 ```
 
 This will create `grogu-firmware.bin`, which is a copy of `rts5453_v16.2.3.bin`
@@ -88,12 +103,9 @@ but with the configuration from `grogu-GOOG0E00-config.bin` applied.
 
 ## Command-Line Arguments
 
-| Argument                 | Description                                                                                                                              |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `pdc_fw_bin`             | **(Required)** The path to the input Realtek PDC firmware binary.                                                                        |
-| `--config_file`          | The path to a binary configuration file. When used, the script will patch this configuration into the base firmware.                     |
-| `--output_file`          | The path to write the new, patched firmware binary to. This is **required** when using `--config_file`.                                  |
-| `--output_config_file`   | The path to save the extracted configuration to. If this option is used, the patching process (`--config_file`) is ignored.                |
+Run `./rtk_fw_config.py -h` for a listing of supported subcommands, and
+`./rtk_fw_config.py <subcommand> -h` for help with a particular subcommand.
 
 [rts5453_v0.44.3.bin]: ../firmware/realtek/rts5453/rts5453_v0.44.3.bin
 [rts5453_v0.45.4.bin]: ../firmware/realtek/rts5453/rts5453_v0.45.4.bin
+[vpython]: https://chromium.googlesource.com/infra/infra/+/HEAD/doc/users/vpython.md
