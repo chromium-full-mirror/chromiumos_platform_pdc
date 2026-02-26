@@ -1,0 +1,11 @@
+# Simple FMAP layout to create a test CBFS image for unit testing
+
+FLASH 512K {
+   RO_SECTION 8K {
+       FMAP 4K
+       COREBOOT(CBFS)
+   }
+   RW_SECTION_A {
+       FW_MAIN_A(CBFS)
+   }
+}

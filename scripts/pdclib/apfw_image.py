@@ -165,6 +165,52 @@ class CbfsTool:
             stderr=subprocess.DEVNULL,
         )
 
+    def create(self, ap_fw_path: Path, regions: list[str], fmap: Path):
+        """Create new CBFS filesystem(s)"""
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "create",
+                "-M",
+                str(fmap),
+                "-r",
+                ",".join(regions),
+            ]
+        )
+
+    def add(
+        self,
+        ap_fw_path: Path,
+        region: str,
+        outside_path: Path,
+        cbfs_filename: str,
+        typ: str = "raw",
+    ):
+        """Insert (add) a file to CBFS"""
+
+        if not ap_fw_path.exists():
+            raise FileNotFoundError(str(ap_fw_path))
+
+        if not outside_path.exists():
+            raise FileNotFoundError(str(outside_path))
+
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "add",
+                "-r",
+                region,
+                "-f",
+                str(outside_path),
+                "-n",
+                cbfs_filename,
+                "-t",
+                typ,
+            ],
+        )
+
 
 def search_pdc_fw_images(
     apfw_image: Path, cbfstool: CbfsTool, cbfs_region: str = "FW_MAIN_A"
