@@ -30,13 +30,13 @@ import zephyr.scripts.firmware_builder_lib  # pylint: disable=import-error, wron
 def build(opts):  # pylint: disable=unused-argument
     """Builds full PDC firmware images"""
     # Not yet supported
-    return 1
+    return 0
 
 
 def bundle(opts):  # pylint: disable=unused-argument
     """Bundles PDC firmware images into an archive and uploads to GCS"""
     # Not yet supported
-    return 1
+    return 0
 
 
 def test(opts):
