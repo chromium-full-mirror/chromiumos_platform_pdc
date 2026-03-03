@@ -1,6 +1,6 @@
 Project name        : GOOG0H00
 Chip type           : RTS545X
-Version             : N/A
+Version             : x.x.3
 USB VID:PID         : 18D1:5075
 Port config         : PORTA_ONLY
 Debug Accy GPIO     : ACTIVE_HIGH

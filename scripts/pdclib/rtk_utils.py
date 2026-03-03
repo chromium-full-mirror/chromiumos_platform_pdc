@@ -544,7 +544,11 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
     rtk_configs = {
         "Project name": binary.get_project_name(),
         "Chip type": binary.get_chip_type().name,
-        "Version": (binary.get_fw_version() if is_full_fw_binary else "N/A"),
+        "Version": (
+            binary.get_fw_version()
+            if is_full_fw_binary
+            else f"x.x.{binary.get_config_version()}"
+        ),
         "USB VID:PID": binary.get_vid_pid(),
         "Port config": binary.get_port_used().name,
         "Debug Accy GPIO": binary.get_debug_accy_gpio_polarity().name,
