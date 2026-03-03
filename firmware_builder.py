@@ -27,6 +27,18 @@ site.addsitedir(PLATFORM_PDC_DIR.parent / "ec")
 import zephyr.scripts.firmware_builder_lib  # pylint: disable=import-error, wrong-import-position
 
 
+DEFAULT_BUNDLE_METADATA_FILE = "/tmp/artifact_bundle_metadata"
+
+
+def write_metadata(opts, info):
+    """Write the metadata about the bundle."""
+    bundle_metadata_file = (
+        opts.metadata if opts.metadata else DEFAULT_BUNDLE_METADATA_FILE
+    )
+    with open(bundle_metadata_file, "w", encoding="utf-8") as file:
+        file.write(json_format.MessageToJson(info))
+
+
 def build(opts):  # pylint: disable=unused-argument
     """Builds full PDC firmware images"""
     # Not yet supported
@@ -36,6 +48,8 @@ def build(opts):  # pylint: disable=unused-argument
 def bundle(opts):  # pylint: disable=unused-argument
     """Bundles PDC firmware images into an archive and uploads to GCS"""
     # Not yet supported
+    info = firmware_pb2.FirmwareArtifactInfo()  # pylint: disable=no-member
+    write_metadata(opts, info)
     return 0
 
 
