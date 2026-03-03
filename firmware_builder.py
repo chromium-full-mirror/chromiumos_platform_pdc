@@ -21,8 +21,8 @@ from chromite.api.gen_sdk.chromite.api import firmware_pb2
 
 # This script is only used in CI so it should be fine to assume the EC
 # repository is going to be present as well.
-SELF_PATH = pathlib.Path(__file__).parent.resolve()
-site.addsitedir(SELF_PATH.parent / "ec")
+PLATFORM_PDC_DIR = pathlib.Path(__file__).parent.resolve()
+site.addsitedir(PLATFORM_PDC_DIR.parent / "ec")
 
 import zephyr.scripts.firmware_builder_lib  # pylint: disable=import-error, wrong-import-position
 
@@ -46,7 +46,7 @@ def test(opts):
     cmd = "scripts/run_tests.sh"
 
     try:
-        subprocess.run(cmd, check=True, env=os.environ)
+        subprocess.run(cmd, check=True, cwd=PLATFORM_PDC_DIR, env=os.environ)
     finally:
         with open(opts.metrics, "w", encoding="utf-8") as file:
             file.write(json_format.MessageToJson(metrics))  # type: ignore
@@ -65,7 +65,6 @@ def main(argv):
         print("Must select a valid sub command!")
         return -1
 
-    # Run selected sub command function
     # Run selected sub command function
     return opts.func(opts)
 
