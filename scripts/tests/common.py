@@ -15,6 +15,11 @@ def get_test_file_path(filename: Path | str) -> Path:
     return Path(__file__).parent.resolve() / "test_files" / filename
 
 
+def get_repo_base_path() -> Path:
+    """Return an absolute path to the base directory of the platform/pdc repo"""
+    return Path(__file__).parent.parent.parent.resolve()
+
+
 @pytest.fixture(scope="session")
 def cbfs_test_images(tmp_path_factory):
     """Fixture that creates test CBFS images

@@ -1,0 +1,19 @@
+# Override list for images using the old Realtek signing scheme
+#
+# Most images should be using the new signing scheme, which is the default
+# check in the tests. Occasionally we need to check in an image for older
+# boards that may use the old scheme. This list modifies the test for that
+# particular image.
+#
+# Do not update this list without fully understanding how the image is being
+# used. If you are here due to a CQ test failure, you may have encountered a
+# legitimate issue! Please stop and verify!
+#
+# Please add a comment around any new entries justifying the addition.
+# Reviewers, please heavily scrutinize changes to this file.
+#
+# File paths should be relative to the base of this repo.
+
+# 16.3.3 is transition firmware if we want to migrate the old FW released on
+# brox to the newer signing scheme
+firmware/realtek/rts5453/rts5453_v16.3.3.bin
