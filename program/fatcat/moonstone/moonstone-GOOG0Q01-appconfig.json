@@ -20,7 +20,7 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "2-19-2026_13-40-44",
+		"timeStamp": "3-13-2026_15-19-52",
 		"toolBuildVersion": "2.34",
 		"sharedSettings": false
 	},
@@ -627,8 +627,8 @@
 								"name": "SBUOverrideDuringDisconnect",
 								"start position": 21,
 								"end position": 21,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "DisablePowerToRetimerOnSleep",
@@ -3037,8 +3037,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31325130",
-								"value description": "0x31325130"
+								"value (EDITABLE)": "0x31335130",
+								"value description": "0x31335130"
 							}
 						]
 					},
@@ -9267,8 +9267,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31325130",
-								"value description": "0x31325130"
+								"value (EDITABLE)": "0x31335130",
+								"value description": "0x31335130"
 							}
 						]
 					},
@@ -15497,8 +15497,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x31325130",
-								"value description": "0x31325130"
+								"value (EDITABLE)": "0x31335130",
+								"value description": "0x31335130"
 							}
 						]
 					},
@@ -21209,8 +21209,8 @@
 								"name": "SBUOverrideDuringDisconnect",
 								"start position": 21,
 								"end position": 21,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "DisablePowerToRetimerOnSleep",
