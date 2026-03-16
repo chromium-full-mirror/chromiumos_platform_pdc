@@ -316,6 +316,19 @@ def test_rtkfwbinary_get_i2c_voltage_level(filepath: Path):
             id="FromFW",
         ),
         pytest.param(
+            RtkFwBinary(
+                get_test_file_path(
+                    "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3"
+                    "__bad_crc.bin"
+                )
+            ),
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3"
+                "__bad_crc_config.txt"
+            ).read_text(),
+            id="FromFW_BadCRC32",
+        ),
+        pytest.param(
             RtkConfigFragment(
                 get_test_file_path("ocelotrvp-GOOG0H00-config.bin")
             ),

@@ -14,7 +14,7 @@ SVIDs Port A        : TBT (8087), DP (ff01)
 SVIDs Port B        : DP (ff01)
 SBU Mux Port A      : 0x30: RETIMER_HBR
 SBU Mux Port B      : 0x10: RETIMER_TI
-CRC32               : 0xb2b5d7c5 VALID
+CRC32               : 0xddccbbaa INVALID
 Base FW SHA1        : d209ee514901933893977dd6891eb892643db316
 Config SHA1         : 0b200289086f713fc175b32ff2f11fce6148c690
 Sink PDOs Port A:

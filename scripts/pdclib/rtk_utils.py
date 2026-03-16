@@ -559,6 +559,15 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
         str_val = RtkRetimerConfig(val).name or RtkPortSbuMuxConfig(val).name
         return f"0x{int(val):02x}: {str_val}"
 
+    def format_crc32():
+        if not is_full_fw_binary:
+            return "N/A"
+
+        return (
+            f"{hex(binary.get_file_crc32())} "
+            f"{'VALID' if binary.verify_crc32() else 'INVALID'}"
+        )
+
     rtk_configs = {
         "Project name": binary.get_project_name(),
         "Chip type": binary.get_chip_type().name,
@@ -584,7 +593,7 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
         ),
         "SBU Mux Port A": format_sbumux_cfg("A"),
         "SBU Mux Port B": format_sbumux_cfg("B"),
-        "CRC32": (hex(binary.get_file_crc32()) if is_full_fw_binary else "N/A"),
+        "CRC32": format_crc32(),
         "Base FW SHA1": (
             binary.get_base_firmware_hash() if is_full_fw_binary else "N/A"
         ),
