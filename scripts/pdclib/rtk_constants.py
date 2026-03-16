@@ -101,6 +101,9 @@ class RtkConfigOffset(enum.IntEnum):
 
     DEBUG_ACCY_GPIO_POLARITY = 0x40C
 
+    SBUMUX_CFG_PORTB = 0x2C3
+    SBUMUX_CFG_PORTA = 0x2C4
+
 
 class RtkPortUsed(enum.IntEnum):
     """Indicates which port(s) are used by the PDC config"""
@@ -149,3 +152,34 @@ class RtkI2cBusVoltage(enum.IntEnum):
                 1: cls.LEVEL_1V8,
             }[value]
         raise ValueError("Unknown chip type")
+
+
+class RtkPortSbuMuxConfig(enum.IntFlag):
+    """Realtek SBU mux configuration bitfield
+
+    This is used to configure the PDC to be compatible with various retimer
+    parts. See http://b/479237337#comment15 for more info
+    """
+
+    # Let the PDC handle the SBU mux
+    BYPASS_MODE = enum.auto()
+    # Enable level-shifting of the SBU lines to 1.2V
+    SBX_1V2 = enum.auto()
+    # Enable level-shifting of the SBU lines to 1.8V
+    SBX_1V8 = enum.auto()
+    # Always route SBU lines to the Sideband (SBX) port
+    SWITCH_TO_SBX = enum.auto()
+    # Always route SBU lines to the AUX port
+    SWITCH_TO_AUX = enum.auto()
+    # Do not automatically flip the SBU lines' orientation
+    DO_NOT_FLIP = enum.auto()
+
+
+class RtkRetimerConfig(enum.IntFlag):
+    """Common values for the SBU mux config field"""
+
+    RETIMER_JBR = RtkPortSbuMuxConfig.BYPASS_MODE
+    RETIMER_HBR = (
+        RtkPortSbuMuxConfig.SWITCH_TO_AUX | RtkPortSbuMuxConfig.DO_NOT_FLIP
+    )
+    RETIMER_TI = RtkPortSbuMuxConfig.SWITCH_TO_AUX

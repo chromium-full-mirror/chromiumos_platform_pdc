@@ -20,7 +20,9 @@ from pdclib.rtk_constants import RtkConfigOffset
 from pdclib.rtk_constants import RtkDebugAccyGpioPolarity
 from pdclib.rtk_constants import RtkFwOffset
 from pdclib.rtk_constants import RtkI2cBusVoltage
+from pdclib.rtk_constants import RtkPortSbuMuxConfig
 from pdclib.rtk_constants import RtkPortUsed
+from pdclib.rtk_constants import RtkRetimerConfig
 
 
 class RtkFileSizeError(Exception):
@@ -260,6 +262,17 @@ class _RtkConfigMixin:
             struct.unpack("<H", self._get_config_range(i, 2))[0]
             for i in range(start_offset, start_offset + 2 * count, 2)
         ]
+
+    def get_port_sbumux_config(self, port: str):
+        """Read SBU mux config register"""
+        if port == "A":
+            value = self._get_config_byte(RtkConfigOffset.SBUMUX_CFG_PORTA)
+        elif port == "B":
+            value = self._get_config_byte(RtkConfigOffset.SBUMUX_CFG_PORTB)
+        else:
+            raise ValueError("port must be 'A' or 'B'")
+
+        return RtkPortSbuMuxConfig(value)
 
     def get_config(self) -> bytes:
         """Read full config"""
@@ -541,6 +554,11 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
 
         return COMMON_SVIDS.get(svid, hex(svid))
 
+    def format_sbumux_cfg(port: str):
+        val = binary.get_port_sbumux_config(port)
+        str_val = RtkRetimerConfig(val).name or RtkPortSbuMuxConfig(val).name
+        return f"0x{int(val):02x}: {str_val}"
+
     rtk_configs = {
         "Project name": binary.get_project_name(),
         "Chip type": binary.get_chip_type().name,
@@ -564,6 +582,8 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
         "SVIDs Port B": ", ".join(
             (format_svid(svid) for svid in binary.get_svids("B"))
         ),
+        "SBU Mux Port A": format_sbumux_cfg("A"),
+        "SBU Mux Port B": format_sbumux_cfg("B"),
         "CRC32": (hex(binary.get_file_crc32()) if is_full_fw_binary else "N/A"),
         "Base FW SHA1": (
             binary.get_base_firmware_hash() if is_full_fw_binary else "N/A"

@@ -12,6 +12,8 @@ Retimer I2C voltage : LEVEL_1V8
 PMC I2C voltage     : LEVEL_1V8
 SVIDs Port A        : TBT (8087), DP (ff01)
 SVIDs Port B        : DP (ff01)
+SBU Mux Port A      : 0x30: RETIMER_HBR
+SBU Mux Port B      : 0x10: RETIMER_TI
 CRC32               : N/A
 Base FW SHA1        : N/A
 Config SHA1         : 0b200289086f713fc175b32ff2f11fce6148c690
