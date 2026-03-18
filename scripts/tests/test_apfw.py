@@ -55,11 +55,13 @@ def test_success_json(cbfs_test_images: Path, capsys):
 
     expected_detected_fw_json = {
         "rts5453_v0.45.4": {
+            "name": "rts5453_v0.45.4",
             "fw_binary": [0, 45, 4, "GOOG0000"],
             "hash_file": {"ver": [0, 45, 4], "config_name": None},
             "fw_binary_hash": "93f390834c9cf6cd33bf872fd809cec7a315dd00",
         },
         "tps6699x-GOOG0J30_00132002_TFU": {
+            "name": "tps6699x-GOOG0J30_00132002_TFU",
             "fw_binary": [19, 32, 2, "GOOG0J30"],
             "hash_file": {"ver": [19, 32, 2], "config_name": "GOOG0J30"},
             "fw_binary_hash": "cd3ea8c879d83af093f42c4eb03e8ce7715d19b4",

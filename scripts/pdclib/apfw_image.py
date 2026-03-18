@@ -212,6 +212,106 @@ class CbfsTool:
         )
 
 
+def parse_firmware_and_hashfile(fw_path: Path, hash_path: Path | None) -> dict:
+    """Extract data for this FW binary and hash file
+
+    Inspect a provided PDC FW binary (TI or RTK) and Depthcharge updater hash
+    file. Hash file path may be None or non-existent. If so, the "hash_file" key
+    in the returned dict will read None.
+
+    Returns a dictionary containing:
+        {
+            "name": Base file name with .bin/.hash stripped off
+            "fw_binary": (major, minor, config, project name string)-tuple
+            "hash_file": {
+                "ver": (major, minor, config)-tuple describing version in hash
+                       file
+                "config_name": Project name string (only applicable on for TI)
+            }
+            "fw_binary_hash": Hex string SHA1 of firmware binary file
+        }
+    """
+
+    detected_fw = {
+        "name": fw_path.stem,
+        "fw_binary": None,
+        "hash_file": None,
+        "fw_binary_hash": None,
+    }
+
+    if hash_path and hash_path.exists():
+        # Inspect hash file if found.
+        with open(hash_path, "rb") as f:
+            contents = f.read()
+
+        if len(contents) == ApFwConstants.HASH_FILE_RTK_LEN:
+            # RTK hash files have just FW version bytes
+            detected_fw["hash_file"] = {
+                "ver": (contents[0], contents[1], contents[2]),
+                "config_name": None,
+            }
+        elif len(contents) == ApFwConstants.HASH_FILE_TI_LEN:
+            # TI hash files have FW version and project name string
+            detected_fw["hash_file"] = {
+                "ver": (contents[0], contents[1], contents[2]),
+                "config_name": ti_utils.format_ti_config_string(
+                    contents[
+                        # pylint: disable=line-too-long
+                        ApFwConstants.HASH_FILE_TI_PROJNAME_OFFSET : ApFwConstants.HASH_FILE_TI_PROJNAME_OFFSET
+                        + ApFwConstants.HASH_FILE_TI_PROJNAME_LEN
+                    ]
+                ),
+            }
+        else:
+            logging.error(
+                "Invalid size for hash file %s (%d bytes)",
+                hash_path,
+                len(contents),
+            )
+            # Continue (detected_fw[file]["hash_file"] will remain None)
+
+    # Report the SHA1 hash of the FW
+    with open(fw_path, "rb") as f:
+        detected_fw["fw_binary_hash"] = hashlib.file_digest(
+            f, "sha1"
+        ).hexdigest()
+
+    # Open firmware files and retrieve program name and version
+    # Save as a tuple: (major, minor, patch, "project_name")
+    if fw_path.name.startswith("tps6699"):
+        detected_fw["fw_binary"] = ti_utils.read_base_fw_ver_and_proj_name(
+            fw_path
+        )
+    elif fw_path.name.startswith("rts54"):
+        fw = rtk_utils.RtkFwBinary(fw_path)
+
+        detected_fw["fw_binary"] = (
+            *fw.get_fw_version().as_tuple(),
+            fw.get_project_name(),
+        )
+
+    return detected_fw
+
+
+def print_fw_and_hash_info_row(firmware_info: dict):
+    """Print FW and hash file info
+
+    Accepts a dict returned by parse_firmware_and_hashfile() and prints this
+    data to stdout in a human-readable table format.
+    """
+
+    hash_text = "%d.%d.%d (%s)" % (
+        *firmware_info["hash_file"]["ver"],
+        firmware_info["hash_file"].get("config_name", "N/A"),
+    )
+    fw_ver_text = "%d.%d.%d (%s)" % (*firmware_info["fw_binary"],)
+    print(
+        f"{firmware_info['name']:<25}Hash File: {hash_text:<19} "
+        f"SHA1: {firmware_info['fw_binary_hash']:<42} "
+        f"Embedded: {fw_ver_text}"
+    )
+
+
 def search_pdc_fw_images(
     apfw_image: Path, cbfstool: CbfsTool, cbfs_region: str = "FW_MAIN_A"
 ) -> List[dict]:
@@ -240,6 +340,7 @@ def search_pdc_fw_images(
 
     with tempfile.TemporaryDirectory() as tempdir:
         tempdir = Path(tempdir)
+        all_fw = {}
 
         # Extract all files we care about:
         for file in detected_fw:
@@ -271,55 +372,8 @@ def search_pdc_fw_images(
                 logging.warning("File %s not present", file_hash)
                 # Continue without examining the hash file
 
-            if (tempdir / file_hash).exists():
-                # Inspect hash file if found.
-                with open(tempdir / file_hash, "rb") as f:
-                    contents = f.read()
+            all_fw[file] = parse_firmware_and_hashfile(
+                tempdir / file_bin, tempdir / file_hash
+            )
 
-                if len(contents) == ApFwConstants.HASH_FILE_RTK_LEN:
-                    # RTK hash files have just FW version bytes
-                    detected_fw[file]["hash_file"] = {
-                        "ver": (contents[0], contents[1], contents[2]),
-                        "config_name": None,
-                    }
-                elif len(contents) == ApFwConstants.HASH_FILE_TI_LEN:
-                    # TI hash files have FW version and project name string
-                    detected_fw[file]["hash_file"] = {
-                        "ver": (contents[0], contents[1], contents[2]),
-                        "config_name": ti_utils.format_ti_config_string(
-                            contents[
-                                # pylint: disable=line-too-long
-                                ApFwConstants.HASH_FILE_TI_PROJNAME_OFFSET : ApFwConstants.HASH_FILE_TI_PROJNAME_OFFSET
-                                + ApFwConstants.HASH_FILE_TI_PROJNAME_LEN
-                            ]
-                        ),
-                    }
-                else:
-                    logging.error(
-                        "Invalid size for hash file %s (%d bytes)",
-                        file_hash,
-                        len(contents),
-                    )
-                    # Continue (detected_fw[file]["hash_file"] will remain None)
-
-            # Report the SHA1 hash of the FW
-            with open(tempdir / file_bin, "rb") as f:
-                detected_fw[file]["fw_binary_hash"] = hashlib.file_digest(
-                    f, "sha1"
-                ).hexdigest()
-
-            # Open firmware files and retrieve program name and version
-            # Save as a tuple: (major, minor, patch, "project_name")
-            if file.startswith("tps6699"):
-                detected_fw[file]["fw_binary"] = (
-                    ti_utils.read_base_fw_ver_and_proj_name(tempdir / file_bin)
-                )
-            elif file.startswith("rts54"):
-                fw = rtk_utils.RtkFwBinary(tempdir / file_bin)
-
-                detected_fw[file]["fw_binary"] = (
-                    *fw.get_fw_version().as_tuple(),
-                    fw.get_project_name(),
-                )
-
-        return detected_fw
+        return all_fw

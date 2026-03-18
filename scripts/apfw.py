@@ -50,18 +50,7 @@ def cmd_read_ap_image(args) -> int:
     else:
         # Human-readable text output, alphabetically ordered.
         for file in sorted(detected_fw.keys()):
-            file_info = detected_fw[file]
-
-            hash_text = "%d.%d.%d (%s)" % (
-                *file_info["hash_file"]["ver"],
-                file_info["hash_file"].get("config_name", "N/A"),
-            )
-            fw_ver_text = "%d.%d.%d (%s)" % (*file_info["fw_binary"],)
-            print(
-                f"{file:<25}Hash File: {hash_text:<19} "
-                f"SHA1: {file_info['fw_binary_hash']:<42} "
-                f"Embedded: {fw_ver_text}"
-            )
+            apfw_image.print_fw_and_hash_info_row(detected_fw[file])
 
     return 0
 
