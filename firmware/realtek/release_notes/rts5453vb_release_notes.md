@@ -2,6 +2,47 @@
 
 **Project name: RTS5453P-VB**
 
+**Version: 16.10.4**
+
+**Release Date: 2026/04/02**
+
+**File name: RTS5453P-VB_Google_V16.10.4_20260402.bin**
+
+**Check sum: 0x00EE941F**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features**
+
+-   Based on v0.57.4, change version to v16.10.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 0.57.4**
 
 **Release Date : 2026/03/31**

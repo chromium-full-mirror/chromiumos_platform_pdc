@@ -2,6 +2,47 @@
 
 **Project name: Skywalker**
 
+**Version: 16.10.4**
+
+**Release Date: Date** : **2026/04/02**
+
+**File name: rts5453P_Google_Skywalker_V16.10.4_20260402.bin**
+
+**Check sum: 0x00F4390C**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.57.4, change version to v16.10.4
+
+**Impacts/Changes**
+
+-   N/A
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 0.57.4**
 
 **Release Date : 2026/03/31**
