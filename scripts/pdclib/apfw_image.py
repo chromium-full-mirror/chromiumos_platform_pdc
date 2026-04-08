@@ -165,6 +165,29 @@ class CbfsTool:
             stderr=subprocess.DEVNULL,
         )
 
+    def read(self, ap_fw_path: Path, region: str, outpath: Path):
+        """Read a raw region from CBFS
+
+        :param ap_fw_path: Path to the AP FW image
+        :param region: The CBFS region to read out
+        :param outpath: A path to write the extracted data
+        """
+        if not ap_fw_path.exists():
+            raise FileNotFoundError(str(ap_fw_path))
+
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "read",
+                "-r",
+                region,
+                "-f",
+                outpath,
+            ],
+            stderr=subprocess.DEVNULL,
+        )
+
     def create(self, ap_fw_path: Path, regions: list[str], fmap: Path):
         """Create new CBFS filesystem(s)"""
         subprocess.check_output(
@@ -179,7 +202,7 @@ class CbfsTool:
             ]
         )
 
-    def add(
+    def add_file(
         self,
         ap_fw_path: Path,
         region: str,
@@ -208,6 +231,27 @@ class CbfsTool:
                 cbfs_filename,
                 "-t",
                 typ,
+            ],
+        )
+
+    def write(self, ap_fw_path: Path, region: str, outside_path: Path):
+        """Insert raw data into a region"""
+
+        if not ap_fw_path.exists():
+            raise FileNotFoundError(str(ap_fw_path))
+
+        if not outside_path.exists():
+            raise FileNotFoundError(str(outside_path))
+
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "write",
+                "-r",
+                region,
+                "-f",
+                str(outside_path),
             ],
         )
 
@@ -310,6 +354,53 @@ def print_fw_and_hash_info_row(firmware_info: dict):
         f"SHA1: {firmware_info['fw_binary_hash']:<42} "
         f"Embedded: {fw_ver_text}"
     )
+
+
+def get_ec_ap_fw_versions(apfw_image: Path, cbfstool: CbfsTool) -> dict:
+    """Extract RO, RW_A, RW_B AP FW version and RW_A, RW_B EC versions"""
+
+    IMAGES = (
+        {"title": "AP RO", "region": "RO_FRID", "file": None},
+        {"title": "AP RW_A", "region": "RW_FWID_A", "file": None},
+        {"title": "AP RW_B", "region": "RW_FWID_B", "file": None},
+        {"title": "EC RW_A", "region": "FW_MAIN_A", "file": "ecrw.version"},
+        {"title": "EC RW_B", "region": "FW_MAIN_B", "file": "ecrw.version"},
+    )
+
+    fw_data = {}
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        tempdir = Path(tempdir)
+
+        for img in IMAGES:
+            try:
+                if img["file"] is None:
+                    # Raw region in CBFS. Use `cbfstool read`.
+                    extracted_filename = tempdir / f"{img['region']}.bin"
+
+                    cbfstool.read(apfw_image, img["region"], extracted_filename)
+                else:
+                    # Region has a CBFS filesystem. Use `cbfstool extract`.
+                    extracted_filename = (
+                        tempdir / f"{img['region']}_{img['file']}.bin"
+                    )
+
+                    cbfstool.extract(
+                        apfw_image,
+                        img["region"],
+                        img["file"],
+                        extracted_filename,
+                    )
+            except subprocess.CalledProcessError:
+                fw_data[img["title"]] = None
+                continue
+
+            # Read version string from file
+            fw_data[img["title"]] = (
+                extracted_filename.read_bytes().strip(b"\x00").decode("ascii")
+            )
+
+    return fw_data
 
 
 def search_pdc_fw_images(

@@ -35,7 +35,10 @@ def cmd_read_ap_image(args) -> int:
         )
         return 1
 
-    detected_fw = apfw_image.search_pdc_fw_images(args.ap_fw_path, cbfstool)
+    detected_fw = apfw_image.search_pdc_fw_images(
+        args.ap_fw_path, cbfstool, args.region
+    )
+    ec_ap_fw = apfw_image.get_ec_ap_fw_versions(args.ap_fw_path, cbfstool)
 
     if args.json:
         # JSON output
@@ -43,11 +46,16 @@ def cmd_read_ap_image(args) -> int:
             json.dumps(
                 {
                     "input_file": str(args.ap_fw_path.resolve()),
+                    "ec_ap_fw": ec_ap_fw,
                     "detected_fw": detected_fw,
                 }
             )
         )
     else:
+        for fw_title, version in ec_ap_fw.items():
+            print(f"{fw_title:<10}: {version}")
+        print()
+
         # Human-readable text output, alphabetically ordered.
         for file in sorted(detected_fw.keys()):
             apfw_image.print_fw_and_hash_info_row(detected_fw[file])
@@ -72,6 +80,13 @@ def main(argv: list[str] | None) -> int:
         "--verbose",
         action="store_true",
         help="Enable verbose log messages",
+    )
+    parser.add_argument(
+        "-r",
+        "--region",
+        default="FW_MAIN_A",
+        choices=("FW_MAIN_A", "FW_MAIN_B"),
+        help="Manually specify a CBFS region to search",
     )
     parser.add_argument(
         "-j", "--json", action="store_true", help="Output data in JSON format"
