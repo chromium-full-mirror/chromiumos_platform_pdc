@@ -2,6 +2,100 @@
 
 **Project name: RTS5453P-VB**
 
+**Version: 16.12.4**
+
+**Release Date: 2026/04/24**
+
+**File name: RTS5453P-VB_Google_V16.12.4_20260424.bin**
+
+**Check sum: 0x00EE6C9A**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   Based on v0.59.4, change version to v16.12.4
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   N/A
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.59.4**
+
+**Release Date: 2026/04/23**
+
+**File name: RTS5453P-VB_Google_V0.59.4_20260331.bin**
+
+**Check sum: 0x00EE5C8D**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/503381350 - Adjust the mode entry order.
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/474393304 - Fix Dell dock compatibility issues.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/474122013 - Fix USB4 SSD compatibility issue.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/489303123 - Adjust the source_info content dynamically according to MAX PDP.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/490076666 - Fix the issue where a hard reset triggered when connecting SuzyQ causes the CCD to disconnect.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/495889691 - According to Intel's recommendation, add the behavior of executing safe mode after exit mode.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/496715885 - Fix the issue of the servo's LAN disconnection after a hard reset.
+
+-   Optimize the SBU MUX to address the issue of temporary disconnection.
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: -   N/A
+
+***
+
 **Version: 16.10.4**
 
 **Release Date: 2026/04/02**
