@@ -13,7 +13,7 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "2-6-2026_19-31-41",
+		"timeStamp": "2-24-2026_11-6-37",
 		"toolBuildVersion": "2.36",
 		"sharedSettings": true
 	},
@@ -4542,8 +4542,8 @@
 								"name": "TBT3 Supported",
 								"start position": 14,
 								"end position": 14,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP Supported",
@@ -4858,7 +4858,7 @@
 								"start position": 0,
 								"end position": 1,
 								"value (EDITABLE)": "0x2",
-								"value description": "3.0 A"
+								"value description": "1.5 A"
 							},
 							{
 								"name": "Process Swap to Sink",
@@ -7825,29 +7825,29 @@
 								"name": "Product Type UFP",
 								"start position": 35,
 								"end position": 37,
-								"value (EDITABLE)": "0x2",
-								"value description": "PDUSB Peripheral"
+								"value (EDITABLE)": "0x0",
+								"value description": "Not a UFP"
 							},
 							{
 								"name": "Product Type UFP",
 								"start position": 35,
 								"end position": 37,
-								"value (EDITABLE)": "0x2",
-								"value description": "PDUSB Peripheral"
+								"value (EDITABLE)": "0x0",
+								"value description": "Not a UFP"
 							},
 							{
 								"name": "USB Communication Capable as Device",
 								"start position": 38,
 								"end position": 38,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB Communication Capable as Device",
 								"start position": 38,
 								"end position": 38,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB Communication Capable as Host",
@@ -7923,8 +7923,8 @@
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x6000001a",
-								"value description": "0x6000001a"
+								"value (EDITABLE)": "0x6300001a",
+								"value description": "0x6300001a"
 							},
 							{
 								"name": "USB Highest Speed",
@@ -7944,8 +7944,8 @@
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x6000001a",
-								"value description": "0x6000001a"
+								"value (EDITABLE)": "0x6300001a",
+								"value description": "0x6300001a"
 							},
 							{
 								"name": "Alternate Mode",
@@ -8035,29 +8035,29 @@
 								"name": "Device Capability",
 								"start position": 128,
 								"end position": 131,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 128,
 								"end position": 130,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Device Capability",
 								"start position": 128,
 								"end position": 131,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 128,
 								"end position": 130,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "UFP VDO Version",
@@ -10800,8 +10800,8 @@
 								"name": "TBT3 Supported",
 								"start position": 14,
 								"end position": 14,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP Supported",
@@ -10933,8 +10933,8 @@
 								"name": "DebugAccessory Support",
 								"start position": 12,
 								"end position": 12,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB3 Rate",
@@ -11115,7 +11115,7 @@
 								"name": "TypeC Current",
 								"start position": 0,
 								"end position": 1,
-								"value (EDITABLE)": "0x1",
+								"value (EDITABLE)": "0x2",
 								"value description": "1.5 A"
 							},
 							{
@@ -13803,8 +13803,8 @@
 								"name": "Auto Enable Standby SRDY",
 								"start position": 9,
 								"end position": 9,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "Auto Enable Input After SnkReady In DBM",
@@ -14083,29 +14083,29 @@
 								"name": "Product Type UFP",
 								"start position": 35,
 								"end position": 37,
-								"value (EDITABLE)": "0x2",
-								"value description": "PDUSB Peripheral"
+								"value (EDITABLE)": "0x0",
+								"value description": "Not a UFP"
 							},
 							{
 								"name": "Product Type UFP",
 								"start position": 35,
 								"end position": 37,
-								"value (EDITABLE)": "0x2",
-								"value description": "PDUSB Peripheral"
+								"value (EDITABLE)": "0x0",
+								"value description": "Not a UFP"
 							},
 							{
 								"name": "USB Communication Capable as Device",
 								"start position": 38,
 								"end position": 38,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB Communication Capable as Device",
 								"start position": 38,
 								"end position": 38,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "USB Communication Capable as Host",
@@ -14181,8 +14181,8 @@
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x6000001a",
-								"value description": "0x6000001a"
+								"value (EDITABLE)": "0x6300001a",
+								"value description": "0x6300001a"
 							},
 							{
 								"name": "USB Highest Speed",
@@ -14202,8 +14202,8 @@
 								"name": "Non-Spec Data",
 								"start position": 104,
 								"end position": 134,
-								"value (EDITABLE)": "0x6000001a",
-								"value description": "0x6000001a"
+								"value (EDITABLE)": "0x6300001a",
+								"value description": "0x6300001a"
 							},
 							{
 								"name": "Alternate Mode",
@@ -14293,29 +14293,29 @@
 								"name": "Device Capability",
 								"start position": 128,
 								"end position": 131,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 128,
 								"end position": 130,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Device Capability",
 								"start position": 128,
 								"end position": 131,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 128,
 								"end position": 130,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0x3",
+								"value description": "0x3"
 							},
 							{
 								"name": "UFP VDO Version",
