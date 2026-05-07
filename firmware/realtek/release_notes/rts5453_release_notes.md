@@ -2,6 +2,93 @@
 
 **Project name: Skywalker**
 
+**Version: 16.13.4**
+
+**Release Date: 2026/05/08**
+
+**File name: rts5453P_Google_Skywalker_V16.13.4_20260508.bin**
+
+**Check sum: 0x00F46BD5**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.60.4, change version to v16.13.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.60.4**
+
+**Release Date: 2026/05/08**
+
+**File name: rts5453P_Google_Skywalker_V0.60.4_20260508.bin**
+
+**Check sum: 0x00F2BC44**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/488535211 - Sync TBT/U4 CTS solution.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/489303123 - Add set_MAX_PDP command
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/505297828 - Due to the abnormality caused in pixel phone, disable the TBT/U4 SSD workaround.
+
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 16.12.4**
 
 **Release Date: 2026/04/24**
