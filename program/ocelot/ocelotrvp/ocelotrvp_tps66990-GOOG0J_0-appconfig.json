@@ -13,7 +13,7 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "5-5-2026_18-18-33",
+		"timeStamp": "5-12-2026_16-32-47",
 		"toolBuildVersion": "2.37",
 		"sharedSettings": true
 	},
@@ -7825,15 +7825,15 @@
 								"name": "Modal Operation Supported",
 								"start position": 34,
 								"end position": 34,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Modal Operation Supported",
 								"start position": 34,
 								"end position": 34,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Product Type UFP",
@@ -14083,15 +14083,15 @@
 								"name": "Modal Operation Supported",
 								"start position": 34,
 								"end position": 34,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Modal Operation Supported",
 								"start position": 34,
 								"end position": 34,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Product Type UFP",
