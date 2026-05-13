@@ -13,7 +13,7 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "5-12-2026_16-32-47",
+		"timeStamp": "5-13-2026_16-39-28",
 		"toolBuildVersion": "2.37",
 		"sharedSettings": true
 	},
@@ -3597,36 +3597,36 @@
 								"name": "PD Hardreset",
 								"start position": 1,
 								"end position": 1,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Plug Insert or Removal",
 								"start position": 3,
 								"end position": 3,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Power Swap Complete",
 								"start position": 4,
 								"end position": 4,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Data Swap Complete",
 								"start position": 5,
 								"end position": 5,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "FR Swap Complete",
 								"start position": 6,
 								"end position": 6,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Source Cap Updated",
@@ -3723,15 +3723,15 @@
 								"name": "Data Status Updated",
 								"start position": 25,
 								"end position": 25,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "Status Updated",
 								"start position": 26,
 								"end position": 26,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "PD Status Updated",
@@ -3786,8 +3786,8 @@
 								"name": "Power Event Occurred Error",
 								"start position": 35,
 								"end position": 35,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Missing Get Capabalities Message Error",
@@ -3940,8 +3940,8 @@
 								"name": "External DCDC Event Received",
 								"start position": 61,
 								"end position": 61,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP SID Status Updated",
@@ -4045,8 +4045,8 @@
 								"name": "App Loaded",
 								"start position": 80,
 								"end position": 80,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "I2C Controller NACKed",
@@ -7790,8 +7790,8 @@
 								"name": "Number Valid VDOs",
 								"start position": 0,
 								"end position": 2,
-								"value (EDITABLE)": "0x6",
-								"value description": 6
+								"value (EDITABLE)": "0x4",
+								"value description": 4
 							},
 							{
 								"name": "Vendor ID",
@@ -8119,8 +8119,8 @@
 								"name": "Non-Spec Data",
 								"start position": 168,
 								"end position": 198,
-								"value (EDITABLE)": "0x43000000",
-								"value description": "0x43000000"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "USB Highest Speed",
@@ -8140,8 +8140,8 @@
 								"name": "Non-Spec Data",
 								"start position": 168,
 								"end position": 198,
-								"value (EDITABLE)": "0x43000000",
-								"value description": "0x43000000"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Alternate Mode",
@@ -8231,57 +8231,57 @@
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							}
 						]
 					},
@@ -8294,8 +8294,8 @@
 								"name": "USVID Enabled",
 								"start position": 0,
 								"end position": 0,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "User ALT Mode SVID Value",
@@ -8476,15 +8476,15 @@
 								"name": "Enable DP SID",
 								"start position": 0,
 								"end position": 0,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP Mode",
 								"start position": 1,
 								"end position": 1,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP Port Capability",
@@ -9176,8 +9176,8 @@
 								"name": "Hold Up Time",
 								"start position": 8,
 								"end position": 15,
-								"value (EDITABLE)": "0x0",
-								"value description": "0x0"
+								"value (EDITABLE)": "0xd1",
+								"value description": "0xd1"
 							},
 							{
 								"name": "LPS Compliant",
@@ -9330,15 +9330,15 @@
 								"name": "Internal Battery Present",
 								"start position": 90,
 								"end position": 90,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "Number Fixed Batteries",
 								"start position": 96,
 								"end position": 99,
-								"value (EDITABLE)": "0x0",
-								"value description": 0
+								"value (EDITABLE)": "0x1",
+								"value description": 1
 							},
 							{
 								"name": "Number Hot Swappable Batteries",
@@ -9358,8 +9358,8 @@
 								"name": "Source EPR PDP",
 								"start position": 112,
 								"end position": 119,
-								"value (EDITABLE)": "0xf",
-								"value description": "15 W"
+								"value (EDITABLE)": "0x0",
+								"value description": "0 W"
 							}
 						]
 					},
@@ -9673,22 +9673,22 @@
 								"name": "EPR Sink Minimum PDP",
 								"start position": 88,
 								"end position": 95,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "EPR Sink Operational PDP",
 								"start position": 96,
 								"end position": 103,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "EPR Sink Maximum PDP",
 								"start position": 104,
 								"end position": 111,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							}
 						]
 					},
@@ -9855,36 +9855,36 @@
 								"name": "PD Hardreset",
 								"start position": 1,
 								"end position": 1,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Plug Insert or Removal",
 								"start position": 3,
 								"end position": 3,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Power Swap Complete",
 								"start position": 4,
 								"end position": 4,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Data Swap Complete",
 								"start position": 5,
 								"end position": 5,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "FR Swap Complete",
 								"start position": 6,
 								"end position": 6,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Source Cap Updated",
@@ -9981,15 +9981,15 @@
 								"name": "Data Status Updated",
 								"start position": 25,
 								"end position": 25,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "Status Updated",
 								"start position": 26,
 								"end position": 26,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "PD Status Updated",
@@ -10044,8 +10044,8 @@
 								"name": "Power Event Occurred Error",
 								"start position": 35,
 								"end position": 35,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "Missing Get Capabalities Message Error",
@@ -10198,8 +10198,8 @@
 								"name": "External DCDC Event Received",
 								"start position": 61,
 								"end position": 61,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							},
 							{
 								"name": "DP SID Status Updated",
@@ -10303,8 +10303,8 @@
 								"name": "App Loaded",
 								"start position": 80,
 								"end position": 80,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "I2C Controller NACKed",
@@ -14048,8 +14048,8 @@
 								"name": "Number Valid VDOs",
 								"start position": 0,
 								"end position": 2,
-								"value (EDITABLE)": "0x6",
-								"value description": 6
+								"value (EDITABLE)": "0x4",
+								"value description": 4
 							},
 							{
 								"name": "Vendor ID",
@@ -14363,43 +14363,43 @@
 								"name": "USB Highest Speed",
 								"start position": 168,
 								"end position": 170,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 168,
 								"end position": 172,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 168,
 								"end position": 198,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "USB Highest Speed",
 								"start position": 168,
 								"end position": 170,
-								"value (EDITABLE)": "0x1",
-								"value description": "USB3.2Gen1"
+								"value (EDITABLE)": "0x0",
+								"value description": "USB2"
 							},
 							{
 								"name": "Port Number",
 								"start position": 168,
 								"end position": 172,
-								"value (EDITABLE)": "0x1",
-								"value description": "0x1"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Non-Spec Data",
 								"start position": 168,
 								"end position": 198,
-								"value (EDITABLE)": "0x43000001",
-								"value description": "0x43000001"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Alternate Mode",
@@ -14489,57 +14489,57 @@
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Device Capability",
 								"start position": 192,
 								"end position": 195,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "Host Capability",
 								"start position": 192,
 								"end position": 194,
-								"value (EDITABLE)": "0x3",
-								"value description": "0x3"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "UFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Reserved1"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							},
 							{
 								"name": "DFP VDO Version",
 								"start position": 197,
 								"end position": 199,
-								"value (EDITABLE)": "0x2",
-								"value description": "Version 1.2"
+								"value (EDITABLE)": "0x0",
+								"value description": "Reserved"
 							}
 						]
 					},
@@ -15588,15 +15588,15 @@
 								"name": "Internal Battery Present",
 								"start position": 90,
 								"end position": 90,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "Number Fixed Batteries",
 								"start position": 96,
 								"end position": 99,
-								"value (EDITABLE)": "0x0",
-								"value description": 0
+								"value (EDITABLE)": "0x1",
+								"value description": 1
 							},
 							{
 								"name": "Number Hot Swappable Batteries",
@@ -15616,8 +15616,8 @@
 								"name": "Source EPR PDP",
 								"start position": 112,
 								"end position": 119,
-								"value (EDITABLE)": "0xf",
-								"value description": "15 W"
+								"value (EDITABLE)": "0x0",
+								"value description": "0 W"
 							}
 						]
 					},
@@ -15931,22 +15931,22 @@
 								"name": "EPR Sink Minimum PDP",
 								"start position": 88,
 								"end position": 95,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "EPR Sink Operational PDP",
 								"start position": 96,
 								"end position": 103,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							},
 							{
 								"name": "EPR Sink Maximum PDP",
 								"start position": 104,
 								"end position": 111,
-								"value (EDITABLE)": "0x41",
-								"value description": "0x41"
+								"value (EDITABLE)": "0x0",
+								"value description": "0x0"
 							}
 						]
 					},
