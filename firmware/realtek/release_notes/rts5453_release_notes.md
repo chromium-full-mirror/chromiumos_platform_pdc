@@ -2,6 +2,88 @@
 
 **Project name: Skywalker**
 
+**Version: 16.14.4**
+
+**Release Date: 2026/05/27**
+
+**File name: rts5453P_Google_Skywalker_V16.14.4_20260527.bin**
+
+**Check sum: 0x00F2E19D**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.61.4, change version to v16.14.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.61.4**
+
+**Release Date: 2026/05/27**
+
+**File name: rts5453P_Google_Skywalker_V0.61.4_20260527.bin**
+
+**Check sum: 0x00F2E933**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/515635856 - Do not execute Dell dock WA when the adapter is connected.
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 16.13.4**
 
 **Release Date: 2026/05/08**
