@@ -10,7 +10,8 @@ import enum
 class TiHeader(bytes, enum.Enum):
     """TI PDC FW image headers"""
 
-    FLASH_SECTION = b"\x03\x00\xef\xac"
+    TFU_BUNDLE_TYPE_A = b"\x03\x00\xef\xac"
+    TFU_BUNDLE_TYPE_B = b"\x13\x00\xef\xac"
     APPCONFIG_SECTION = b"\x03\x00\xea\xac"
 
 

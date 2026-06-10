@@ -15,7 +15,11 @@ from pdclib import ti_utils
 from pdclib.ti_constants import TiHeader
 
 
-TI_HEADERS = (TiHeader.FLASH_SECTION, TiHeader.APPCONFIG_SECTION)
+TI_HEADERS = (
+    TiHeader.TFU_BUNDLE_TYPE_A,
+    TiHeader.TFU_BUNDLE_TYPE_B,
+    TiHeader.APPCONFIG_SECTION,
+)
 
 
 def detect_type(path: Path) -> str:

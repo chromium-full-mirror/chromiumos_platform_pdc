@@ -33,7 +33,7 @@ def read_base_fw_ver_and_proj_name(
     with open(binary_path, "rb") as f:
         data = f.read()
         header = data[0:4]
-        if header == TiHeader.FLASH_SECTION:
+        if header in (TiHeader.TFU_BUNDLE_TYPE_A, TiHeader.TFU_BUNDLE_TYPE_B):
             # Either a standalone FW image or a FW+appconfig bundle. Start with
             # getting FW version:
             patch, minor, major, _ = struct.unpack(

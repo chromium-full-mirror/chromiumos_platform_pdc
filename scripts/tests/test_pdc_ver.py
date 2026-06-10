@@ -36,8 +36,8 @@ def test_bad_size_file(capsys):
     assert "Could not autodetect image type" in captured.err
 
 
-def test_ti_image(capsys):
-    """Test running with TI image."""
+def test_ti_image_a(capsys):
+    """Test running with TI image, type A"""
     exit_code = pdc_ver.main(
         [str(get_test_file_path("tps6699x-GOOG0J30_00132002_TFU.bin"))]
     )
@@ -47,6 +47,19 @@ def test_ti_image(capsys):
     assert "Image Type   : TI" in captured.out
     assert "Version      : 19.32.2" in captured.out
     assert "Project Name : GOOG0J30" in captured.out
+
+
+def test_ti_image_b(capsys):
+    """Test running with TI image, type B"""
+    exit_code = pdc_ver.main(
+        [str(get_test_file_path("tps6699xb-GOOG0b00_00160001_TFU.bin"))]
+    )
+    assert exit_code == 0
+    captured = capsys.readouterr()
+
+    assert "Image Type   : TI" in captured.out
+    assert "Version      : 22.0.1" in captured.out
+    assert "Project Name : GOOG0b00" in captured.out
 
 
 def test_rtk_fw_image(capsys):
