@@ -30,9 +30,9 @@ def cbfs_test_images(tmp_path_factory):
 
     Currently creates:
       - "cbfs.bin", with:
-        - rts5453_v0.45.4.{bin|hash}
+        - rts5453_GOOG0000.{bin|hash}
           RTK 0.45.4 FW, project name "GOOG0000"
-        - tps6699x-GOOG0J30_00132002_TFU.{bin|hash}
+        - tps6699x_GOOG0J00.{bin|hash}
           TI 19.32.02 FW, project name "GOOG0J30"
         - AP RO, AP RW_A, AP RW_B, EC RW_A, EC RW_B FWID version strings
 
@@ -83,13 +83,13 @@ def cbfs_test_images(tmp_path_factory):
             cbfs_path,
             region,
             get_test_file_path("rts5453_v0.45.4.bin"),
-            "rts5453_v0.45.4.bin",
+            "rts5453_GOOG0000.bin",
         )
         cbfstool.add_file(
             cbfs_path,
             region,
             hash_file_rtk_path,
-            "rts5453_v0.45.4.hash",
+            "rts5453_GOOG0000.hash",
         )
 
         # TI image and hash file
@@ -97,13 +97,13 @@ def cbfs_test_images(tmp_path_factory):
             cbfs_path,
             region,
             get_test_file_path("tps6699x-GOOG0J30_00132002_TFU.bin"),
-            "tps6699x-GOOG0J30_00132002_TFU.bin",
+            "tps6699x_GOOG0J00.bin",
         )
         cbfstool.add_file(
             cbfs_path,
             region,
             hash_file_ti_path,
-            "tps6699x-GOOG0J30_00132002_TFU.hash",
+            "tps6699x_GOOG0J00.hash",
         )
 
     #

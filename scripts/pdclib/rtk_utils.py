@@ -622,3 +622,9 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
     )
     for p in binary.get_pdos(PDORole.SOURCE, "B"):
         output_func(str(p))
+
+
+def get_hash_bytes(binary_path: Path) -> bytes:
+    """Generate hash file bytes for a RTK binary."""
+    fw = RtkFwBinary(binary_path)
+    return bytes(fw.get_fw_version().as_tuple())

@@ -255,6 +255,40 @@ class CbfsTool:
             ],
         )
 
+    def remove(self, ap_fw_path: Path, region: str, cbfs_filename: str):
+        """Remove a file from CBFS"""
+
+        if not ap_fw_path.exists():
+            raise FileNotFoundError(str(ap_fw_path))
+
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "remove",
+                "-r",
+                region,
+                "-n",
+                cbfs_filename,
+            ],
+        )
+
+    def compact(self, ap_fw_path: Path, region: str):
+        """Compact (defragment) a CBFS region"""
+
+        if not ap_fw_path.exists():
+            raise FileNotFoundError(str(ap_fw_path))
+
+        subprocess.check_output(
+            [
+                self.cbfstool_path,
+                ap_fw_path,
+                "compact",
+                "-r",
+                region,
+            ],
+        )
+
 
 def parse_firmware_and_hashfile(fw_path: Path, hash_path: Path | None) -> dict:
     """Extract data for this FW binary and hash file
@@ -468,3 +502,81 @@ def search_pdc_fw_images(
             )
 
         return all_fw
+
+
+def swap_pdc_fw_image(
+    ap_fw_path: Path,
+    cbfstool: CbfsTool,
+    cbfs_region: str,
+    pdc_fw_slot: str,
+    new_fw_path: Path,
+    new_hash_path: Path | None = None,
+) -> None:
+    """Swap a PDC FW image in AP FW CBFS with a new one.
+
+    :param ap_fw_path: Path to AP FW binary image
+    :param cbfstool: CbfsTool instance
+    :param cbfs_region: CBFS region to modify
+    :param pdc_fw_slot: Which PDC FW image to swap. Equal to base name of the
+                        file in CBFS (w/o .bin or .hash)
+    :param new_fw_path: Path to the new PDC FW binary
+    :param new_hash_path: Optional path to the new hash file. If None, it will
+                          be generated.
+    """
+    if not new_fw_path.exists():
+        raise FileNotFoundError(f"New FW binary {new_fw_path} does not exist")
+
+    # Find the existing PDC FW in CBFS for the given slot
+    contents = search_pdc_fw_images(ap_fw_path, cbfstool, cbfs_region)
+    target_bin_name = f"{pdc_fw_slot}.bin"
+    target_hash_name = f"{pdc_fw_slot}.hash"
+
+    if pdc_fw_slot not in contents:
+        raise FileNotFoundError(
+            f"No PDC FW slot '{pdc_fw_slot}' found in CBFS ({ap_fw_path}, "
+            f"region {cbfs_region}). Valid options: {','.join(contents.keys())}"
+        )
+
+    # Determine vendor from target_bin_name
+    if "tps6699" in target_bin_name.lower():
+        vendor = "ti"
+    elif "rts54" in target_bin_name.lower():
+        vendor = "rtk"
+    else:
+        raise ValueError(f"Unknown vendor for target {target_bin_name}")
+
+    # Prepare new hash content
+    if new_hash_path:
+        if not new_hash_path.exists():
+            raise FileNotFoundError(
+                f"Provided hash file {new_hash_path} does not exist"
+            )
+        hash_content = new_hash_path.read_bytes()
+    else:
+        # Generate hash content
+        if vendor == "ti":
+            hash_content = ti_utils.get_hash_bytes(new_fw_path)
+        elif vendor == "rtk":
+            hash_content = rtk_utils.get_hash_bytes(new_fw_path)
+
+    # We need to write the hash content to a temp file before adding it to CBFS
+    with tempfile.TemporaryDirectory() as tempdir:
+        tempdir = Path(tempdir)
+
+        temp_hash_path = tempdir / "temp_hash.hash"
+        temp_hash_path.write_bytes(hash_content)
+
+        # Remove old files
+        cbfstool.remove(ap_fw_path, cbfs_region, target_bin_name)
+        if target_hash_name:
+            cbfstool.remove(ap_fw_path, cbfs_region, target_hash_name)
+
+        # Defragment the CBFS region to maximize the chance of fitting in the
+        # replacement firmware
+        cbfstool.compact(ap_fw_path, cbfs_region)
+
+        # Add new files
+        cbfstool.add_file(ap_fw_path, cbfs_region, new_fw_path, target_bin_name)
+        cbfstool.add_file(
+            ap_fw_path, cbfs_region, temp_hash_path, target_hash_name
+        )

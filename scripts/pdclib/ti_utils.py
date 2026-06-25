@@ -106,3 +106,27 @@ def read_base_fw_ver_and_proj_name(
                 "Unknown file header "
                 f"{binascii.hexlify(header, '.').decode('ascii')}"
             )
+
+
+def get_hash_bytes(binary_path: Path) -> bytes:
+    """Generate hash file bytes for a TI binary."""
+    major, minor, patch, proj_name = read_base_fw_ver_and_proj_name(binary_path)
+    if major is None:
+        raise ValueError(f"Cannot read version from TI binary {binary_path}")
+    if proj_name is None:
+        raise ValueError(
+            f"Cannot read project name from TI binary {binary_path}"
+        )
+
+    if proj_name.startswith("GOOG"):
+        proj_bytes = proj_name.encode("ascii")
+    elif proj_name.startswith("0x"):
+        proj_bytes = binascii.unhexlify(proj_name[2:])
+    else:
+        raise ValueError(f"Unexpected project name format: {proj_name}")
+
+    proj_bytes = proj_bytes.ljust(8, b"\x00")
+    if len(proj_bytes) > 8:
+        raise ValueError(f"Project name too long: {proj_name}")
+
+    return bytes([major, minor, patch]) + proj_bytes
