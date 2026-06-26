@@ -15,12 +15,20 @@ from pdclib import console_fwup_common
 class TpsUpdaterServodClient(console_fwup_common.ServodClient):
     """Provide TPS-specific implementations of the EC console command API"""
 
-    def fwup_start(self, port: int):
+    def fwup_start(self, chip: console_fwup_common.ChipSpec):
         """Start a FW update session"""
 
-        self._run_ec_command_get_output(
-            f"pdc_tps_fwup start {port}", ["TPS_FWUP: Started"]
-        )
+        if isinstance(chip, console_fwup_common.ChipSpecPortNum):
+            self._run_ec_command_get_output(
+                f"pdc_tps_fwup start {chip.port_number}", ["TPS_FWUP: Started"]
+            )
+        elif isinstance(chip, console_fwup_common.ChipSpecRawI2C):
+            self._run_ec_command_get_output(
+                f"pdc_tps_fwup start {chip.i2c_bus} {chip.i2c_addr}",
+                ["TPS_FWUP: Started"],
+            )
+        else:
+            raise RuntimeError(f"Invalid chip spec type {chip}")
 
     def fwup_initiate(self, data: bytes):
         """Send initiate command via TFU"""
@@ -157,7 +165,7 @@ class Tps6699xFirmwareUpdater:
     def _read_data(self, data: bytes, offset: int, length: int) -> bytes:
         return data[offset : offset + length]
 
-    def update(self, usbc_port: int, fw_image: bytes):
+    def update(self, chip: console_fwup_common.ChipSpec, fw_image: bytes):
         """Update firmware with the supplied PDC FW binary."""
 
         def chunk_stream(stream_for, broadcast_address, buf):
@@ -211,8 +219,8 @@ class Tps6699xFirmwareUpdater:
 
         try:
             # Start firmware update session
-            log.info("Starting firmware update session (port C%d)", usbc_port)
-            self.servo.fwup_start(usbc_port)
+            log.info("Starting firmware update session (%s)", str(chip))
+            self.servo.fwup_start(chip)
 
             log.info("Sending data blocks")
             # Send TFUi command and then stream the header
@@ -268,12 +276,9 @@ def tps_update(
     servo = TpsUpdaterServodClient(servod_host, servod_port)
     tps = Tps6699xFirmwareUpdater(servo)
 
-    if not chip.is_port_num_known:
-        raise Exception(f"TPS update only supports port numbers: {chip}")
-
     with open(pdc_fw_path, "rb") as f:
         pdc_fw = f.read()
 
-    tps.update(chip.port_number, pdc_fw)
+    tps.update(chip, pdc_fw)
 
     return 0
