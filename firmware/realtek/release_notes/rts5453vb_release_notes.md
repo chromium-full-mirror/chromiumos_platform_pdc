@@ -2,6 +2,178 @@
 
 **Project name: RTS5453P-VB**
 
+**Version: 16.18.4**
+
+**Release Date: 2026/07/16**
+
+**File name: RTS5453P-VB_Google_V16.18.4_20260716.bin**
+
+**Check sum: 0x00EEDCF2**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   Based on v0.65.4, change version to v16.18.4
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   N/A
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.65.4**
+
+**Release Date: 2026/07/16**
+
+**File name: RTS5453P-VB_Google_V0.65.4_20260716.bin**
+
+**Check sum: 0x00EF276F**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   N/A
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/524185695 - Fix the issue where Set_VDO does not correctly fill the data into the 2.0 ID_header.
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: -   N/A
+
+***
+
+**Version: 16.17.4**
+
+**Release Date: 2026/07/07**
+
+**File name: RTS5453P-VB_Google_V16.17.4_20260707.bin**
+
+**Check sum: 0x00EDABCC**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   Based on v0.64.4, change version to v16.17.4
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   N/A
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.64.4**
+
+**Release Date: 2026/07/07**
+
+**File name: RTS5453P-VB_Google_V0.64.4_20260707.bin**
+
+**Check sum: 0x00EF420E**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   N/A
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/525073582 - Fix the issue where the force debug path affects port A.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/529167621 - CTS fix side effect(v0.60.4), revert. (Ignore sink path command during hard reset state.)
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/462303660 - Fix the issue where the SET_VDO for the ID header does not set the PD2.0 fields.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/515660370 - Correct the UCSI & RTK status for the issue of port partner misplacement.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/524185695 - Add set_VDO for UFP/DFP VDO.
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: -   N/A
+
+***
+
 **Version: 16.14.4**
 
 **Release Date: 2026/05/27**

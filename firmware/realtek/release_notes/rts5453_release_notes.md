@@ -2,6 +2,351 @@
 
 **Project name: Skywalker**
 
+**Version: 16.18.4**
+
+**Release Date: 2026/07/16**
+
+**File name: rts5453P_Google_Skywalker_V16.18.4_20260716.bin**
+
+**Check sum: 0x00F16E8A**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.65.4, change version to v16.18.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.65.4**
+
+**Release Date: 2026/07/16**
+
+**File name: rts5453P_Google_Skywalker_V0.65_20260716.bin**
+
+**Check sum: 0x00EF6F51**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/524185695 - Fix the issue where Set_VDO does not correctly fill the data into the 2.0 ID_header.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/533218649 - Fix the issue where SCP did not execute correctly.
+
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 16.17.4**
+
+**Release Date: 2026/07/07**
+
+**File name: rts5453P_Google_Skywalker_V16.17.4_20260707.bin**
+
+**Check sum: 0x00F0DACD**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.64.4, change version to v16.17.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.64.4**
+
+**Release Date: 2026/07/07**
+
+**File name: rts5453P_Google_Skywalker_V0.64_20260707.bin**
+
+**Check sum: 0x00F06AE1**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/525073582 - Fix the issue where the force debug path affects port A.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/529167621 - CTS fix side effect(v0.60.4), revert. (Ignore sink path command during hard reset state.)
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/462303660 - Fix the issue where the SET_VDO for the ID header does not set the PD2.0 fields.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/515660370 - Correct the UCSI & RTK status for the issue of port partner misplacement.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/524185695 - Add set_VDO for UFP/DFP VDO.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/517007646 - Fix the issue where the dead battery flag is incorrectly set after updating FW with servo connection.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/530756087 - Fine-tune Vconn COP threshold
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/488535211 - Add CTS solution.(QuadraMAX/LeCory)
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 16.16.4**
+
+**Release Date: 2026/06/09**
+
+**File name: rts5453P_Google_Skywalker_V16.16.4_20260609.bin**
+
+**Check sum: 0x00F2753C**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.63.4, change version to v16.16.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.63.4**
+
+**Release Date: 2026/06/09**
+
+**File name: rts5453P_Google_Skywalker_V0.63_20260609.bin**
+
+**Check sum: 0x00F2DBD7**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/517007646 - Restored the behavior where tTypeCSinkWaitCap timeout triggers a hard reset.
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 16.15.4**
+
+**Release Date: 2026/06/04**
+
+**File name: rts5453P_Google_Skywalker_V16.15.4_20260604.bin**
+
+**Check sum: 0x00F2C32A**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.62.4, change version to v16.15.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.62.4**
+
+**Release Date: 2026/06/04**
+
+**File name: rts5453P_Google_Skywalker_V0.62_20260604.bin**
+
+**Check sum: 0x00F2A67C**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/517007646 - Fixed an issue where both ports were not correctly reset after the PD FW update.
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 16.14.4**
 
 **Release Date: 2026/05/27**
