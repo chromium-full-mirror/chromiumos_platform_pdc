@@ -8,6 +8,58 @@ import binascii
 import dataclasses
 
 
+class ConfigName:
+    """Parse an 8-character PDC config/project name string"""
+
+    def __init__(self, config_name: str | bytes):
+        if isinstance(config_name, bytes):
+            config_name = config_name.decode("ascii")
+        self.config_name = config_name
+
+    @property
+    def prefix(self) -> str:
+        return self.config_name[0:4]
+
+    @property
+    def id(self) -> str:
+        return self.config_name[4:6]
+
+    @property
+    def revision(self) -> str:
+        return self.config_name[6]
+
+    @property
+    def variant(self) -> str:
+        return self.config_name[7]
+
+    def get_revision_zero_string(self) -> str:
+        """Return the config name but with the revision set to 0"""
+        return f"{self.prefix}{self.id}0{self.variant}"
+
+    def compare_id_and_variant(self, other: "ConfigName") -> None:
+        """Compare two config names for the same config ID and variant.
+
+        This ignores the config revision field.
+
+        Raises an AssertionError with a helpful message if comparison fails.
+        """
+        assert (
+            self.prefix == other.prefix
+        ), f"Prefixes differ ('{self.prefix}' != '{other.prefix}')"
+        assert (
+            self.id == other.id
+        ), f"Config IDs differ ('{self.id}' != '{other.id}')"
+        assert (
+            self.variant == other.variant
+        ), f"Config variants differ ('{self.variant}' != '{other.variant}')"
+
+    def __eq__(self, other: "ConfigName") -> bool:
+        return self.config_name == other.config_name
+
+    def __str__(self):
+        return self.config_name
+
+
 @dataclasses.dataclass
 class UsbVidPid:
     """Store a USB VID and PID"""

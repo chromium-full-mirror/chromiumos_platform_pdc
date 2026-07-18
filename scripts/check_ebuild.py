@@ -15,6 +15,7 @@ import subprocess
 import sys
 
 import pdclib.apfw_image
+import pdclib.common
 
 
 # A non-production Chrome OS board that we will use as a sandbox
@@ -121,6 +122,72 @@ def add_version_specifier(package_atom: str) -> str:
     return package_atom
 
 
+def check_package_consistency(
+    package_name: str, base_cbfs_filename: str, embedded_data: dict
+) -> None:
+    try:
+        package_config, package_ver = re.findall(
+            r"(GOOG[A-Za-z0-9]{4}).*-(\d+\.\d+\.\d+)",
+            package_name,
+        )[0]
+
+        package_config = pdclib.common.ConfigName(package_config)
+    except (ValueError, IndexError) as err:
+        raise ValueError(
+            "Cannot extract config name or version "
+            f"from package name ({package_name})"
+        ) from err
+
+    assert (
+        package_config.revision == "0"
+    ), "Config name in package title should leave the config revision as '0'"
+
+    assert (
+        str(package_config) in base_cbfs_filename
+    ), "CBFS file name should include same config name as in the package title"
+
+    # Ensure version numbers in hash file and FW binary match package version
+    assert (
+        "%d.%d.%d" % embedded_data["hash_file"]["ver"] == package_ver
+    ), "Hash file version does not match package version"
+    assert (
+        "%d.%d.%d" % embedded_data["fw_binary"][0:3] == package_ver
+    ), "FW binary version does not match package version"
+
+    # Ensure config name in hash file (optional) and FW binary match package
+    # title, but allow for different revisions.
+    if embedded_data["hash_file"]["config_name"]:
+        try:
+            package_config.compare_id_and_variant(
+                pdclib.common.ConfigName(
+                    embedded_data["hash_file"]["config_name"]
+                )
+            )
+        except AssertionError as err:
+            raise AssertionError(
+                "Hash file has a config name but does not match package title"
+            ) from err
+
+        # FW binary config name and hash file config name must be exact matches
+        assert (
+            embedded_data["fw_binary"][3]
+            == embedded_data["hash_file"]["config_name"]
+        ), (
+            f"Hash file config name and FW binary config do not match "
+            f"({embedded_data['hash_file']['config_name']} != "
+            f"{embedded_data['fw_binary'][3]})"
+        )
+
+    try:
+        package_config.compare_id_and_variant(
+            pdclib.common.ConfigName(embedded_data["fw_binary"][3])
+        )
+    except AssertionError as err:
+        raise AssertionError(
+            "FW binary config name does not match package title"
+        ) from err
+
+
 def cmd_inspect_package(package_atoms_list: list[str]) -> int:
     """Emerge the packages and inspect PDC FW contents"""
 
@@ -164,6 +231,8 @@ def cmd_inspect_package(package_atoms_list: list[str]) -> int:
     for pkg in packages:
         print(f" - {pkg}")
 
+    errors = []
+
     for pkg in packages:
         print_green_header(pkg)
 
@@ -184,7 +253,22 @@ def cmd_inspect_package(package_atoms_list: list[str]) -> int:
             data = pdclib.apfw_image.parse_firmware_and_hashfile(
                 fw_file, hash_file
             )
+
             pdclib.apfw_image.print_fw_and_hash_info_row(data)
+
+            try:
+                check_package_consistency(pkg, base_name, data)
+            except AssertionError as err:
+                errors.append((pkg, base_name, err))
+
+    if errors:
+        print()
+        print(f"Found {len(errors)} error(s) in packages:")
+
+        for pkg, slot, err in errors:
+            print(f" - {pkg}, {slot}: {err}")
+
+        return 1
 
     return 0
 
