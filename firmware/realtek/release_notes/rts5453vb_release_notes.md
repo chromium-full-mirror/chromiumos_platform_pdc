@@ -2,6 +2,88 @@
 
 **Project name: RTS5453P-VB**
 
+**Version: 16.19.4**
+
+**Release Date: 2026/07/28**
+
+**File name: RTS5453P-VB_Google_V16.19.4_20260728.bin**
+
+**Check sum: 0x00EF079F**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   Based on v0.66.4, change version to v16.19.4
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   N/A
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.66.4**
+
+**Release Date: 2026/07/28**
+
+**File name: RTS5453P-VB_Google_V0.66.4_20260728.bin**
+
+**Check sum: 0x00EDE5A8**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address**  | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|------------------|--------------------|---------------------|
+| **PA** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+| **PB** | **Base on ADC**   | **Base on cfg**     | **Smbus addr+2** | **Base on cfg**    | **Base on cfg**     |
+
+**New Features:**
+
+-   N/A
+
+**Impacts/Changes:**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes:**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/525073582 - Fix the issue where the SBU MUX debug mode status returns an error.
+
+**Known Issues:**
+
+-   Known issues 1: N/A
+
+**Workarounds:**
+
+-   Workaround 1: -   N/A
+
+***
+
 **Version: 16.18.4**
 
 **Release Date: 2026/07/16**

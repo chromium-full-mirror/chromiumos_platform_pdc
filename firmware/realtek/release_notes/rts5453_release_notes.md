@@ -2,6 +2,93 @@
 
 **Project name: Skywalker**
 
+**Version: 16.19.4**
+
+**Release Date: 2026/07/28**
+
+**File name: rts5453P_Google_Skywalker_V16.19.4_20260728.bin**
+
+**Check sum: 0x00F18CCC**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.66.4, change version to v16.19.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.66.4**
+
+**Release Date: 2026/07/28**
+
+**File name: rts5453P_Google_Skywalker_V0.66_20260728.bin**
+
+**Check sum: 0x00EF1AE9**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/525073582 - Fix the issue where the SBU MUX debug mode status returns an error.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/528209853 - Modify the behavior to a soft reset when the device violates the PD protocol during Vconn swap.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/528209853 - Fix the issue where the PD stops the alt flow when the discover ID command replies with NACK in the SOP'.
+
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 16.18.4**
 
 **Release Date: 2026/07/16**
