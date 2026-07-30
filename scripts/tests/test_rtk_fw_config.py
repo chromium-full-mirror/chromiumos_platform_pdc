@@ -124,7 +124,7 @@ def test_extract_config__success():
         )
         output_config_path = Path(tmpdir) / "output_config.bin"
 
-        rtk_fw_config.main(
+        assert 0 == rtk_fw_config.main(
             [
                 "extract",
                 "-i",
@@ -200,6 +200,30 @@ def test_merge_config__missing_file():
         )
 
 
+def test_merge_config__chip_type_mismatch():
+    """Config and base FW are for different chip types"""
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        input_base_fw_path = get_test_file_path("rts5453_v0.45.4.bin")
+        input_config_path = get_test_file_path(
+            "skywalker-GOOG0U00-vb-config.bin"
+        )
+        output_path = Path(tmpdir) / "output_fw.bin"
+
+        # Merge should fail due to GR base FW and VB config section
+        assert 1 == rtk_fw_config.main(
+            [
+                "merge",
+                "-i",
+                str(input_base_fw_path),
+                "-c",
+                str(input_config_path),
+                "-o",
+                str(output_path),
+            ]
+        )
+
+
 def test_merge_config__success():
     """Successful path. New image has correct base FW and config section"""
 
@@ -210,7 +234,7 @@ def test_merge_config__success():
         )
         output_path = Path(tmpdir) / "output_fw.bin"
 
-        rtk_fw_config.main(
+        assert 0 == rtk_fw_config.main(
             [
                 "merge",
                 "-i",

@@ -51,6 +51,17 @@ def cmd_merge(args) -> int:
     print(f"Current config for '{args.image}':")
     rtk_utils.print_config(fw)
 
+    # Compare the chip type of the config and the base firmware
+    if new_config.get_chip_type() != fw.get_chip_type():
+        print()
+        print(
+            f"Error: FW has chip type {fw.get_chip_type().name}, "
+            f"but config has chip type {new_config.get_chip_type().name}. "
+            "This combination is not supported."
+        )
+
+        return 1
+
     fw.set_config(new_config)
     fw.set_file_crc32()
 
