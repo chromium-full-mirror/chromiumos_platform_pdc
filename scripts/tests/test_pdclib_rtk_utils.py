@@ -262,8 +262,8 @@ def test_fw_or_config_from_file(filepath: Path):
             get_test_file_path(
                 "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
             ),
-            RtkChipType.RTS545X,
-            id="RTS545X",
+            RtkChipType.RTS545X_GR,
+            id="RTS545X_GR",
         ),
         pytest.param(
             get_test_file_path("RTS5453P-VB_Google_V0.44_20251001.bin"),
@@ -285,7 +285,7 @@ def test_rtkfwbinary_get_chip_type(filepath: Path, expected: RtkChipType):
             get_test_file_path(
                 "ocelotrvp-GOOG0H00-realtek-rts545x-firmware-0.44.3.bin"
             ),
-            id="RTS545X",
+            id="RTS545X_GR",
         ),
         pytest.param(
             get_test_file_path("RTS5453P-VB_Google_V0.44_20251001.bin"),

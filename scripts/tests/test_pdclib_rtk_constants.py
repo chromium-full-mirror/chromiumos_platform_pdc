@@ -15,11 +15,11 @@ def test_rtki2cbusvoltage_parse_from_config():
     # RTS545XP and RTS545XP-VB encode I2C voltages differently. Check each.
 
     assert (
-        RtkI2cBusVoltage.parse_from_config(0, RtkChipType.RTS545X)
+        RtkI2cBusVoltage.parse_from_config(0, RtkChipType.RTS545X_GR)
         == RtkI2cBusVoltage.LEVEL_1V8
     )
     assert (
-        RtkI2cBusVoltage.parse_from_config(1, RtkChipType.RTS545X)
+        RtkI2cBusVoltage.parse_from_config(1, RtkChipType.RTS545X_GR)
         == RtkI2cBusVoltage.LEVEL_3V3
     )
 
@@ -36,4 +36,4 @@ def test_rtki2cbusvoltage_parse_from_config():
         RtkI2cBusVoltage.parse_from_config(0, RtkChipType.UNKNOWN)
 
     with pytest.raises(KeyError):
-        RtkI2cBusVoltage.parse_from_config(-1, RtkChipType.RTS545X)
+        RtkI2cBusVoltage.parse_from_config(-1, RtkChipType.RTS545X_GR)

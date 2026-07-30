@@ -129,7 +129,7 @@ class RtkChipType(enum.IntEnum):
     """Realtek PDC chip type"""
 
     UNKNOWN = 0
-    RTS545X = 1
+    RTS545X_GR = 1
     RTS545X_VB = 2
 
 
@@ -141,7 +141,7 @@ class RtkI2cBusVoltage(enum.IntEnum):
 
     @classmethod
     def parse_from_config(cls, value: int, chip_type: RtkChipType):
-        if chip_type == RtkChipType.RTS545X:
+        if chip_type == RtkChipType.RTS545X_GR:
             return {
                 0: cls.LEVEL_1V8,
                 1: cls.LEVEL_3V3,

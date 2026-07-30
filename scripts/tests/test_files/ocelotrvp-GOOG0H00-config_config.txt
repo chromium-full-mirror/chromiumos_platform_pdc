@@ -1,5 +1,5 @@
 Project name        : GOOG0H00
-Chip type           : RTS545X
+Chip type           : RTS545X_GR
 Version             : x.x.3
 USB VID:PID         : 18D1:5075
 Port config         : PORTA_ONLY

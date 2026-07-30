@@ -27,7 +27,7 @@ FOR_ALL_RTK_FW = pytest.mark.parametrize(
     [
         # RTS545xP (non-VB) firmware dir
         *[
-            pytest.param(p.resolve(), RtkChipType.RTS545X, id=p.name)
+            pytest.param(p.resolve(), RtkChipType.RTS545X_GR, id=p.name)
             for p in (get_rtk_fw_dir() / "rts5453").iterdir()
         ],
         # RTS545xP-VB firmware dir
@@ -53,7 +53,7 @@ def test_rtk_base_firmware(filepath: Path, chip_type: RtkChipType):
 
         chip_type_name = {
             RtkChipType.RTS545X_VB: "rts5453vb",
-            RtkChipType.RTS545X: "rts5453",
+            RtkChipType.RTS545X_GR: "rts5453",
         }
 
         # Ensure filename uses the correct chip name

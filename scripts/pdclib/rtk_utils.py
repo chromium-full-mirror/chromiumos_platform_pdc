@@ -164,7 +164,7 @@ class _RtkConfigMixin:
             and self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_H)
             == 0x69
         ):
-            return RtkChipType.RTS545X
+            return RtkChipType.RTS545X_GR
         if (
             self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_L) == 0x07
             and self._get_config_byte(RtkConfigOffset.FW_CONFIG_CHIP_ID_H)
