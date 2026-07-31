@@ -12,6 +12,7 @@ This script checks for:
 """
 
 import dataclasses
+import functools
 import json
 import logging
 import os
@@ -20,7 +21,41 @@ import subprocess
 import sys
 from typing import Any, Dict, List, Optional
 
-from packaging import version
+
+class InvalidVersion(ValueError):
+    """Raised when a version string cannot be parsed."""
+
+
+@functools.total_ordering
+class Version:
+    """Simple dot-separated version representation using standard library.
+
+    Attributes:
+        raw: Raw version string.
+        components: Parsed tuple of version integer components.
+    """
+
+    def __init__(self, version_str: str):
+        self.raw = version_str
+        parts = []
+        for part in version_str.split("."):
+            if not part.isdigit():
+                raise InvalidVersion(f"Invalid version string: '{version_str}'")
+            parts.append(int(part))
+        self.components = tuple(parts)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Version):
+            return NotImplemented
+        return self.components == other.components
+
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, Version):
+            return NotImplemented
+        return self.components < other.components
+
+    def __str__(self) -> str:
+        return self.raw
 
 
 # Set up logging
@@ -34,15 +69,32 @@ logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class TIAppConfig:
-    """Represents a parsed TI appconfig.json file."""
+    """Represents a parsed TI appconfig.json file.
+
+    Attributes:
+        path: File path to the appconfig.json file.
+        data: Parsed JSON content dictionary.
+    """
 
     path: pathlib.Path
     data: Dict[str, Any]
-    tool_build_version: Optional[version.Version] = None
+
+    @property
+    def tool_build_version_str(self) -> Optional[str]:
+        """Returns the raw toolBuildVersion string from metadata."""
+        metadata = self.data.get("metadata")
+        if isinstance(metadata, dict):
+            return metadata.get("toolBuildVersion")
+        return None
 
 
 class AppConfigValidator:
-    """Validator for appconfig.json files."""
+    """Validator for appconfig.json files.
+
+    Attributes:
+        errors: List of logged validation error messages.
+        required_metadata: List of metadata field names required to be present.
+    """
 
     def __init__(self):
         self.errors: List[str] = []
@@ -71,30 +123,45 @@ class AppConfigValidator:
 
     def _validate_metadata(self, config: TIAppConfig):
         """Validates metadata fields."""
-        metadata = config.data.get("metadata")
+        metadata = config.data.get("metadata", {})
 
         for field in self.required_metadata:
             if field not in metadata:
                 self.log_error(f"{config.path}: metadata is missing '{field}'")
 
+        version_str = config.tool_build_version_str
+        if version_str is not None:
+            try:
+                Version(version_str)
+            except InvalidVersion:
+                msg = (
+                    f"{config.path}: Invalid toolBuildVersion format: "
+                    f"'{version_str}'"
+                )
+                self.log_error(msg)
+
     def _validate_version_not_decreased(
         self, current: TIAppConfig, base: Optional[TIAppConfig]
     ):
         """Checks if the version has decreased compared to base."""
-        if not current.tool_build_version:
-            self.log_error(
-                f"{current.path}: missing or invalid toolBuildVersion"
-            )
+        if (
+            not base
+            or not current.tool_build_version_str
+            or not base.tool_build_version_str
+        ):
             return
 
-        if not base or not base.tool_build_version:
+        try:
+            current_v = Version(current.tool_build_version_str)
+            base_v = Version(base.tool_build_version_str)
+        except InvalidVersion:
             return
 
-        if current.tool_build_version < base.tool_build_version:
+        if current_v < base_v:
             msg = (
                 f"{current.path}: toolBuildVersion "
-                f"'{current.tool_build_version}' is lower than the "
-                f"previous version '{base.tool_build_version}'."
+                f"'{current_v}' is lower than the "
+                f"previous version '{base_v}'."
             )
             self.log_error(msg)
 
@@ -120,22 +187,11 @@ def get_git_file_content(commit: str, file_path: pathlib.Path) -> Optional[str]:
         return None
 
 
-def parse_appconfig(path: pathlib.Path, data) -> Optional[TIAppConfig]:
+def parse_appconfig(
+    path: pathlib.Path, data: Dict[str, Any]
+) -> Optional[TIAppConfig]:
     """Parses a JSON string into an AppConfig object."""
-
-    version_str = data.get("metadata", {}).get("toolBuildVersion")
-    v = None
-    if version_str:
-        try:
-            v = version.parse(version_str)
-        except version.InvalidVersion:
-            logger.warning(
-                "%s: Invalid toolBuildVersion format: '%s'",
-                path,
-                version_str,
-            )
-
-    return TIAppConfig(path=path, data=data, tool_build_version=v)
+    return TIAppConfig(path=path, data=data)
 
 
 def parse_appconfig_changes(path, data, base_data):
