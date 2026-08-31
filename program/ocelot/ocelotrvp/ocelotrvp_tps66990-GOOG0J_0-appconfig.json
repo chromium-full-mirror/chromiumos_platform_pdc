@@ -8476,15 +8476,15 @@
 								"name": "Enable DP SID",
 								"start position": 0,
 								"end position": 0,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "DP Mode",
 								"start position": 1,
 								"end position": 1,
-								"value (EDITABLE)": "0x0",
-								"value description": "False"
+								"value (EDITABLE)": "0x1",
+								"value description": "True"
 							},
 							{
 								"name": "DP Port Capability",
