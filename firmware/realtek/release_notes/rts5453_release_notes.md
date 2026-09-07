@@ -2,6 +2,172 @@
 
 **Project name: Skywalker**
 
+**Version: 16.21.4**
+
+**Release Date: 2026/09/04**
+
+**File name: rts5453P_Google_Skywalker_V16.21.4_20260904.bin**
+
+**Check sum: 0x00F1A0D2**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.68.4, change version to v16.21.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.68.4**
+
+**Release Date: 2026/09/04**
+
+**File name: rts5453P_Google_Skywalker_V0.68_20260904.bin**
+
+**Check sum: 0x00F0C1CA**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/399666872 - Fix the issue where repeatedly setting Debug mode causes the SBU path to temporarily reset.
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/440015048 - Added the function to disable the redriver when in UFP mode.
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 16.20.4**
+
+**Release Date: 2026/08/19**
+
+**File name: rts5453P_Google_Skywalker_V16.20.4_20260819.bin**
+
+**Check sum: 0x00F109A8**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   Based on v0.67.4, change version to v16.20.4
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   N/A
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
+**Version: 0.67.4**
+
+**Release Date: 2026/08/19**
+
+**File name: rts5453P_Google_Skywalker_V0.67_20260819.bin**
+
+**Check sum: 0x00F101F1**
+
+**Config Layout: ConfigLayout_google_20251114_V04.xlsx**
+
+**GPIO Configurations:**
+
+|        | **Smbus Address** | **Retimer Address** | **PCH Address** | **Retimer PWR_EN** | **Retimer RESET_N** |
+|--------|-------------------|---------------------|-----------------|--------------------|---------------------|
+| **PA** | **0x67**          | **N/A**             | **0x69**        | **N/A**            | **N/A**             |
+| **PB** | **0x66**          | **N/A**             | **0x68**        | **N/A**            | **N/A**             |
+
+**New Features**
+
+-   N/A
+
+**Impacts/Changes**
+
+-   N/A
+
+-   Performance Improvement: N/A
+
+**Bug Fixes**
+
+-   https://partnerissuetracker.corp.google.com/u/1/issues/548116006 - After fixing the force enable debug mode, there was an unexpected entry into power saving mode that led to the disconnection of the debug path.
+
+**Known Issues**
+
+-   Known issues 1: N/A
+
+**Workarounds**
+
+-   Workaround 1: N/A
+
+***
+
 **Version: 16.19.4**
 
 **Release Date: 2026/07/28**
