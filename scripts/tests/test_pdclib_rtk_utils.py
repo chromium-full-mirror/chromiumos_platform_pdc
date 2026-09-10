@@ -335,7 +335,16 @@ def test_rtkfwbinary_get_i2c_voltage_level(filepath: Path):
             get_test_file_path(
                 "ocelotrvp-GOOG0H00-config_config.txt"
             ).read_text(),
-            id="FromConfigFragment",
+            id="FromConfigFragment_V3",
+        ),
+        pytest.param(
+            RtkConfigFragment(
+                get_test_file_path("ocelotrvp-GOOG0H00-config_v4.bin")
+            ),
+            get_test_file_path(
+                "ocelotrvp-GOOG0H00-config_v4_config.txt"
+            ).read_text(),
+            id="FromConfigFragment_V4",
         ),
     ],
 )

@@ -23,6 +23,7 @@ from pdclib.rtk_constants import RtkI2cBusVoltage
 from pdclib.rtk_constants import RtkPortSbuMuxConfig
 from pdclib.rtk_constants import RtkPortUsed
 from pdclib.rtk_constants import RtkRetimerConfig
+from pdclib.rtk_constants import RtkSrcFetMode
 
 
 class RtkFileSizeError(Exception):
@@ -273,6 +274,21 @@ class _RtkConfigMixin:
             raise ValueError("port must be 'A' or 'B'")
 
         return RtkPortSbuMuxConfig(value)
+
+    def get_port_src_fet_config(self, port: str):
+        """Read source FET mode byte"""
+        if port == "A":
+            value = self._get_config_byte(
+                RtkConfigOffset.VBUS_SRC_FET_MODE_PORTA
+            )
+        elif port == "B":
+            value = self._get_config_byte(
+                RtkConfigOffset.VBUS_SRC_FET_MODE_PORTB
+            )
+        else:
+            raise ValueError("port must be 'A' or 'B'")
+
+        return RtkSrcFetMode(value)
 
     def get_config(self) -> bytes:
         """Read full config"""
@@ -593,6 +609,8 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
         ),
         "SBU Mux Port A": format_sbumux_cfg("A"),
         "SBU Mux Port B": format_sbumux_cfg("B"),
+        "Source FET Port A": binary.get_port_src_fet_config("A").name,
+        "Source FET Port B": binary.get_port_src_fet_config("B").name,
         "CRC32": format_crc32(),
         "Base FW SHA1": (
             binary.get_base_firmware_hash() if is_full_fw_binary else "N/A"

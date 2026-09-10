@@ -1,6 +1,6 @@
 Project name        : GOOG0H00
 Chip type           : RTS545X_GR
-Version             : x.x.3
+Version             : x.x.4
 USB VID:PID         : 18D1:5075
 Port config         : PORTA_ONLY
 Debug Accy GPIO     : ACTIVE_HIGH
@@ -14,11 +14,11 @@ SVIDs Port A        : TBT (8087), DP (ff01)
 SVIDs Port B        : DP (ff01)
 SBU Mux Port A      : 0x30: RETIMER_HBR
 SBU Mux Port B      : 0x10: RETIMER_TI
-Source FET Port A   : UNKNOWN
-Source FET Port B   : UNKNOWN
+Source FET Port A   : INTERNAL_SRC_FET
+Source FET Port B   : INTERNAL_SRC_FET
 CRC32               : N/A
 Base FW SHA1        : N/A
-Config SHA1         : 0b200289086f713fc175b32ff2f11fce6148c690
+Config SHA1         : 44ae0deb125828373325ee925f4de5ea01976ebf
 Sink PDOs Port A:
 2601912c: FIX |  5000mV  3000mA    15.0W | DRP DRD USB         | FRS_NOT_SUPPORTED
 Sink PDOs Port B:

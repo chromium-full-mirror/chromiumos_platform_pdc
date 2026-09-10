@@ -104,6 +104,20 @@ class RtkConfigOffset(enum.IntEnum):
     SBUMUX_CFG_PORTB = 0x2C3
     SBUMUX_CFG_PORTA = 0x2C4
 
+    VBUS_SRC_FET_MODE_PORTB = 0x2C5
+    VBUS_SRC_FET_MODE_PORTA = 0x2C7
+
+
+class RtkSrcFetMode(enum.IntEnum):
+    """Vbus source FET configuration
+
+    Indicates use of the internal source FET or a GPIO-controlled external one.
+    """
+
+    INTERNAL_SRC_FET = 0x04
+    EXTERNAL_SRC_FET = 0x02
+    UNKNOWN = 0xFF
+
 
 class RtkPortUsed(enum.IntEnum):
     """Indicates which port(s) are used by the PDC config"""
