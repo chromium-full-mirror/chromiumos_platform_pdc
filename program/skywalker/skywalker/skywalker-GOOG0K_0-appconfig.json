@@ -20,9 +20,10 @@
 		"end equipment": "Host",
 		"cpu": "Intel",
 		"header records": "TPS66994",
-		"timeStamp": "6-8-2026_4-20-29",
-		"toolBuildVersion": "2.38",
-		"sharedSettings": false
+		"timeStamp": "9-14-2026_8-50-32",
+		"toolBuildVersion": "2.39",
+		"sharedSettings": false,
+		"gui revision": "CA"
 	},
 	"host interface registers": {
 		"global registers": [],
@@ -48,8 +49,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x30314b30",
-								"value description": "0x30314b30"
+								"value (EDITABLE)": "0x30324b30",
+								"value description": "0x30324b30"
 							}
 						]
 					},
@@ -5984,15 +5985,15 @@
 								"name": "Number of I2C Common Events",
 								"start position": 24,
 								"end position": 31,
-								"value (EDITABLE)": "0xe",
-								"value description": 14
+								"value (EDITABLE)": "0xf",
+								"value description": 15
 							},
 							{
 								"name": "I2C Event Start Index Port 1",
 								"start position": 32,
 								"end position": 39,
-								"value (EDITABLE)": "0xf",
-								"value description": 15
+								"value (EDITABLE)": "0x10",
+								"value description": 16
 							},
 							{
 								"name": "Number of I2C Port 1 Events",
@@ -6005,8 +6006,8 @@
 								"name": "I2C Event Start Index Port 2",
 								"start position": 48,
 								"end position": 55,
-								"value (EDITABLE)": "0xf",
-								"value description": 15
+								"value (EDITABLE)": "0x10",
+								"value description": 16
 							},
 							{
 								"name": "Number of I2C Port 2 Events",
@@ -9302,8 +9303,8 @@
 								"name": "Customer Use Word 2",
 								"start position": 32,
 								"end position": 63,
-								"value (EDITABLE)": "0x30314b30",
-								"value description": "0x30314b30"
+								"value (EDITABLE)": "0x30324b30",
+								"value description": "0x30324b30"
 							}
 						]
 					},
@@ -15238,15 +15239,15 @@
 								"name": "Number of I2C Common Events",
 								"start position": 24,
 								"end position": 31,
-								"value (EDITABLE)": "0xe",
-								"value description": 14
+								"value (EDITABLE)": "0xf",
+								"value description": 15
 							},
 							{
 								"name": "I2C Event Start Index Port 1",
 								"start position": 32,
 								"end position": 39,
-								"value (EDITABLE)": "0xf",
-								"value description": 15
+								"value (EDITABLE)": "0x10",
+								"value description": 16
 							},
 							{
 								"name": "Number of I2C Port 1 Events",
@@ -15259,8 +15260,8 @@
 								"name": "I2C Event Start Index Port 2",
 								"start position": 48,
 								"end position": 55,
-								"value (EDITABLE)": "0xf",
-								"value description": 15
+								"value (EDITABLE)": "0x10",
+								"value description": 16
 							},
 							{
 								"name": "Number of I2C Port 2 Events",
@@ -18558,53 +18559,6 @@
 						"name": "Trigger Event",
 						"start position": 0,
 						"end position": 7,
-						"value (EDITABLE)": "0x1",
-						"value description": "I2C_CNTLR_EVENT__ATTACH"
-					},
-					{
-						"name": "Data Length",
-						"start position": 8,
-						"end position": 12,
-						"value (EDITABLE)": "0x2",
-						"value description": "2"
-					},
-					{
-						"name": "Target Address Index",
-						"start position": 13,
-						"end position": 16,
-						"value (EDITABLE)": "0x0",
-						"value description": "0"
-					},
-					{
-						"name": "Priority",
-						"start position": 17,
-						"end position": 18,
-						"value (EDITABLE)": "0x0",
-						"value description": "0"
-					},
-					{
-						"name": "Orientation Independent",
-						"start position": 19,
-						"end position": 19,
-						"value (EDITABLE)": "0x1",
-						"value description": "true"
-					},
-					{
-						"name": "Data",
-						"start position": 24,
-						"end position": 511,
-						"value (EDITABLE)": "0x0000",
-						"value description": "0x0000"
-					}
-				]
-			},
-			{
-				"name": "Record Index 2",
-				"fields": [
-					{
-						"name": "Trigger Event",
-						"start position": 0,
-						"end position": 7,
 						"value (EDITABLE)": "0x24",
 						"value description": "I2C_CNTLR_EVENT__DETACH"
 					},
@@ -18640,8 +18594,55 @@
 						"name": "Data",
 						"start position": 24,
 						"end position": 511,
-						"value (EDITABLE)": "0x0000",
-						"value description": "0x0000"
+						"value (EDITABLE)": "0xaa00",
+						"value description": "0xaa00"
+					}
+				]
+			},
+			{
+				"name": "Record Index 2",
+				"fields": [
+					{
+						"name": "Trigger Event",
+						"start position": 0,
+						"end position": 7,
+						"value (EDITABLE)": "0x23",
+						"value description": "I2C_CNTLR_EVENT__POWER_ON_RESET"
+					},
+					{
+						"name": "Data Length",
+						"start position": 8,
+						"end position": 12,
+						"value (EDITABLE)": "0x2",
+						"value description": "2"
+					},
+					{
+						"name": "Target Address Index",
+						"start position": 13,
+						"end position": 16,
+						"value (EDITABLE)": "0x0",
+						"value description": "0"
+					},
+					{
+						"name": "Priority",
+						"start position": 17,
+						"end position": 18,
+						"value (EDITABLE)": "0x0",
+						"value description": "0"
+					},
+					{
+						"name": "Orientation Independent",
+						"start position": 19,
+						"end position": 19,
+						"value (EDITABLE)": "0x1",
+						"value description": "true"
+					},
+					{
+						"name": "Data",
+						"start position": 24,
+						"end position": 511,
+						"value (EDITABLE)": "0xaa00",
+						"value description": "0xaa00"
 					}
 				]
 			},
@@ -19208,6 +19209,53 @@
 						"value description": "0xff00"
 					}
 				]
+			},
+			{
+				"name": "Record Index 15",
+				"fields": [
+					{
+						"name": "Trigger Event",
+						"start position": 0,
+						"end position": 7,
+						"value (EDITABLE)": "0x1",
+						"value description": "I2C_CNTLR_EVENT__ATTACH"
+					},
+					{
+						"name": "Data Length",
+						"start position": 8,
+						"end position": 12,
+						"value (EDITABLE)": "0x2",
+						"value description": "2"
+					},
+					{
+						"name": "Target Address Index",
+						"start position": 13,
+						"end position": 16,
+						"value (EDITABLE)": "0x0",
+						"value description": "0"
+					},
+					{
+						"name": "Priority",
+						"start position": 17,
+						"end position": 18,
+						"value (EDITABLE)": "0x0",
+						"value description": "0"
+					},
+					{
+						"name": "Orientation Independent",
+						"start position": 19,
+						"end position": 19,
+						"value (EDITABLE)": "0x0",
+						"value description": "false"
+					},
+					{
+						"name": "Data",
+						"start position": 24,
+						"end position": 511,
+						"value (EDITABLE)": "0x0000",
+						"value description": "0x0000"
+					}
+				]
 			}
 		],
 		"configuration mapping": {
@@ -19250,6 +19298,9 @@
 			],
 			"Configuration 12": [
 				"Record Index 14"
+			],
+			"Configuration 13": [
+				"Record Index 15"
 			]
 		},
 		"configuration port mapping": {
@@ -19266,7 +19317,8 @@
 				"Configuration 9",
 				"Configuration 10",
 				"Configuration 11",
-				"Configuration 12"
+				"Configuration 12",
+				"Configuration 13"
 			],
 			"Port 1 Event": [],
 			"Port 2 Event": []
