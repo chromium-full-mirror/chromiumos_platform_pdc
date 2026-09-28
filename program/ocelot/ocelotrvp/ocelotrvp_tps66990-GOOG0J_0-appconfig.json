@@ -4535,8 +4535,8 @@
 								"name": "Sleep State",
 								"start position": 0,
 								"end position": 2,
-								"value (EDITABLE)": "0x0",
-								"value description": "S0"
+								"value (EDITABLE)": "0x3",
+								"value description": "S5"
 							}
 						]
 					},
@@ -9400,8 +9400,8 @@
 								"name": "Port Guaranteed PDP",
 								"start position": 32,
 								"end position": 40,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0xf",
+								"value description": "0xf"
 							},
 							{
 								"name": "Port Maximum PDP2",
@@ -9421,8 +9421,8 @@
 								"name": "Port Type",
 								"start position": 63,
 								"end position": 63,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							}
 						]
 					},
@@ -10793,8 +10793,8 @@
 								"name": "Sleep State",
 								"start position": 0,
 								"end position": 2,
-								"value (EDITABLE)": "0x0",
-								"value description": "S0"
+								"value (EDITABLE)": "0x3",
+								"value description": "S5"
 							}
 						]
 					},
@@ -15658,8 +15658,8 @@
 								"name": "Port Guaranteed PDP",
 								"start position": 32,
 								"end position": 40,
-								"value (EDITABLE)": "0x7",
-								"value description": "0x7"
+								"value (EDITABLE)": "0xf",
+								"value description": "0xf"
 							},
 							{
 								"name": "Port Maximum PDP2",
@@ -15679,8 +15679,8 @@
 								"name": "Port Type",
 								"start position": 63,
 								"end position": 63,
-								"value (EDITABLE)": "0x1",
-								"value description": "True"
+								"value (EDITABLE)": "0x0",
+								"value description": "False"
 							}
 						]
 					},
