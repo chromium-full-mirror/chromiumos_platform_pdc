@@ -6362,8 +6362,8 @@
 								"name": "Fast Role Swap required USB Type-C Current",
 								"start position": 31,
 								"end position": 32,
-								"value (EDITABLE)": "0x1",
-								"value description": "Default USB Power"
+								"value (EDITABLE)": "0x2",
+								"value description": "5V,1.5A"
 							},
 							{
 								"name": "Higher Capability",
@@ -9652,22 +9652,22 @@
 								"name": "Sink Minimum PDP",
 								"start position": 64,
 								"end position": 71,
-								"value (EDITABLE)": "0x7",
-								"value description": "7 W"
+								"value (EDITABLE)": "0xF",
+								"value description": "15 W"
 							},
 							{
 								"name": "Sink Operational PDP",
 								"start position": 72,
 								"end position": 79,
-								"value (EDITABLE)": "0x2d",
-								"value description": "45 W"
+								"value (EDITABLE)": "0x41",
+								"value description": "65 W"
 							},
 							{
 								"name": "Sink Maximum PDP",
 								"start position": 80,
 								"end position": 87,
-								"value (EDITABLE)": "0x41",
-								"value description": "65 W"
+								"value (EDITABLE)": "0x64",
+								"value description": "100 W"
 							},
 							{
 								"name": "EPR Sink Minimum PDP",
@@ -12620,8 +12620,8 @@
 								"name": "Fast Role Swap required USB Type-C Current",
 								"start position": 31,
 								"end position": 32,
-								"value (EDITABLE)": "0x1",
-								"value description": "Default USB Power"
+								"value (EDITABLE)": "0x2",
+								"value description": "5V,1.5A"
 							},
 							{
 								"name": "Higher Capability",
@@ -15910,22 +15910,22 @@
 								"name": "Sink Minimum PDP",
 								"start position": 64,
 								"end position": 71,
-								"value (EDITABLE)": "0x7",
-								"value description": "7 W"
+								"value (EDITABLE)": "0xF",
+								"value description": "15 W"
 							},
 							{
 								"name": "Sink Operational PDP",
 								"start position": 72,
 								"end position": 79,
-								"value (EDITABLE)": "0x2d",
-								"value description": "45 W"
+								"value (EDITABLE)": "0x41",
+								"value description": "65 W"
 							},
 							{
 								"name": "Sink Maximum PDP",
 								"start position": 80,
 								"end position": 87,
-								"value (EDITABLE)": "0x41",
-								"value description": "65 W"
+								"value (EDITABLE)": "0x64",
+								"value description": "100 W"
 							},
 							{
 								"name": "EPR Sink Minimum PDP",
