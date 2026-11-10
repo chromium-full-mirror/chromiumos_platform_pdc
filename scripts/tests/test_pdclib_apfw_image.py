@@ -11,6 +11,9 @@ import shutil
 
 from pdclib.apfw_image import CbfsTool
 from pdclib.apfw_image import search_pdc_fw_images
+from pdclib.fw_ver import PdcFwSeries
+from pdclib.fw_ver import PdcFwVer
+from pdclib.fw_ver import PdcVendor
 from tests.common import cbfs_test_images  # pylint: disable=unused-import
 
 
@@ -23,17 +26,21 @@ def test_search_pdc_fw_images(cbfs_test_images: Path):
     assert len(images) == 2
 
     assert "rts5453_GOOG0000" in images
-    assert images["rts5453_GOOG0000"]["fw_binary"] == (0, 45, 4, "GOOG0000")
+    assert images["rts5453_GOOG0000"]["fw_binary"] == PdcFwVer(
+        0, 45, 4, "GOOG0000", PdcVendor.RTK, PdcFwSeries.RTK_BRINGUP
+    )
     assert images["rts5453_GOOG0000"]["hash_file"]["ver"] == (0, 45, 4)
     # RTK hash files do not include the config name
     assert images["rts5453_GOOG0000"]["hash_file"]["config_name"] is None
 
     assert "tps6699x_GOOG0J00" in images
-    assert images["tps6699x_GOOG0J00"]["fw_binary"] == (
+    assert images["tps6699x_GOOG0J00"]["fw_binary"] == PdcFwVer(
         0x13,
         0x20,
         0x02,
         "GOOG0J30",
+        PdcVendor.TI,
+        PdcFwSeries.TI_PRODUCTION,
     )
     assert images["tps6699x_GOOG0J00"]["hash_file"]["ver"] == (
         0x13,

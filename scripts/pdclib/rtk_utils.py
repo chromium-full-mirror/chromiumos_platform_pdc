@@ -5,7 +5,6 @@
 """Utilities for working with Realtek FW binaries"""
 
 import binascii
-import dataclasses
 import hashlib
 from pathlib import Path
 import struct
@@ -13,6 +12,9 @@ from typing import Iterable, List, Tuple
 
 # pylint: disable=import-modules-only
 from pdclib.common import UsbVidPid
+from pdclib.fw_ver import PdcFwSeries
+from pdclib.fw_ver import PdcFwVer
+from pdclib.fw_ver import PdcVendor
 from pdclib.pdo import PDO
 from pdclib.pdo import PDORole
 from pdclib.rtk_constants import RtkChipType
@@ -28,21 +30,6 @@ from pdclib.rtk_constants import RtkSrcFetMode
 
 class RtkFileSizeError(Exception):
     """Thrown if a FW binary has an unexpected size"""
-
-
-@dataclasses.dataclass
-class RtkFwVersion:
-    """Store a RTK PDC FW version (major.minor.config)"""
-
-    major: int
-    minor: int
-    config: int
-
-    def as_tuple(self) -> tuple:
-        return (self.major, self.minor, self.config)
-
-    def __str__(self):
-        return f"{self.major}.{self.minor}.{self.config}"
 
 
 def _range_check(arr: bytearray, start: int, length: int) -> None:
@@ -177,6 +164,21 @@ class _RtkConfigMixin:
     def get_config_version(self) -> int:
         """Read the config version"""
         return self._get_config_byte(RtkConfigOffset.FW_VERSION_CONFIG)
+
+    def get_version(self) -> PdcFwVer:
+        """Get a version object
+
+        This will only include config section data and no full FW version.
+        Inheriting classes should augment this method.
+        """
+        return PdcFwVer(
+            vendor=PdcVendor.RTK,
+            series=PdcFwSeries.CONFIG_ONLY,
+            major=None,
+            minor=None,
+            patch=self.get_config_version(),  # config version
+            project_name=self.get_project_name(),
+        )
 
     def get_i2c_voltage_smbus(self) -> RtkI2cBusVoltage:
         """Read the voltage level of the SMBus/EC I2C interface"""
@@ -420,12 +422,25 @@ class RtkFwBinary(_RtkConfigMixin):
         """Compare the expected and actual CRC32 checksums"""
         return self.calc_crc32() == self.get_file_crc32()
 
-    def get_fw_version(self) -> RtkFwVersion:
+    def get_version(self) -> PdcFwVer:
         """Get the version of the FW and config"""
-        return RtkFwVersion(
-            self.get_byte(RtkFwOffset.FW_VERSION_MAJOR),
-            self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
-            self.get_config_version(),
+        major = self.get_byte(RtkFwOffset.FW_VERSION_MAJOR)
+
+        if major >= 16:
+            series = PdcFwSeries.RTK_RELEASE
+        elif major == 1:
+            series = PdcFwSeries.RTK_TEST
+        else:
+            # 0.x or 2.x
+            series = PdcFwSeries.RTK_BRINGUP
+
+        return PdcFwVer(
+            vendor=PdcVendor.RTK,
+            series=series,
+            major=major,
+            minor=self.get_byte(RtkFwOffset.FW_VERSION_MINOR),
+            patch=self.get_config_version(),  # config version
+            project_name=self.get_project_name(),
         )
 
     def get_range(self, start_offset: int, length: int) -> bytes:
@@ -587,11 +602,7 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
     rtk_configs = {
         "Project name": binary.get_project_name(),
         "Chip type": binary.get_chip_type().name,
-        "Version": (
-            binary.get_fw_version()
-            if is_full_fw_binary
-            else f"x.x.{binary.get_config_version()}"
-        ),
+        "Version": str(binary.get_version()),
         "USB VID:PID": binary.get_vid_pid(),
         "Port config": binary.get_port_used().name,
         "Debug Accy GPIO": binary.get_debug_accy_gpio_polarity().name,
@@ -645,4 +656,4 @@ def print_config(binary: RtkFwBinary | RtkConfigFragment, output_func=print):
 def get_hash_bytes(binary_path: Path) -> bytes:
     """Generate hash file bytes for a RTK binary."""
     fw = RtkFwBinary(binary_path)
-    return bytes(fw.get_fw_version().as_tuple())
+    return bytes(fw.get_version().as_tuple())

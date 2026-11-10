@@ -24,15 +24,8 @@ from pdclib.rtk_utils import print_config
 from pdclib.rtk_utils import RtkConfigFragment
 from pdclib.rtk_utils import RtkFileSizeError
 from pdclib.rtk_utils import RtkFwBinary
-from pdclib.rtk_utils import RtkFwVersion
 import pytest
 from tests.common import get_test_file_path
-
-
-def test_rtkfwversion():
-    v = RtkFwVersion(10, 20, 30)
-
-    assert str(v) == "10.20.30"
 
 
 def test_rtkfwbinary_file_bad_length():
@@ -73,7 +66,7 @@ def test_rtkfwbinary_check_version():
         )
     )
 
-    assert fw.get_fw_version() == RtkFwVersion(0, 44, 3)
+    assert fw.get_version().as_tuple() == (0, 44, 3)
 
 
 def test_rtkfwbinary_check_base_fw_hash():

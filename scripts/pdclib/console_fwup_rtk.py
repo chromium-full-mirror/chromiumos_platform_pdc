@@ -194,9 +194,8 @@ def rtk_update(
     assert fw.verify_crc32(), "The CRC32 of the provided FW binary is incorrect"
 
     log.info(
-        "New FW: %s ('%s'), %s, Port Config: %s",
-        fw.get_fw_version(),
-        fw.get_project_name(),
+        "New FW: %s, %s, Port Config: %s",
+        fw.get_version(),
         fw.get_vid_pid(),
         fw.get_port_used().name,
     )

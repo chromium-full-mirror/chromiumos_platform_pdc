@@ -56,23 +56,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if img_type == "TI":
         try:
-            major, minor, patch, proj = ti_utils.read_base_fw_ver_and_proj_name(
-                args.image
-            )
-            ver_str = f"{major}.{minor}.{patch}" if major is not None else "N/A"
-            proj_str = proj if proj is not None else "N/A"
-            print("Image Type   : TI")
-            print(f"Version      : {ver_str}")
-            print(f"Project Name : {proj_str}")
+            ver = ti_utils.read_base_fw_ver_and_proj_name(args.image)
+            print(ver)
         except Exception as e:  # pylint: disable=broad-except
             raise RuntimeError(f"Error parsing TI image {args.image}") from e
 
     elif img_type == "RTK_FW":
         try:
             fw = rtk_utils.RtkFwBinary(args.image)
-            print("Image Type   : Realtek (Full FW)")
-            print(f"Version      : {fw.get_fw_version()}")
-            print(f"Project Name : {fw.get_project_name()}")
+            ver = fw.get_version()
+            print(ver)
             if not fw.verify_crc32():
                 raise ValueError(
                     f"CRC32 invalid. Expected 0x{fw.get_file_crc32():08x}, "
@@ -84,9 +77,7 @@ def main(argv: list[str] | None = None) -> int:
     elif img_type == "RTK_CFG":
         try:
             cfg = rtk_utils.RtkConfigFragment(args.image)
-            print("Image Type   : Realtek (Config Fragment)")
-            print(f"Version      : x.x.{cfg.get_config_version()}")
-            print(f"Project Name : {cfg.get_project_name()}")
+            print(cfg.get_version())
         except Exception as e:  # pylint: disable=broad-except
             raise RuntimeError(
                 f"Error parsing RTK config fragment {args.image}"

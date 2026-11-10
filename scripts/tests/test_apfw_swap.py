@@ -12,6 +12,9 @@ import shutil
 import apfw
 from pdclib.apfw_image import CbfsTool
 from pdclib.apfw_image import search_pdc_fw_images
+from pdclib.fw_ver import PdcFwSeries
+from pdclib.fw_ver import PdcFwVer
+from pdclib.fw_ver import PdcVendor
 import pytest
 from tests.common import cbfs_test_images  # pylint: disable=unused-import
 from tests.common import get_test_file_path
@@ -24,7 +27,9 @@ from tests.common import get_test_file_path
         pytest.param(
             "rts5453_GOOG0000",
             {
-                "fw_binary": (0, 45, 4, "GOOG0000"),
+                "fw_binary": PdcFwVer(
+                    0, 45, 4, "GOOG0000", PdcVendor.RTK, PdcFwSeries.RTK_BRINGUP
+                ),
                 "hash_file": {
                     "ver": (0, 45, 4),
                     "config_name": None,
@@ -32,7 +37,9 @@ from tests.common import get_test_file_path
             },
             get_test_file_path("rts5453_v0.44.3.bin"),
             {
-                "fw_binary": (0, 44, 3, "GOOG0000"),
+                "fw_binary": PdcFwVer(
+                    0, 44, 3, "GOOG0000", PdcVendor.RTK, PdcFwSeries.RTK_BRINGUP
+                ),
                 "hash_file": {
                     "ver": (0, 44, 3),
                     "config_name": None,
@@ -43,7 +50,14 @@ from tests.common import get_test_file_path
         pytest.param(
             "tps6699x_GOOG0J00",
             {
-                "fw_binary": (19, 32, 2, "GOOG0J30"),
+                "fw_binary": PdcFwVer(
+                    19,
+                    32,
+                    2,
+                    "GOOG0J30",
+                    PdcVendor.TI,
+                    PdcFwSeries.TI_PRODUCTION,
+                ),
                 "hash_file": {
                     "ver": (19, 32, 2),
                     "config_name": "GOOG0J30",
@@ -51,7 +65,14 @@ from tests.common import get_test_file_path
             },
             get_test_file_path("tps6699x-GOOG0J30_00132008_TFU.bin"),
             {
-                "fw_binary": (19, 32, 8, "GOOG0J30"),
+                "fw_binary": PdcFwVer(
+                    19,
+                    32,
+                    8,
+                    "GOOG0J30",
+                    PdcVendor.TI,
+                    PdcFwSeries.TI_PRODUCTION,
+                ),
                 "hash_file": {
                     "ver": (19, 32, 8),
                     "config_name": "GOOG0J30",
@@ -61,7 +82,7 @@ from tests.common import get_test_file_path
         ),
     ],
 )
-def test_swap_rtk_fw(
+def test_swap_fw(
     cbfs_test_images: Path,
     tmp_path: Path,
     fw_slot: str,

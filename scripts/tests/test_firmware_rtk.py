@@ -12,7 +12,6 @@ import re
 import pdclib.common
 from pdclib.rtk_constants import RtkChipType
 from pdclib.rtk_utils import RtkFwBinary
-from pdclib.rtk_utils import RtkFwVersion
 import pytest
 from tests.common import get_repo_base_path
 
@@ -61,8 +60,10 @@ def test_rtk_base_firmware(filepath: Path, chip_type: RtkChipType):
             matches.group(1) == chip_type_name[chip_type]
         ), "Chip name in filename incorrect"
 
-        filename_ver = RtkFwVersion(
-            int(matches.group(2)), int(matches.group(3)), int(matches.group(4))
+        filename_ver = (
+            int(matches.group(2)),
+            int(matches.group(3)),
+            int(matches.group(4)),
         )
 
     except (IndexError, AssertionError) as e:
@@ -72,7 +73,7 @@ def test_rtk_base_firmware(filepath: Path, chip_type: RtkChipType):
     fw = RtkFwBinary(filepath)
 
     assert (
-        fw.get_fw_version() == filename_ver
+        fw.get_version().as_tuple() == filename_ver
     ), "Filename version does not match actual version"
     assert (
         fw.get_chip_type() == chip_type

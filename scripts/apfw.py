@@ -18,6 +18,7 @@ import shutil
 import sys
 
 from pdclib import apfw_image
+from pdclib import fw_ver
 
 
 def cmd_swap_ap_image(cbfstool: apfw_image.CbfsTool, args) -> int:
@@ -72,7 +73,8 @@ def cmd_read_ap_image(cbfstool: apfw_image.CbfsTool, args) -> int:
                     "input_file": str(args.ap_fw_path.resolve()),
                     "ec_ap_fw": ec_ap_fw,
                     "detected_fw": detected_fw,
-                }
+                },
+                cls=fw_ver.PdcJsonEncoder,
             )
         )
     else:

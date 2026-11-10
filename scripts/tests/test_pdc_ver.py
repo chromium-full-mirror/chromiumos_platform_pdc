@@ -44,9 +44,7 @@ def test_ti_image_a(capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
 
-    assert "Image Type   : TI" in captured.out
-    assert "Version      : 19.32.2" in captured.out
-    assert "Project Name : GOOG0J30" in captured.out
+    assert "TI 19.32.2 (TI_PRODUCTION, GOOG0J30)" in captured.out
 
 
 def test_ti_image_b(capsys):
@@ -57,9 +55,7 @@ def test_ti_image_b(capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
 
-    assert "Image Type   : TI" in captured.out
-    assert "Version      : 22.0.1" in captured.out
-    assert "Project Name : GOOG0b00" in captured.out
+    assert "TI 22.0.1 (TI_PRODUCTION, GOOG0b00)" in captured.out
 
 
 def test_rtk_fw_image(capsys):
@@ -76,9 +72,7 @@ def test_rtk_fw_image(capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
 
-    assert "Image Type   : Realtek (Full FW)" in captured.out
-    assert "Version      : 0.44.3" in captured.out
-    assert "Project Name : GOOG0H00" in captured.out
+    assert "RTK 0.44.3 (RTK_BRINGUP, GOOG0H00)" in captured.out
 
 
 def test_rtk_fw_image_bad_crc32():
@@ -108,6 +102,4 @@ def test_rtk_cfg_image(capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
 
-    assert "Image Type   : Realtek (Config Fragment)" in captured.out
-    assert "Version      : x.x.3" in captured.out
-    assert "Project Name : GOOG0H00" in captured.out
+    assert "RTK x.x.3 (CONFIG_ONLY, GOOG0H00)" in captured.out

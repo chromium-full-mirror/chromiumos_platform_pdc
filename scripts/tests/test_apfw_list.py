@@ -48,13 +48,13 @@ def test_success_text(cbfs_test_images: Path, capsys):
     assert "rts5453_GOOG0000" in lines[6]
     assert "Hash File: 0.45.4 (None)" in lines[6]
     assert "SHA1: 93f390834c9cf6cd33bf872fd809cec7a315dd00" in lines[6]
-    assert "Embedded: 0.45.4 (GOOG0000)" in lines[6]
+    assert "Embedded: RTK 0.45.4 (RTK_BRINGUP, GOOG0000)" in lines[6]
 
     # TI line
     assert "tps6699x_GOOG0J00" in lines[7]
     assert "Hash File: 19.32.2 (GOOG0J30)" in lines[7]
     assert "SHA1: cd3ea8c879d83af093f42c4eb03e8ce7715d19b4" in lines[7]
-    assert "Embedded: 19.32.2 (GOOG0J30)" in lines[7]
+    assert "Embedded: TI 19.32.2 (TI_PRODUCTION, GOOG0J30)" in lines[7]
 
 
 def test_success_json(cbfs_test_images: Path, capsys):
@@ -63,13 +63,27 @@ def test_success_json(cbfs_test_images: Path, capsys):
     expected_detected_fw_json = {
         "rts5453_GOOG0000": {
             "name": "rts5453_GOOG0000",
-            "fw_binary": [0, 45, 4, "GOOG0000"],
+            "fw_binary": {
+                "major": 0,
+                "minor": 45,
+                "patch": 4,
+                "project_name": "GOOG0000",
+                "series": "RTK_BRINGUP",
+                "vendor": "RTK",
+            },
             "hash_file": {"ver": [0, 45, 4], "config_name": None},
             "fw_binary_hash": "93f390834c9cf6cd33bf872fd809cec7a315dd00",
         },
         "tps6699x_GOOG0J00": {
             "name": "tps6699x_GOOG0J00",
-            "fw_binary": [19, 32, 2, "GOOG0J30"],
+            "fw_binary": {
+                "major": 19,
+                "minor": 32,
+                "patch": 2,
+                "project_name": "GOOG0J30",
+                "series": "TI_PRODUCTION",
+                "vendor": "TI",
+            },
             "hash_file": {"ver": [19, 32, 2], "config_name": "GOOG0J30"},
             "fw_binary_hash": "cd3ea8c879d83af093f42c4eb03e8ce7715d19b4",
         },

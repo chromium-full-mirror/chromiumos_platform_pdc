@@ -7,9 +7,11 @@
 import binascii
 from pathlib import Path
 import struct
-from typing import Tuple
 
 # pylint: disable=import-modules-only
+from pdclib.fw_ver import PdcFwSeries
+from pdclib.fw_ver import PdcFwVer
+from pdclib.fw_ver import PdcVendor
 from pdclib.ti_constants import TiFwFormat
 from pdclib.ti_constants import TiFwOffset
 from pdclib.ti_constants import TiHeader
@@ -27,7 +29,7 @@ def format_ti_config_string(s: bytes) -> str:
 
 def read_base_fw_ver_and_proj_name(
     binary_path: Path,
-) -> Tuple[int, int, int, str]:
+) -> PdcFwVer:
     """Read FW version info from TI binary file."""
 
     with open(binary_path, "rb") as f:
@@ -36,7 +38,7 @@ def read_base_fw_ver_and_proj_name(
         if header in (TiHeader.TFU_BUNDLE_TYPE_A, TiHeader.TFU_BUNDLE_TYPE_B):
             # Either a standalone FW image or a FW+appconfig bundle. Start with
             # getting FW version:
-            patch, minor, major, _ = struct.unpack(
+            patch, minor, major, series = struct.unpack(
                 TiFwFormat.FWVER,
                 data[
                     TiFwOffset.FWVER_OFFSET : TiFwOffset.FWVER_OFFSET
@@ -70,30 +72,45 @@ def read_base_fw_ver_and_proj_name(
 
             if appconfig_offset == -1:
                 # No appconfig section found
-                return major, minor, patch, None
-
-            # Get project name (customer use register)
-            return (
-                major,
-                minor,
-                patch,
-                format_ti_config_string(
+                project_name = None
+            else:
+                # Get project name (customer use register)
+                project_name = format_ti_config_string(
                     data[
                         appconfig_offset
                         + TiFwOffset.PROJ_NAME_OFFSET : appconfig_offset
                         + TiFwOffset.PROJ_NAME_OFFSET
                         + TiFwOffset.PROJ_NAME_LENGTH
                     ]
-                ),
+                )
+
+            return PdcFwVer(
+                vendor=PdcVendor.TI,
+                major=major,
+                minor=minor,
+                patch=patch,
+                project_name=project_name,
+                series={
+                    # Type-A images
+                    0x00: PdcFwSeries.TI_PRODUCTION,
+                    0xC0: PdcFwSeries.TI_RELEASE_CANDIDATE,
+                    0xE0: PdcFwSeries.TI_ENGINEERING,
+                    # Type-B images
+                    0xF2: PdcFwSeries.TI_PRODUCTION,
+                    0xC2: PdcFwSeries.TI_RELEASE_CANDIDATE,
+                    0xE2: PdcFwSeries.TI_ENGINEERING,
+                }[series],
             )
 
         elif header == TiHeader.APPCONFIG_SECTION:
             # Standalone appconfig file. No FW version available.
-            return (
-                None,
-                None,
-                None,
-                format_ti_config_string(
+            return PdcFwVer(
+                vendor=PdcVendor.TI,
+                series=PdcFwSeries.CONFIG_ONLY,
+                major=None,
+                minor=None,
+                patch=None,
+                project_name=format_ti_config_string(
                     data[
                         # pylint: disable=line-too-long
                         TiFwOffset.PROJ_NAME_OFFSET : TiFwOffset.PROJ_NAME_OFFSET
@@ -110,23 +127,23 @@ def read_base_fw_ver_and_proj_name(
 
 def get_hash_bytes(binary_path: Path) -> bytes:
     """Generate hash file bytes for a TI binary."""
-    major, minor, patch, proj_name = read_base_fw_ver_and_proj_name(binary_path)
-    if major is None:
+    ver = read_base_fw_ver_and_proj_name(binary_path)
+    if ver.major is None:
         raise ValueError(f"Cannot read version from TI binary {binary_path}")
-    if proj_name is None:
+    if ver.project_name is None:
         raise ValueError(
             f"Cannot read project name from TI binary {binary_path}"
         )
 
-    if proj_name.startswith("GOOG"):
-        proj_bytes = proj_name.encode("ascii")
-    elif proj_name.startswith("0x"):
-        proj_bytes = binascii.unhexlify(proj_name[2:])
+    if ver.project_name.startswith("GOOG"):
+        proj_bytes = ver.project_name.encode("ascii")
+    elif ver.project_name.startswith("0x"):
+        proj_bytes = binascii.unhexlify(ver.project_name[2:])
     else:
-        raise ValueError(f"Unexpected project name format: {proj_name}")
+        raise ValueError(f"Unexpected project name format: {ver.project_name}")
 
     proj_bytes = proj_bytes.ljust(8, b"\x00")
     if len(proj_bytes) > 8:
-        raise ValueError(f"Project name too long: {proj_name}")
+        raise ValueError(f"Project name too long: {ver.project_name}")
 
-    return bytes([major, minor, patch]) + proj_bytes
+    return bytes(ver.as_tuple()) + proj_bytes

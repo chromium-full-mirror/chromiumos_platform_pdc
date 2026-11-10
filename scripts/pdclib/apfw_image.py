@@ -363,10 +363,7 @@ def parse_firmware_and_hashfile(fw_path: Path, hash_path: Path | None) -> dict:
     elif fw_path.name.startswith("rts54"):
         fw = rtk_utils.RtkFwBinary(fw_path)
 
-        detected_fw["fw_binary"] = (
-            *fw.get_fw_version().as_tuple(),
-            fw.get_project_name(),
-        )
+        detected_fw["fw_binary"] = fw.get_version()
 
     return detected_fw
 
@@ -382,11 +379,10 @@ def print_fw_and_hash_info_row(firmware_info: dict):
         *firmware_info["hash_file"]["ver"],
         firmware_info["hash_file"].get("config_name", "N/A"),
     )
-    fw_ver_text = "%d.%d.%d (%s)" % (*firmware_info["fw_binary"],)
     print(
         f"{firmware_info['name']:<25}Hash File: {hash_text:<19} "
         f"SHA1: {firmware_info['fw_binary_hash']:<42} "
-        f"Embedded: {fw_ver_text}"
+        f"Embedded: {str(firmware_info['fw_binary'])}"
     )
 
 
